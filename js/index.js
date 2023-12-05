@@ -4,6 +4,8 @@ const githubRepoName = 'Milog' // 깃허브 레포지토리 이름
 
 const sessionId = localStorage.getItem("sessionId");
 const signedHost = localStorage.getItem("signinHost");
+const token = localStorage.getItem("token");
+const signedusername = localStorage.getItem("username");
 
 var isLogin = false;
 if (sessionId && signedHost) {
@@ -621,10 +623,7 @@ if (!blog && !page) {
 } else if (page == 'editor') {
 
     const sessionId = localStorage.getItem("sessionId");
-    const signinHost = localStorage.getItem("signinHost");
-    const token = localStorage.getItem("token");
     const userid = localStorage.getItem("userid");
-    const username = localStorage.getItem("username");
 
     if (token) {
         document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor"></textarea></div><div class="parser"><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
@@ -647,7 +646,7 @@ if (!blog && !page) {
             if (postTitle.value == '' || postUrl.value == '' || postCategory.value == '' || editor.value == '') {
                 alert("빈칸을 모두 채워주세요!");
             } else {
-                var postCreateUrl = 'https://'+signinHost+'/api/pages/create'
+                var postCreateUrl = 'https://'+signedHost+'/api/pages/create'
                 var postCreateParam = {
                     method: 'POST',
                     headers: {
@@ -666,7 +665,7 @@ if (!blog && !page) {
                 fetch(postCreateUrl, postCreateParam)
                 .then((postData) => {return postData.json()})
                 .then((postRes) => {
-                    location.href = 'https://yeojibur.in/Milog?b='+ username +'@'+ signinHost +'&a='+ postRes.id
+                    location.href = 'https://yeojibur.in/Milog?b='+ signedusername +'@'+ signedHost +'&a='+ postRes.id
                 })
                 .catch(err => {throw err});
             }
@@ -675,6 +674,30 @@ if (!blog && !page) {
         location.href = 'https://yeojibur.in/Milog?p=signin'
     }
 
+} else if (page == 'delete' && article != null ) {
+    if (token) {
+        if (window.confirm("정말 글을 삭제하시겠습니까?")) {
+            const deletePostUrl = 'https://'+signedHost+'/api/pages/delete'
+            const deletePostParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    i: token,
+                    pageId: article,
+                }),
+            }
+            fetch(deletePostUrl, deletePostParam)
+                .then((postData) => {return postData.json()})
+                .then((postRes) => {
+                    location.href = 'https://yeojibur.in/Milog?b='+ signedusername +'@'+ signedHost
+                })
+                .catch(err => {throw err});
+        } else {
+            location.href = 'https://yeojibur.in/Milog?b='+ signedusername +'@'+ signedHost +'&a='+ article
+        }
+    }
 } else if (page == 'blog' && category != null) {
     document.querySelector("#page_title").innerText = category
     const findPageUrl = 'https://'+host+'/api/users/pages'
