@@ -72,7 +72,7 @@ input {
     padding: 130px 0;
 }
 
-#page_title {
+#page_title, #titlepreview {
     font-size: 2rem;
     padding: 10px 0;
 }

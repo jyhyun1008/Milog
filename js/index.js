@@ -625,11 +625,16 @@ if (!blog && !page) {
     const username = localStorage.getItem("username");
 
     if (token) {
-        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor"></textarea></div><div class="parser"></div></div><div class="button" id="postButton">게시</div>'
+        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor"></textarea></div><div class="parser"><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
 
         var editor = document.getElementById('editor');
         editor.addEventListener('keyup', function(event){
-            document.querySelector('.parser').innerHTML = parseMd(editor.value)
+            document.querySelector('#contentpreview').innerHTML = parseMd(editor.value)
+        })
+
+        var title = document.getElementById('postTitle');
+        title.addEventListener('keyup', function(event){
+            document.querySelector('#titlepreview').innerHTML = parseMd(title.value)
         })
     
         var postButton = document.getElementById('postButton');
