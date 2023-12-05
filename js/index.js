@@ -307,8 +307,8 @@ if (!blog && !page) {
                     fetch(findPostsUrl, findPostParam)
                     .then((postData) => {return postData.json()})
                     .then((postRes) => {
-                        blogPosts = blogPosts + postRes
-                        console.log(postRes)
+                        blogPosts = blogPosts.concat(postRes)
+                        console.log(blogPosts)
                     })
                     .catch(err => {throw err});
                 })
