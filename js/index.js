@@ -2,6 +2,17 @@ const initialHost = 'i.peacht.art' // 처음 불러올 때 호스트
 const githubUserName = 'jyhyun1008' // 깃허브 아이디
 const githubRepoName = 'Milog' // 깃허브 레포지토리 이름
 
+const sessionId = localStorage.getItem("sessionId");
+const signedHost = localStorage.getItem("signinHost");
+
+var isLogin = false;
+if (sessionId && signedHost) {
+    isLogin = true;
+    document.getElementById('loginout').innerText = '로그아웃'
+} else {
+    document.getElementById('loginout').innerText = '로그인'
+}
+
 function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 html로 변환시켜 줍니다.
     // 정규식으로 되어 있습니다. 자세한 것은 정규식을 공부해 주세요.
 
