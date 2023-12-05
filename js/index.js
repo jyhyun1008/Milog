@@ -620,8 +620,8 @@ if (!blog && !page) {
         document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
         if (token) {
             document.querySelector("#commentbox").innerHTML += '<textarea id="comment" placeholder="덧글을 작성해보세요. 작성된 덧글은 수정하기 어렵습니다."></textarea><div class="button" id="leavecomment">덧글 작성</div>'
-            var leaveComment = document.querySelector("#leavecomment")
-            var commentText = document.querySelector("#comment")
+            var leaveComment = document.getElementById("leavecomment")
+            var commentText = document.getElementById("comment")
             console.log(leaveComment)
             leaveComment.addEventListener('click', function(event){
                 if (commentText.value == '') {
