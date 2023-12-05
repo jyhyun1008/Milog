@@ -328,7 +328,7 @@ if (!blog && !page) {
             .then((infoData) => {return infoData.json()})
             .then((infoRes) => {
                 if (infoRes.length == 0) {
-                    var createPageUrl = 'https://'+signinHost+'api/pages/create'
+                    var createPageUrl = 'https://'+signinHost+'/api/pages/create'
                     var createPageParam = {
                         method: 'POST',
                         headers: {
@@ -350,7 +350,7 @@ if (!blog && !page) {
                     fetch(createPageUrl, createPageParam)
                     .then((pageData) => {return pageData.json()})
                     .then((pageRes) => {
-                        var createNoteUrl = 'https://'+signinHost+'api/notes/create'
+                        var createNoteUrl = 'https://'+signinHost+'/api/notes/create'
                         var createNoteParam = {
                             method: 'POST',
                             headers: {
