@@ -329,12 +329,19 @@ if (!blog && !page) {
                 return new Promise((resolve, reject) => {
                     if (post.summary.includes('#MiLog')) {
                         filteredPosts.push(post)
+                        var eyeCatchUrl = ''
+                        var userhost = ''
                         if (!post.eyeCatchingImage) {
                             eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
                         } else {
                             eyeCatchUrl = post.eyeCatchingImage.url
                         }
-                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+post.title+'</div><div class="post_summary">'+post.summary+'</div></div>'
+                        if (!post.user.host) {
+                            userhost = initialHost
+                        } else {
+                            userhost = post.user.host
+                        }
+                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+post.title+'</div><div class="post_summary">'+post.summary+'</div><div class="post_author">@'+post.user.username+'@'+userhost+'</div></div>'
                         resolve()
                     }
                 })
