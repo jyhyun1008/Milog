@@ -616,7 +616,62 @@ if (!blog && !page) {
         document.querySelector("#page_content").innerHTML += parseMd(pageText)
         if (signedusername == username && signedHost == host) {
             document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update">수정</div></a> <a href="./?p=delete"><div class="button" id="delete">삭제</div></a></div>'
+        } 
+        document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
+        if (token) {
+            document.querySelector("#commentbox").innerHTML += '<textarea id="comment"></textarea><div class="button" id="leavecomment"></div>'
+            var leaveComment = document.querySelector("#leavecomment")
+            leaveComment.addEventListener("click", function(event) {
+                var commentText = document.querySelector("#comment").value
+                const leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
+                const leaveCommentParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        i: token,
+                        visibility: home,
+                        text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+commentText,
+                    }),
+                }
+                fetch(leaveCommentUrl, leaveCommentParam)
+                .then((leavedcommentData) => {return leavedcommentData.json()})
+                .then((leavedcommentRes) => {
+                    location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
+                })
+                .catch(err => {throw err});
+            })
         }
+        const findCommentUrl = 'https://'+host+'/api/notes/search'
+        const findCommentParam = {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: article,
+            }),
+        }
+        fetch(findCommentUrl, findCommentParam)
+        .then((commentData) => {return commentData.json()})
+        .then((commentRes) => {
+            if (commentRes.length > 0) {
+                for (var i=0; i<commentRes.length; i++) {
+                    var commentUserHost = ''
+                    if (commentRes[i].user.host) {
+                        commentUserHost = commentRes[i].user.host
+                    } else {
+                        commentUserHost = host
+                    }
+                    var commentText = commentRes[i].text.substr(commentRes[i].text.indexOf('\n'))
+                    document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
+                }
+            } else {
+                document.querySelector("#commentbox").innerHTML += '<div class="commentList">작성된 덧글이 없습니다.</div>'
+            }
+        })
+        .catch(err => {throw err});
         
     })
     .catch(err => { throw err });
