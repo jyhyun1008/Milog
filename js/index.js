@@ -621,7 +621,7 @@ if (!blog && !page) {
         if (token) {
             document.querySelector("#commentbox").innerHTML += '<textarea id="comment"></textarea><div class="button" id="leavecomment">덧글 작성</div>'
             var leaveComment = document.querySelector("#leavecomment")
-            leaveComment.addEventListener("click", function(event) {
+            leaveComment.addEventListener('click', function(event) {
                 var commentText = document.querySelector("#comment").value
                 const leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
                 const leaveCommentParam = {
