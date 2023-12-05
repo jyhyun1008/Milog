@@ -449,7 +449,13 @@ if (!blog && !page) {
     localStorage.clear();
     location.href = 'https://yeojibur.in/Milog'
 } else if (page == 'editor') {
-    document.querySelector('#page_content').innerHTML = '<div class="editor_containor"><div class="editor"><textarea></textarea></div><div class="parser"></div></div>'
+    document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><textarea id="editor"></textarea></div><div class="parser"></div></div>'
+
+    var editor = document.getElementById('editor')[0];
+    editor.addEventListener('keydown', function(event){
+        document.querySelector('.parser').innerHTML = parseMd(editor.innerText)
+    })
+
 } else if (page == 'blog' && category != null) {
     document.querySelector("#page_title").innerText = category
     const findPageUrl = 'https://'+host+'/api/users/pages'
