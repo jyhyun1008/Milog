@@ -115,6 +115,27 @@ function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 ht
     
 }
 
+function parseToJSON(md){
+
+    md = md.replace(/\"/gm, "&quot;").replace(/\'/gm, "&#39;");
+    md = "[\n"+md+"\n]"
+
+    md = md.replace(/\n[\#]{6}(.+)/g, '\n$1');
+    md = md.replace(/\n[\#]{5}(.+)/g, '\n$1');
+    md = md.replace(/\n[\#]{4}(.+)/g, '\n$1');
+    md = md.replace(/\n[\#]{3}(.+)/g, '\n**$1**');
+    md = md.replace(/\n[\#]{2}(.+)/g, '\n\$[x2$1]');
+    md = md.replace(/\n[\#]{1}(.+)/g, ",{type: 'section', title: '$1', children: []}");
+
+    md = md.replace(/\}\n([\s\S]+)\,\{/g, "},{type: 'text', text: '$1'},{")
+    md = md.replace(/\[\n([\s\S]+)\,\{/g, "[{type: 'text', text: '$1'},{")
+    md = md.replace(/\}\n([\s\S]+)\]/g, "},{type: 'text', text: '$1'}]")
+
+    md = md.replace(/\[\n([\s\S]+)\]/g, "[{type: 'text', text: '$1'}]")
+
+    return md;
+}
+
 function parseMFM(md){
     // MFM으로 작성된 텍스트를 마크다운으로 변환하는 코드입니다.
 
@@ -460,7 +481,7 @@ if (!blog && !page) {
     document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor"></textarea></div><div class="parser"></div></div><div class="button" id="postButton">게시</div>'
 
     var editor = document.getElementById('editor');
-    editor.addEventListener('keydown', function(event){
+    editor.addEventListener('keyup', function(event){
         document.querySelector('.parser').innerHTML = parseMd(editor.value)
     })
 
