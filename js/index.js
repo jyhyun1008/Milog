@@ -637,28 +637,32 @@ if (!blog && !page) {
         var postCategory = document.getElementById('postCategory');
         var postUrl = document.getElementById('postUrl');
         postButton.addEventListener('onclick', function(event) {
-            var postCreateUrl = 'https://'+signinHost+'/api/pages/create'
-            var postCreateParam = {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                body:  JSON.stringify({
-                    i: tokenRes.token,
-                    title: postTitle,
-                    name: postUrl,
-                    summary: '#MiLog #'+postCategory,
-                    variables: [],
-                    script: '',
-                    content: parseToJSON(editor.value)
+            if (postTitle.value == '' || postUrl.value == '' || postCategory.value == '' || editor.value == '') {
+                alert("빈칸을 모두 채워주세요!");
+            } else {
+                var postCreateUrl = 'https://'+signinHost+'/api/pages/create'
+                var postCreateParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body:  JSON.stringify({
+                        i: tokenRes.token,
+                        title: postTitle.value,
+                        name: postUrl.value,
+                        summary: '#MiLog #'+postCategory.value,
+                        variables: [],
+                        script: '',
+                        content: parseToJSON(editor.value)
+                    })
+                }
+                fetch(postCreateUrl, postCreateParam)
+                .then((postData) => {return postData.json()})
+                .then((postRes) => {
+                    location.href = 'https://yeojibur.in/Milog?b='+ username +'@'+ signinHost +'&a='+ postRes.id
                 })
+                .catch(err => {throw err});
             }
-            fetch(postCreateUrl, postCreateParam)
-            .then((postData) => {return postData.json()})
-            .then((postRes) => {
-                location.href = 'https://yeojibur.in/Milog?b='+ username +'@'+ signinHost +'&a='+ postRes.id
-            })
-            .catch(err => {throw err});
         })
     } else {
         location.href = 'https://yeojibur.in/Milog?p=signin'
