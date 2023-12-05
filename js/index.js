@@ -319,16 +319,19 @@ if (!blog && !page) {
         location.href = signinUrl;
     }
 } else if (page == 'signin' && !signinHost) {
-    document.querySelector("#page_title").innerText = 'SIGN IN'
-    document.querySelector("#page_content").innerHTML = '<div><input id="host" placeholder="계정이 있는 인스턴스 주소"></input><div class="button" id="signinButton">로그인</div></div>'
+    if (localStorage.getItem("sessionId")) {
+        location.href = 'https://yeojibur.in/Milog'
+    } else {
+        document.querySelector("#page_title").innerText = 'SIGN IN'
+        document.querySelector("#page_content").innerHTML = '<div><input id="host" placeholder="계정이 있는 인스턴스 주소"></input><div class="button" id="signinButton">로그인</div></div>'
 
-    var signHost = document.getElementById('host');
-    var signinButton = document.getElementById('signinButton');
+        var signHost = document.getElementById('host');
+        var signinButton = document.getElementById('signinButton');
 
-    signinButton.addEventListener('onclick', function(event) {
-        location.href = 'https://yeojibur.in/Milog?p=signin&h=' + signHost.value
-    })
-    
+        signinButton.addEventListener('onclick', function(event) {
+            location.href = 'https://yeojibur.in/Milog?p=signin&h=' + signHost.value
+        })
+    }
 } else if (page == 'callback') {
     const sessionId = localStorage.getItem("sessionId");
     const signinHost = localStorage.getItem("signinHost");
