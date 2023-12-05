@@ -623,24 +623,28 @@ if (!blog && !page) {
             var leaveComment = document.querySelector("#leavecomment")
             leaveComment.addEventListener('click', function(event) {
                 var commentText = document.querySelector("#comment").value
-                const leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
-                const leaveCommentParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        i: token,
-                        visibility: home,
-                        text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+commentText,
-                    }),
+                if (commentText == '') {
+                    alert('덧글 내용을 입력해주세요!')
+                } else {
+                    const leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
+                    const leaveCommentParam = {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            i: token,
+                            visibility: home,
+                            text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+commentText,
+                        }),
+                    }
+                    fetch(leaveCommentUrl, leaveCommentParam)
+                    .then((leavedcommentData) => {return leavedcommentData.json()})
+                    .then((leavedcommentRes) => {
+                        location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
+                    })
+                    .catch(err => {throw err});
                 }
-                fetch(leaveCommentUrl, leaveCommentParam)
-                .then((leavedcommentData) => {return leavedcommentData.json()})
-                .then((leavedcommentRes) => {
-                    location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
-                })
-                .catch(err => {throw err});
             })
         }
         const findCommentUrl = 'https://'+host+'/api/notes/search'
