@@ -292,7 +292,7 @@ if (!blog && !page) {
         let uuid = self.crypto.randomUUID();
         localStorage.setItem("signinHost", signinHost);
         localStorage.setItem("sessionId", uuid);
-        var signinUrl = 'https://'+signinHost+'/miauth/'+uuid+'?name=MiLog&callback=https%3A%2F%2Fyeojibur.in%2FMilog%3Fp%3Dcallback&permisson=write:notes,write:pages,write:drive'
+        var signinUrl = 'https://'+signinHost+'/miauth/'+uuid+'?name=MiLog&callback=https%3A%2F%2Fyeojibur.in%2FMilog%3Fp%3Dcallback&permission=write:notes,write:pages,write:drive'
         location.href = signinUrl;
     }
 } else if (page == 'callback') {
@@ -342,7 +342,7 @@ if (!blog && !page) {
                             variables: [],
                             script: '',
                             content: [{
-                                id: self.crypto.randomUUID(),
+                                //id: self.crypto.randomUUID(),
                                 text: 'blogTitle: '+tokenRes.user.username+'.log\n\nblogIntro: @'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.\n\nfollowing: ',
                                 type: 'text'
                             }]
