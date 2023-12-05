@@ -300,12 +300,74 @@ if (!blog && !page) {
         headers: {
             'content-type': 'application/json',
         },
-        body:  JSON.stringify({})
+        body: JSON.stringify({})
     }
     fetch(postUrl, postParam)
     .then((tokenData) => {return tokenData.json()})
     .then((tokenRes) => {
-        console.log(tokenRes)
+        localStorage.setItem("token", tokenRes.token)
+        localStorage.setItem("me", tokenRes.user)
+
+        var findInfoUrl = 'https://'+signinHost+'/api/notes/search'
+        var findInfoParam = {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: 'MiLogSetup',
+                userId: tokenRes.user.id,
+            })
+        }
+        fetch(findInfoUrl, findInfoParam)
+        .then((infoData) => {return infoData.json()})
+        .then((infoRes) => {
+            if (infoRes.length == 0) {
+                var createPageUrl = 'https://'+signinHost+'api/pages/create'
+                var createPageParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        i: tokenRes.token,
+                        title: 'MiLogSetup',
+                        name: 'milogsetup',
+                        summary: '#MiLogSetup',
+                        variables: [],
+                        script: '',
+                        content: [{
+                            text: 'blogTitle: '+tokenRes.user.username+'.log\n\nblogIntro: @'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.\n\nfollowing: ',
+                            type: 'text'
+                        }]
+                    })
+                }
+                fetch(createPageUrl, createPageParam)
+                .then((pageData) => {return pageData.json()})
+                .then((pageRes) => {
+                    var createNoteUrl = 'https://'+signinHost+'api/notes/create'
+                    var createNoteParam = {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            i: tokenRes.token,
+                            visibility: 'home',
+                            text: 'https://'+signinHost+'/@'+tokenRes.user.username+'/pages/milogsetup #MiLogSetup'
+                        })
+                    }
+                    fetch(createNoteUrl, createNoteParam)
+                    .then((noteData) => {return noteData.json()})
+                    .then((noteRes) => {
+                        location.href = 'https://yeojibur.in/Milog'
+                    })
+                    .catch(err => {throw err});
+                })
+                .catch(err => {throw err});
+            }
+        })
+        .catch(err => {throw err});
     })
     .catch(err => {throw err});
 } else if (blog != null) {
