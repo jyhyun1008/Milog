@@ -308,7 +308,7 @@ if (!blog && !page) {
                     .then((postData) => {return postData.json()})
                     .then((postRes) => {
                         blogPosts = blogPosts + postRes
-                        console.log(blogPosts)
+                        console.log(postRes)
                     })
                     .catch(err => {throw err});
                 })
