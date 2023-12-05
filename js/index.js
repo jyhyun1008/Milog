@@ -248,6 +248,7 @@ if (!blog && !page) {
 
             var blogs = []
             var blogPosts = []
+            var filteredPosts = []
 
             const loadUsersFunc = async() => {
                 
@@ -265,6 +266,13 @@ if (!blog && !page) {
                 });
 
                 console.log(blogPosts)
+
+                document.querySelector("#page_content").innerHTML += '<div id="postlist"></div>'
+                
+                for (let post of blogPosts) {
+                    await filterPosts(post);
+                }
+
             }
 
             const loadUsers = (res) => {
@@ -314,6 +322,16 @@ if (!blog && !page) {
                         .catch(err => {throw err});
                     })
                     .catch(err => {throw err});
+                })
+            }
+
+            const filterPosts = (post) => {
+                return new Promise((resolve, reject) => {
+                    if (post.summary.includes('#MiLog')) {
+                        filteredPosts.push(post)
+                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><div><img src="'+post.eyeCatchingImage.url+'"></div><div>'+post.title+'</div><div>'+post.summary+'</div></div>'
+                        resolve()
+                    }
                 })
             }
 
