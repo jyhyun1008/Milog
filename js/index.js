@@ -588,7 +588,12 @@ if (!blog && !page) {
 
         var pageUrl = "https://"+host+"/@"+username+"/pages/"+PageRes.name
         var pageTitle = PageRes.title
-        var pageImage = PageRes.eyeCatchingImage.url
+        var pageImage = ''
+        if (PageRes.eyeCatchingImage) {
+            pageImage = PageRes.eyeCatchingImage.url
+        } else {
+            pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
+        }
         var pageText = makePageText(PageRes.content, PageRes.attachedFiles)
         document.querySelector("#page_title").innerText = pageTitle
         document.querySelector("#page_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
