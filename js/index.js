@@ -255,6 +255,7 @@ if (!blog && !page) {
                 .then((userRes) => {
                     var blogInfo = {
                         url: result.text.split(' ')[0],
+                        pageId: result.text.split(' ')[1],
                         userId: userRes[0].id,
                         username: result.user.username,
                         host: result.user.host
@@ -342,7 +343,6 @@ if (!blog && !page) {
                             variables: [],
                             script: '',
                             content: [{
-                                //id: self.crypto.randomUUID(),
                                 text: 'blogTitle: '+tokenRes.user.username+'.log\n\nblogIntro: @'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.\n\nfollowing: ',
                                 type: 'text'
                             }]
@@ -362,13 +362,13 @@ if (!blog && !page) {
                             body: JSON.stringify({
                                 i: tokenRes.token,
                                 visibility: 'home',
-                                text: 'https://'+signinHost+'/@'+tokenRes.user.username+'/pages/milogsetup #MiLogSetup'
+                                text: 'https://'+signinHost+'/@'+tokenRes.user.username+'/pages/milogsetup '+pageRes.id+' #MiLogSetup'
                             })
                         }
                         fetch(createNoteUrl, createNoteParam)
                         .then((noteData) => {return noteData.json()})
                         .then((noteRes) => {
-                            //location.href = 'https://yeojibur.in/Milog'
+                            location.href = 'https://yeojibur.in/Milog'
                         })
                         .catch(err => {throw err});
                     })
@@ -418,6 +418,7 @@ if (!blog && !page) {
         .then((infoRes) => {
             blogInfo = {
                 url: infoRes[0].text.split(' ')[0],
+                pageId: infoRes[0].text.split(' ')[1],
                 userId: userRes[0].id,
                 username: username,
                 host: host
@@ -430,6 +431,8 @@ if (!blog && !page) {
                 },
                 body:  JSON.stringify({
                     userId: blogInfo.userId,
+                    sinceId: blogInfo.pageId,
+                    limit: 100,
                 })
             }
             fetch(findPostsUrl, findPostParam)
