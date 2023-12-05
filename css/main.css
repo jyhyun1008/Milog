@@ -43,6 +43,8 @@ body {
 input {
     height: 36px;
     width: 100%;
+    padding: 0 2px;
+    border-width: 0px;
 }
 
 #container {
@@ -65,6 +67,8 @@ input {
 .editor textarea {
     width: 100%;
     height: calc(100vh - 360px - 108px);
+    padding: 0 2px;
+    border-width: 0px;
 }
 
 .parser {

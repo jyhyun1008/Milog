@@ -457,7 +457,7 @@ if (!blog && !page) {
     const userid = localStorage.getItem("userid");
     const username = localStorage.getItem("username");
 
-    document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle"></input><input id="postCategory"></input><input id="postUrl"></input><textarea id="editor"></textarea></div><div class="parser"></div></div><div class="button" id="postButton">게시</div>'
+    document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor"></textarea></div><div class="parser"></div></div><div class="button" id="postButton">게시</div>'
 
     var editor = document.getElementById('editor');
     editor.addEventListener('keydown', function(event){
