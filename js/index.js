@@ -621,10 +621,10 @@ if (!blog && !page) {
         if (token) {
             document.querySelector("#commentbox").innerHTML += '<textarea id="comment" placeholder="덧글을 작성해보세요. 작성된 덧글은 수정하기 어렵습니다."></textarea><div class="button" id="leavecomment">덧글 작성</div>'
             var leaveComment = document.querySelector("#leavecomment")
+            var commentText = document.querySelector("#comment")
             console.log(leaveComment)
-            leaveComment.addEventListener('click', function(event) {
-                var commentText = document.querySelector("#comment").value
-                if (commentText == '') {
+            leaveComment.addEventListener('click', function(event){
+                if (commentText.value == '') {
                     alert('덧글 내용을 입력해주세요!')
                 } else {
                     const leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
@@ -636,7 +636,7 @@ if (!blog && !page) {
                         body: JSON.stringify({
                             i: token,
                             visibility: 'home',
-                            text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+commentText,
+                            text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+commentText.value,
                         }),
                     }
                     fetch(leaveCommentUrl, leaveCommentParam)
