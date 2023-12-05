@@ -134,7 +134,7 @@ function parseToJSON(md){
     md = md.replace(/\[\n([\s\S]+)\]/g, "[{type: 'text', text: '$1'}]")
     md = md.replace(/\[\,\{/g, "[{")
 
-    return JSON.parse(md);
+    return JSON.parse('{array: '+md+'}');
 }
 
 function parseMFM(md){
