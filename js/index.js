@@ -615,7 +615,7 @@ if (!blog && !page) {
         document.querySelector("#page_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
         document.querySelector("#page_content").innerHTML += parseMd(pageText)
         if (signedusername == username && signedHost == host) {
-            document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update">수정</div></a> <a href="./?p=delete"><div class="button" id="delete">삭제</div></a></div>'
+            document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update&a='+article+'">수정</div></a> <a href="./?p=delete&a='+article+'"><div class="button" id="delete">삭제</div></a></div>'
         } 
         document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
         if (token) {
