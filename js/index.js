@@ -8,9 +8,9 @@ const signedHost = localStorage.getItem("signinHost");
 var isLogin = false;
 if (sessionId && signedHost) {
     isLogin = true;
-    document.getElementById('loginout').innerText = '로그아웃'
+    document.getElementsByClassName('nav-item')[0].innerHTML += '<a href="./?p=signout"><div class="button" id="loginout">로그아웃</div></a>'
 } else {
-    document.getElementById('loginout').innerText = '로그인'
+    document.getElementsByClassName('nav-item')[0].innerHTML += '<a href="./?p=signin"><div class="button" id="loginout">로그인</div></a>'
 }
 
 function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 html로 변환시켜 줍니다.
