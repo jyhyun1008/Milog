@@ -40,6 +40,11 @@ body {
     border-radius: 15px;
 }
 
+input {
+    height: 36px;
+    width: 100%;
+}
+
 #container {
     width: 100%;
     max-width: 740px;
@@ -53,16 +58,16 @@ body {
 
 .editor {
     width: 50%;
-    height: calc(100vh - 260px);
+    height: calc(100vh - 360px);
     padding-right: 10px;
 }
 
 .editor textarea {
     width: 100%;
-    height: calc(100vh - 260px);
+    height: calc(100vh - 360px - 108px);
 }
 
 .parser {
     width: 50%;
-    height: calc(100vh - 260px);
+    height: calc(100vh - 360px);
 }
