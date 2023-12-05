@@ -249,8 +249,6 @@ if (!blog && !page) {
             var blogs = []
             var blogPosts = []
 
-            console.log(noteRes)
-
             async function loadUsersFunc(noteRes) {
                 noteRes.forEach(async (result) => {
                   await loadUsers(result);
@@ -264,7 +262,11 @@ if (!blog && !page) {
             }
 
             async function loadUsers(result) {
-                var findUserIdUrl = 'https://'+result.user.host+'/api/users/search-by-username-and-host'
+                var resulthost = result.user.host
+                if (!resulthost) {
+                    resulthost = initialHost
+                }
+                var findUserIdUrl = 'https://'+resulthost+'/api/users/search-by-username-and-host'
                 var findUserIdParam = {
                     method: 'POST',
                     headers: {
@@ -272,7 +274,7 @@ if (!blog && !page) {
                     },
                     body:  JSON.stringify({
                         username: result.user.username,
-                        host: result.user.host,
+                        host: resulthost,
                     })
                 }
                 fetch(findUserIdUrl, findUserIdParam)
@@ -282,7 +284,7 @@ if (!blog && !page) {
                         url: result.text.split(' ')[0],
                         userId: userRes[0].id,
                         username: result.user.username,
-                        host: result.user.host
+                        host: resulthost
                     }
                     blogs.push(blogInfo)
                     var findPostsUrl = 'https://'+blogInfo.host+'/api/users/pages'
