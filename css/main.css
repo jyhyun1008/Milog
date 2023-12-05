@@ -128,3 +128,9 @@ input {
 #tools {
     display: flex;
 }
+
+#comment {
+    width: 100%;
+    padding: 0 2px;
+    border-width: 0px;
+}

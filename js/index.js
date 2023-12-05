@@ -619,7 +619,7 @@ if (!blog && !page) {
         } 
         document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
         if (token) {
-            document.querySelector("#commentbox").innerHTML += '<textarea id="comment"></textarea><div class="button" id="leavecomment">덧글 작성</div>'
+            document.querySelector("#commentbox").innerHTML += '<textarea id="comment" placeholder="덧글을 작성해보세요. 작성된 덧글은 수정하기 어렵습니다."></textarea><div class="button" id="leavecomment">덧글 작성</div>'
             var leaveComment = document.querySelector("#leavecomment")
             leaveComment.addEventListener('click', function(event) {
                 var commentText = document.querySelector("#comment").value
@@ -688,7 +688,7 @@ if (!blog && !page) {
     const userid = localStorage.getItem("userid");
 
     if (token) {
-        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor"></textarea></div><div class="parser"><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
+        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
 
         var editor = document.getElementById('editor');
         editor.addEventListener('keyup', function(event){
