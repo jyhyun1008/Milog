@@ -312,7 +312,8 @@ if (!blog && !page) {
         .then((tokenData) => {return tokenData.json()})
         .then((tokenRes) => {
             localStorage.setItem("token", tokenRes.token)
-            localStorage.setItem("me", tokenRes.user)
+            localStorage.setItem("username", tokenRes.user.username)
+            localStorage.setItem("userid", tokenRes.user.id)
     
             var findInfoUrl = 'https://'+signinHost+'/api/notes/search'
             var findInfoParam = {
@@ -449,11 +450,47 @@ if (!blog && !page) {
     localStorage.clear();
     location.href = 'https://yeojibur.in/Milog'
 } else if (page == 'editor') {
-    document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><textarea id="editor"></textarea></div><div class="parser"></div></div>'
+
+    const sessionId = localStorage.getItem("sessionId");
+    const signinHost = localStorage.getItem("signinHost");
+    const token = localStorage.getItem("token");
+    const userid = localStorage.getItem("userid");
+    const username = localStorage.getItem("username");
+
+    document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle"></input><input id="postCategory"></input><input id="postUrl"></input><textarea id="editor"></textarea></div><div class="parser"></div></div><div class="button" id="postButton">게시</div>'
 
     var editor = document.getElementById('editor');
     editor.addEventListener('keydown', function(event){
         document.querySelector('.parser').innerHTML = parseMd(editor.value)
+    })
+
+    var postButton = document.getElementById('postButton');
+    var postTitle = document.getElementById('postTitle');
+    var postCategory = document.getElementById('postCategory');
+    var postUrl = document.getElementById('postUrl');
+    postButton.addEventListener('onclick', function(event) {
+        var postCreateUrl = 'https://'+signinHost+'/api/pages/create'
+        var postCreateParam = {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body:  JSON.stringify({
+                i: tokenRes.token,
+                title: postTitle,
+                name: postUrl,
+                summary: '#MiLog #'+postCategory,
+                variables: [],
+                script: '',
+                content: []
+            })
+        }
+        fetch(postCreateUrl, postCreateParam)
+        .then((postData) => {return postData.json()})
+        .then((postRes) => {
+            location.href = 'https://yeojibur.in/Milog?b='+ username +'@'+ signinHost +'&a='+ postRes.id
+        })
+        .catch(err => {throw err});
     })
 
 } else if (page == 'blog' && category != null) {
