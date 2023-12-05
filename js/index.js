@@ -250,9 +250,15 @@ if (!blog && !page) {
             var blogPosts = []
 
             async function loadUsersFunc(noteRes) {
-                noteRes.forEach(async (result) => {
-                  await loadUsers(result);
-                })
+                
+                //noteRes.forEach(async (result) => {
+                  //  await loadUsers(result);
+                //})
+
+
+                for await (const result of noteRes) {
+                    await loadUsers(result);
+                }
 
                 blogPosts.sort(function(a, b)  {
                     return a.createdAt - b.createdAt;
