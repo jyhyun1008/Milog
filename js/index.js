@@ -383,7 +383,7 @@ if (!blog && !page) {
         var signHost = document.getElementById('host');
         var signinButton = document.getElementById('signinButton');
 
-        signinButton.addEventListener('onclick', function(event) {
+        signinButton.addEventListener('click', function(event) {
             location.href = 'https://yeojibur.in/Milog?p=signin&h=' + signHost.value
         })
     }
