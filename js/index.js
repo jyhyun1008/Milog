@@ -278,7 +278,6 @@ if (!blog && !page) {
                 .then((userRes) => {
                     var blogInfo = {
                         url: result.text.split(' ')[0],
-                        pageId: result.text.split(' ')[1],
                         userId: userRes[0].id,
                         username: result.user.username,
                         host: result.user.host
@@ -319,6 +318,17 @@ if (!blog && !page) {
         var signinUrl = 'https://'+signinHost+'/miauth/'+uuid+'?name=MiLog&callback=https%3A%2F%2Fyeojibur.in%2FMilog%3Fp%3Dcallback&permission=write:notes,write:pages,write:drive'
         location.href = signinUrl;
     }
+} else if (page == 'signin' && !signinHost) {
+    document.querySelector("#page_title").innerText = 'SIGN IN'
+    document.querySelector("#page_content").innerHTML = '<div><input id="host" placeholder="계정이 있는 인스턴스 주소"></input><div class="button" id="signinButton">로그인</div></div>'
+
+    var signHost = document.getElementById('host');
+    var signinButton = document.getElementById('signinButton');
+
+    signinButton.addEventListener('onclick', function(event) {
+        location.href = 'https://yeojibur.in/Milog?p=signin&h=' + signHost.value
+    })
+    
 } else if (page == 'callback') {
     const sessionId = localStorage.getItem("sessionId");
     const signinHost = localStorage.getItem("signinHost");
@@ -386,7 +396,7 @@ if (!blog && !page) {
                             body: JSON.stringify({
                                 i: tokenRes.token,
                                 visibility: 'home',
-                                text: 'https://'+signinHost+'/@'+tokenRes.user.username+'/pages/milogsetup '+pageRes.id+' #MiLogSetup'
+                                text: 'https://'+signinHost+'/@'+tokenRes.user.username+'/pages/milogsetup #MiLogSetup'
                             })
                         }
                         fetch(createNoteUrl, createNoteParam)
@@ -442,7 +452,6 @@ if (!blog && !page) {
         .then((infoRes) => {
             blogInfo = {
                 url: infoRes[0].text.split(' ')[0],
-                pageId: infoRes[0].text.split(' ')[1],
                 userId: userRes[0].id,
                 username: username,
                 host: host
@@ -455,7 +464,6 @@ if (!blog && !page) {
                 },
                 body:  JSON.stringify({
                     userId: blogInfo.userId,
-                    sinceId: blogInfo.pageId,
                     limit: 100,
                 })
             }
@@ -480,41 +488,45 @@ if (!blog && !page) {
     const userid = localStorage.getItem("userid");
     const username = localStorage.getItem("username");
 
-    document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor"></textarea></div><div class="parser"></div></div><div class="button" id="postButton">게시</div>'
+    if (token) {
+        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor"></textarea></div><div class="parser"></div></div><div class="button" id="postButton">게시</div>'
 
-    var editor = document.getElementById('editor');
-    editor.addEventListener('keyup', function(event){
-        document.querySelector('.parser').innerHTML = parseMd(editor.value)
-    })
-
-    var postButton = document.getElementById('postButton');
-    var postTitle = document.getElementById('postTitle');
-    var postCategory = document.getElementById('postCategory');
-    var postUrl = document.getElementById('postUrl');
-    postButton.addEventListener('onclick', function(event) {
-        var postCreateUrl = 'https://'+signinHost+'/api/pages/create'
-        var postCreateParam = {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body:  JSON.stringify({
-                i: tokenRes.token,
-                title: postTitle,
-                name: postUrl,
-                summary: '#MiLog #'+postCategory,
-                variables: [],
-                script: '',
-                content: []
-            })
-        }
-        fetch(postCreateUrl, postCreateParam)
-        .then((postData) => {return postData.json()})
-        .then((postRes) => {
-            location.href = 'https://yeojibur.in/Milog?b='+ username +'@'+ signinHost +'&a='+ postRes.id
+        var editor = document.getElementById('editor');
+        editor.addEventListener('keyup', function(event){
+            document.querySelector('.parser').innerHTML = parseMd(editor.value)
         })
-        .catch(err => {throw err});
-    })
+    
+        var postButton = document.getElementById('postButton');
+        var postTitle = document.getElementById('postTitle');
+        var postCategory = document.getElementById('postCategory');
+        var postUrl = document.getElementById('postUrl');
+        postButton.addEventListener('onclick', function(event) {
+            var postCreateUrl = 'https://'+signinHost+'/api/pages/create'
+            var postCreateParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body:  JSON.stringify({
+                    i: tokenRes.token,
+                    title: postTitle,
+                    name: postUrl,
+                    summary: '#MiLog #'+postCategory,
+                    variables: [],
+                    script: '',
+                    content: parseToJSON(editor.value)
+                })
+            }
+            fetch(postCreateUrl, postCreateParam)
+            .then((postData) => {return postData.json()})
+            .then((postRes) => {
+                location.href = 'https://yeojibur.in/Milog?b='+ username +'@'+ signinHost +'&a='+ postRes.id
+            })
+            .catch(err => {throw err});
+        })
+    } else {
+        location.href = 'https://yeojibur.in/Milog?p=signin'
+    }
 
 } else if (page == 'blog' && category != null) {
     document.querySelector("#page_title").innerText = category
