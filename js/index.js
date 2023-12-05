@@ -249,6 +249,8 @@ if (!blog && !page) {
             var blogs = []
             var blogPosts = []
 
+            console.log(noteRes)
+
             async function loadUsersFunc(noteRes) {
                 noteRes.forEach(async (result) => {
                   await loadUsers(result);
