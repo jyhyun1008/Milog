@@ -451,7 +451,7 @@ if (!blog && !page) {
 } else if (page == 'editor') {
     document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><textarea id="editor"></textarea></div><div class="parser"></div></div>'
 
-    var editor = document.getElementById('editor')[0];
+    var editor = document.getElementById('editor');
     editor.addEventListener('keydown', function(event){
         document.querySelector('.parser').innerHTML = parseMd(editor.innerText)
     })
