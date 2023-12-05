@@ -453,7 +453,7 @@ if (!blog && !page) {
 
     var editor = document.getElementById('editor');
     editor.addEventListener('keydown', function(event){
-        document.querySelector('.parser').innerHTML = parseMd(editor.innerText)
+        document.querySelector('.parser').innerHTML = parseMd(editor.value)
     })
 
 } else if (page == 'blog' && category != null) {
