@@ -125,16 +125,16 @@ function parseToJSON(md){
     md = md.replace(/\n[\#]{4}(.+)/g, '\n$1');
     md = md.replace(/\n[\#]{3}(.+)/g, '\n**$1**');
     md = md.replace(/\n[\#]{2}(.+)/g, '\n\$[x2$1]');
-    md = md.replace(/\n[\#]{1}(.+)/g, ",{type: 'section', title: '$1', children: []}");
+    md = md.replace(/\n[\#]{1}(.+)/g, ",{'type': 'section', 'title': '$1', 'children': []}");
 
-    md = md.replace(/\}\n([\s\S]+)\,\{/g, "},{type: 'text', text: '$1'},{")
-    md = md.replace(/\[\n([\s\S]+)\,\{/g, "[{type: 'text', text: '$1'},{")
-    md = md.replace(/\}\n([\s\S]+)\]/g, "},{type: 'text', text: '$1'}]")
+    md = md.replace(/\}\n([\s\S]+)\,\{/g, "},{'type': 'text', 'text': '$1'},{")
+    md = md.replace(/\[\n([\s\S]+)\,\{/g, "[{'type': 'text', 'text': '$1'},{")
+    md = md.replace(/\}\n([\s\S]+)\]/g, "},{'type': 'text', 'text': '$1'}]")
 
-    md = md.replace(/\[\n([\s\S]+)\]/g, "[{type: 'text', text: '$1'}]")
+    md = md.replace(/\[\n([\s\S]+)\]/g, "[{'type': 'text', 'text': '$1'}]")
     md = md.replace(/\[\,\{/g, "[{")
 
-    return JSON.parse('{array: '+md+'}');
+    return JSON.parse(md);
 }
 
 function parseMFM(md){
