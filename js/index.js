@@ -249,14 +249,14 @@ if (!blog && !page) {
             var blogs = []
             var blogPosts = []
 
-            async function loadUsersFunc(noteRes) {
+            const loadUsersFunc = async() => {
                 
                 //noteRes.forEach(async (result) => {
                   //  await loadUsers(result);
                 //})
                 console.log(noteRes)
 
-                for await (const result of noteRes) {
+                for (let result of noteRes) {
                     await loadUsers(result);
                 }
 
@@ -267,55 +267,57 @@ if (!blog && !page) {
                 console.log(blogPosts)
             }
 
-            async function loadUsers(res) {
-                var resulthost = res.user.host
-                console.log(res)
-                if (!resulthost) {
-                    resulthost = initialHost
-                }
-                var findUserIdUrl = 'https://'+resulthost+'/api/users/search-by-username-and-host'
-                var findUserIdParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body:  JSON.stringify({
-                        username: res.user.username,
-                        host: resulthost,
-                    })
-                }
-                fetch(findUserIdUrl, findUserIdParam)
-                .then((userData) => {return userData.json()})
-                .then((userRes) => {
-                    var blogInfo = {
-                        url: res.text.split(' ')[0],
-                        userId: userRes[0].id,
-                        username: res.user.username,
-                        host: resulthost
+            const loadUsers = (res) => {
+                return new Promise((resolve, reject) => {
+                    var resulthost = res.user.host
+                    console.log(res)
+                    if (!resulthost) {
+                        resulthost = initialHost
                     }
-                    blogs.push(blogInfo)
-                    var findPostsUrl = 'https://'+blogInfo.host+'/api/users/pages'
-                    var findPostParam = {
+                    var findUserIdUrl = 'https://'+resulthost+'/api/users/search-by-username-and-host'
+                    var findUserIdParam = {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json',
                         },
                         body:  JSON.stringify({
-                            userId: blogInfo.userId,
+                            username: res.user.username,
+                            host: resulthost,
                         })
                     }
-                    fetch(findPostsUrl, findPostParam)
-                    .then((postData) => {return postData.json()})
-                    .then((postRes) => {
-                        blogPosts = blogPosts.concat(postRes)
-                        console.log(blogPosts)
+                    fetch(findUserIdUrl, findUserIdParam)
+                    .then((userData) => {return userData.json()})
+                    .then((userRes) => {
+                        var blogInfo = {
+                            url: res.text.split(' ')[0],
+                            userId: userRes[0].id,
+                            username: res.user.username,
+                            host: resulthost
+                        }
+                        blogs.push(blogInfo)
+                        var findPostsUrl = 'https://'+blogInfo.host+'/api/users/pages'
+                        var findPostParam = {
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json',
+                            },
+                            body:  JSON.stringify({
+                                userId: blogInfo.userId,
+                            })
+                        }
+                        fetch(findPostsUrl, findPostParam)
+                        .then((postData) => {return postData.json()})
+                        .then((postRes) => {
+                            blogPosts = blogPosts.concat(postRes)
+                            resolve()
+                        })
+                        .catch(err => {throw err});
                     })
                     .catch(err => {throw err});
                 })
-                .catch(err => {throw err});
             }
 
-            loadUsersFunc(noteRes)
+            loadUsersFunc()
         })
         .catch(err => {throw err});
     })
