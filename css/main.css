@@ -54,6 +54,23 @@ input {
     padding: 130px 0;
 }
 
+#postlist {
+    display: flex;
+}
+
+.postlist {
+    width: 33%;
+}
+
+.eyecatch {
+    aspect-ratio: 16 / 9;
+    border-radius: 15px;
+}
+
+.post_title {
+    font-size: 1.7rem;
+}
+
 .editor_container {
     display: flex;
 }

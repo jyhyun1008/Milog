@@ -334,7 +334,7 @@ if (!blog && !page) {
                         } else {
                             eyeCatchUrl = post.eyeCatchingImage.url
                         }
-                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><div><img src="'+eyeCatchUrl+'"></div><div>'+post.title+'</div><div>'+post.summary+'</div></div>'
+                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+post.title+'</div><div class="post_summary">'+post.summary+'</div></div>'
                         resolve()
                     }
                 })
