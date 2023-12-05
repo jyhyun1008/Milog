@@ -641,7 +641,7 @@ if (!blog && !page) {
         var postTitle = document.getElementById('postTitle');
         var postCategory = document.getElementById('postCategory');
         var postUrl = document.getElementById('postUrl');
-        postButton.addEventListener('onclick', function(event) {
+        postButton.addEventListener('click', function(event) {
             if (postTitle.value == '' || postUrl.value == '' || postCategory.value == '' || editor.value == '') {
                 alert("빈칸을 모두 채워주세요!");
             } else {
