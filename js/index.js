@@ -620,33 +620,35 @@ if (!blog && !page) {
         document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
         if (token) {
             document.querySelector("#commentbox").innerHTML += '<textarea id="comment" placeholder="덧글을 작성해보세요. 작성된 덧글은 수정하기 어렵습니다."></textarea><div class="button" id="leavecomment">덧글 작성</div>'
-            var leaveComment = document.getElementById("leavecomment")
-            var commentText = document.getElementById("comment")
-            console.log(leaveComment)
-            leaveComment.addEventListener('click', function(event){
-                if (commentText.value == '') {
-                    alert('덧글 내용을 입력해주세요!')
-                } else {
-                    const leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
-                    const leaveCommentParam = {
-                        method: 'POST',
-                        headers: {
-                            'content-type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            i: token,
-                            visibility: 'home',
-                            text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+commentText.value,
-                        }),
+            setTimeout(() => {
+                var leaveComment = document.getElementById("leavecomment")
+                var commentText = document.getElementById("comment")
+                console.log(leaveComment)
+                leaveComment.addEventListener('click', function(event){
+                    if (commentText.value == '') {
+                        alert('덧글 내용을 입력해주세요!')
+                    } else {
+                        const leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
+                        const leaveCommentParam = {
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                i: token,
+                                visibility: 'home',
+                                text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+commentText.value,
+                            }),
+                        }
+                        fetch(leaveCommentUrl, leaveCommentParam)
+                        .then((leavedcommentData) => {return leavedcommentData.json()})
+                        .then((leavedcommentRes) => {
+                            location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
+                        })
+                        .catch(err => {throw err});
                     }
-                    fetch(leaveCommentUrl, leaveCommentParam)
-                    .then((leavedcommentData) => {return leavedcommentData.json()})
-                    .then((leavedcommentRes) => {
-                        location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
-                    })
-                    .catch(err => {throw err});
-                }
-            })
+                })
+            }, 100);
         }
         const findCommentUrl = 'https://'+host+'/api/notes/search'
         const findCommentParam = {
