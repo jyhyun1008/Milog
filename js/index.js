@@ -652,7 +652,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        i: tokenRes.token,
+                        i: token,
                         title: postTitle.value,
                         name: postUrl.value,
                         summary: '#MiLog #'+postCategory.value,
