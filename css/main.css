@@ -52,7 +52,7 @@ a :hover {
     text-align: center;
 }
 
-#loginout {
+#loginout, #editor {
     border-width: 2px;
     border-style: solid;
     border-color: var(--darkaccent);
