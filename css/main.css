@@ -117,3 +117,7 @@ input {
     width: 50%;
     height: calc(100vh - 360px);
 }
+
+#tools {
+    display: flex;
+}

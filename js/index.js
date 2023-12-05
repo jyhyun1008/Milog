@@ -609,7 +609,9 @@ if (!blog && !page) {
         document.querySelector("#page_title").innerText = pageTitle
         document.querySelector("#page_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
         console.log(pageText)
+        document.querySelector("#page_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
         document.querySelector("#page_content").innerHTML += parseMd(pageText)
+        document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update">수정</div></a> <a href="./?p=delete"><div class="button" id="delete">삭제</div></a></div>'
         
     })
     .catch(err => { throw err });
