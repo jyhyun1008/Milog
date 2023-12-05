@@ -448,6 +448,8 @@ if (!blog && !page) {
 } else if (page == 'signout') {
     localStorage.clear();
     location.href = 'https://yeojibur.in/Milog'
+} else if (page == 'write') {
+    document.querySelector('#page_content').innerText = '<div class="editor_containor"><div class="editor"><textarea></textarea></div><div class="parser"></div></div>'
 } else if (page == 'blog' && category != null) {
     document.querySelector("#page_title").innerText = category
     const findPageUrl = 'https://'+host+'/api/users/pages'
