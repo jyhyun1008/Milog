@@ -350,6 +350,8 @@ if (!blog && !page) {
                     fetch(createPageUrl, createPageParam)
                     .then((pageData) => {return pageData.json()})
                     .then((pageRes) => {
+
+                        console.log(pageRes)
                         var createNoteUrl = 'https://'+signinHost+'/api/notes/create'
                         var createNoteParam = {
                             method: 'POST',
@@ -365,7 +367,7 @@ if (!blog && !page) {
                         fetch(createNoteUrl, createNoteParam)
                         .then((noteData) => {return noteData.json()})
                         .then((noteRes) => {
-                            location.href = 'https://yeojibur.in/Milog'
+                            //location.href = 'https://yeojibur.in/Milog'
                         })
                         .catch(err => {throw err});
                     })
