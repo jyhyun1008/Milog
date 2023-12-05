@@ -254,7 +254,7 @@ if (!blog && !page) {
                 //noteRes.forEach(async (result) => {
                   //  await loadUsers(result);
                 //})
-
+                console.log(noteRes)
 
                 for await (const result of noteRes) {
                     await loadUsers(result);
