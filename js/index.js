@@ -267,8 +267,9 @@ if (!blog && !page) {
                 console.log(blogPosts)
             }
 
-            async function loadUsers(result) {
-                var resulthost = result.user.host
+            async function loadUsers(res) {
+                var resulthost = res.user.host
+                console.log(res)
                 if (!resulthost) {
                     resulthost = initialHost
                 }
@@ -279,7 +280,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        username: result.user.username,
+                        username: res.user.username,
                         host: resulthost,
                     })
                 }
@@ -287,9 +288,9 @@ if (!blog && !page) {
                 .then((userData) => {return userData.json()})
                 .then((userRes) => {
                     var blogInfo = {
-                        url: result.text.split(' ')[0],
+                        url: res.text.split(' ')[0],
                         userId: userRes[0].id,
-                        username: result.user.username,
+                        username: res.user.username,
                         host: resulthost
                     }
                     blogs.push(blogInfo)
