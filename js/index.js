@@ -619,7 +619,7 @@ if (!blog && !page) {
         } 
         document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
         if (token) {
-            document.querySelector("#commentbox").innerHTML += '<textarea id="comment"></textarea><div class="button" id="leavecomment"></div>'
+            document.querySelector("#commentbox").innerHTML += '<textarea id="comment"></textarea><div class="button" id="leavecomment">덧글 작성</div>'
             var leaveComment = document.querySelector("#leavecomment")
             leaveComment.addEventListener("click", function(event) {
                 var commentText = document.querySelector("#comment").value
