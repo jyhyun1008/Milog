@@ -54,6 +54,11 @@ input {
     padding: 130px 0;
 }
 
+#page_title {
+    font-size: 2rem;
+    padding: 10px 0;
+}
+
 #postlist {
     display: flex;
 }
