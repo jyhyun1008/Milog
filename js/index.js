@@ -342,6 +342,7 @@ if (!blog && !page) {
                             variables: [],
                             script: '',
                             content: [{
+                                id: self.crypto.randomUUID(),
                                 text: 'blogTitle: '+tokenRes.user.username+'.log\n\nblogIntro: @'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.\n\nfollowing: ',
                                 type: 'text'
                             }]
