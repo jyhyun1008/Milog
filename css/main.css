@@ -73,13 +73,14 @@ input {
 }
 
 .postlist {
-    width: 33%;
+    width: 50%;
     padding: 5px;
 }
 
 .eyecatch {
     aspect-ratio: 16 / 9;
     border-radius: 15px;
+    width: 100%;
 }
 
 .post_title {
