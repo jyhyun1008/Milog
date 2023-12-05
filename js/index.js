@@ -613,7 +613,9 @@ if (!blog && !page) {
         console.log(pageText)
         document.querySelector("#page_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
         document.querySelector("#page_content").innerHTML += parseMd(pageText)
-        document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update">수정</div></a> <a href="./?p=delete"><div class="button" id="delete">삭제</div></a></div>'
+        if (signedusername == username && signedHost == host) {
+            document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update">수정</div></a> <a href="./?p=delete"><div class="button" id="delete">삭제</div></a></div>'
+        }
         
     })
     .catch(err => { throw err });
@@ -697,6 +699,9 @@ if (!blog && !page) {
         } else {
             location.href = 'https://yeojibur.in/Milog?b='+ signedusername +'@'+ signedHost +'&a='+ article
         }
+    } else {
+        alert("권한이 없습니다.")
+        location.href = 'https://yeojibur.in/Milog'
     }
 } else if (page == 'blog' && category != null) {
     document.querySelector("#page_title").innerText = category
