@@ -286,90 +286,97 @@ if (!blog && !page) {
     })
     .catch(err => { throw err });
 } else if (page == 'signin' && signinHost != null) {
-    let uuid = self.crypto.randomUUID();
-    localStorage.setItem("signinHost", signinHost);
-    localStorage.setItem("sessionId", uuid);
-    var signinUrl = 'https://'+signinHost+'/miauth/'+uuid+'?name=MiLog&callback=https%3A%2F%2Fyeojibur.in%2FMilog%3Fp%3Dcallback&permisson=write:notes,write:pages,write:drive'
-    location.href = signinUrl;
+    if (localStorage.getItem("sessionId")) {
+        location.href = 'https://yeojibur.in/Milog?p=signout'
+    } else {
+        let uuid = self.crypto.randomUUID();
+        localStorage.setItem("signinHost", signinHost);
+        localStorage.setItem("sessionId", uuid);
+        var signinUrl = 'https://'+signinHost+'/miauth/'+uuid+'?name=MiLog&callback=https%3A%2F%2Fyeojibur.in%2FMilog%3Fp%3Dcallback&permisson=write:notes,write:pages,write:drive'
+        location.href = signinUrl;
+    }
 } else if (page == 'callback') {
     const sessionId = localStorage.getItem("sessionId");
     const signinHost = localStorage.getItem("signinHost");
-    var postUrl = 'https://'+signinHost+'/api/miauth/'+sessionId+'/check'
-    var postParam = {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify({})
-    }
-    fetch(postUrl, postParam)
-    .then((tokenData) => {return tokenData.json()})
-    .then((tokenRes) => {
-        localStorage.setItem("token", tokenRes.token)
-        localStorage.setItem("me", tokenRes.user)
-
-        var findInfoUrl = 'https://'+signinHost+'/api/notes/search'
-        var findInfoParam = {
+    if (sessionId && signinHost) {
+        var postUrl = 'https://'+signinHost+'/api/miauth/'+sessionId+'/check'
+        var postParam = {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
             },
-            body: JSON.stringify({
-                query: 'MiLogSetup',
-                userId: tokenRes.user.id,
-            })
+            body: JSON.stringify({})
         }
-        fetch(findInfoUrl, findInfoParam)
-        .then((infoData) => {return infoData.json()})
-        .then((infoRes) => {
-            if (infoRes.length == 0) {
-                var createPageUrl = 'https://'+signinHost+'api/pages/create'
-                var createPageParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        i: tokenRes.token,
-                        title: 'MiLogSetup',
-                        name: 'milogsetup',
-                        summary: '#MiLogSetup',
-                        variables: [],
-                        script: '',
-                        content: [{
-                            text: 'blogTitle: '+tokenRes.user.username+'.log\n\nblogIntro: @'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.\n\nfollowing: ',
-                            type: 'text'
-                        }]
-                    })
-                }
-                fetch(createPageUrl, createPageParam)
-                .then((pageData) => {return pageData.json()})
-                .then((pageRes) => {
-                    var createNoteUrl = 'https://'+signinHost+'api/notes/create'
-                    var createNoteParam = {
+        fetch(postUrl, postParam)
+        .then((tokenData) => {return tokenData.json()})
+        .then((tokenRes) => {
+            localStorage.setItem("token", tokenRes.token)
+            localStorage.setItem("me", tokenRes.user)
+    
+            var findInfoUrl = 'https://'+signinHost+'/api/notes/search'
+            var findInfoParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: 'MiLogSetup',
+                    userId: tokenRes.user.id,
+                })
+            }
+            fetch(findInfoUrl, findInfoParam)
+            .then((infoData) => {return infoData.json()})
+            .then((infoRes) => {
+                if (infoRes.length == 0) {
+                    var createPageUrl = 'https://'+signinHost+'api/pages/create'
+                    var createPageParam = {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json',
                         },
                         body: JSON.stringify({
                             i: tokenRes.token,
-                            visibility: 'home',
-                            text: 'https://'+signinHost+'/@'+tokenRes.user.username+'/pages/milogsetup #MiLogSetup'
+                            title: 'MiLogSetup',
+                            name: 'milogsetup',
+                            summary: '#MiLogSetup',
+                            variables: [],
+                            script: '',
+                            content: [{
+                                text: 'blogTitle: '+tokenRes.user.username+'.log\n\nblogIntro: @'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.\n\nfollowing: ',
+                                type: 'text'
+                            }]
                         })
                     }
-                    fetch(createNoteUrl, createNoteParam)
-                    .then((noteData) => {return noteData.json()})
-                    .then((noteRes) => {
-                        location.href = 'https://yeojibur.in/Milog'
+                    fetch(createPageUrl, createPageParam)
+                    .then((pageData) => {return pageData.json()})
+                    .then((pageRes) => {
+                        var createNoteUrl = 'https://'+signinHost+'api/notes/create'
+                        var createNoteParam = {
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                i: tokenRes.token,
+                                visibility: 'home',
+                                text: 'https://'+signinHost+'/@'+tokenRes.user.username+'/pages/milogsetup #MiLogSetup'
+                            })
+                        }
+                        fetch(createNoteUrl, createNoteParam)
+                        .then((noteData) => {return noteData.json()})
+                        .then((noteRes) => {
+                            location.href = 'https://yeojibur.in/Milog'
+                        })
+                        .catch(err => {throw err});
                     })
                     .catch(err => {throw err});
-                })
-                .catch(err => {throw err});
-            }
+                }
+            })
+            .catch(err => {throw err});
         })
         .catch(err => {throw err});
-    })
-    .catch(err => {throw err});
+    }
+    
 } else if (blog != null) {
     var username = blog.split('@')[0]
     var host = blog.split('@')[1]
@@ -432,6 +439,9 @@ if (!blog && !page) {
         .catch(err => {throw err});
     })
     .catch(err => {throw err});
+} else if (page == 'signout') {
+    localStorage.clear();
+    location.href = 'https://yeojibur.in/Milog'
 } else if (page == 'blog' && category != null) {
     document.querySelector("#page_title").innerText = category
     const findPageUrl = 'https://'+host+'/api/users/pages'
