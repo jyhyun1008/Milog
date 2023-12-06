@@ -556,149 +556,154 @@ if (!blog && !page) {
             pageId: article,
         }),
     }
-    fetch(findPageUrl, findPageParam)
-    .then((PageData) => {return PageData.json()})
-    .then((PageRes) => {
 
-        function makePageText(content, attFiles) {
+    const leaveCommentFunc = async() => {
+        await commentFunc()
 
-            var result = ''
-            for (var i=0; i <content.length; i++){
-                if (content[i].type == 'section') {
-                        result = result + '\n#' + content[i].title
-                        for (var j = 0; j < content[i].children.length; j++){
-                            if (content[i].children[j].type == 'text') {
-                                console.log(parseMFM(content[i].children[j].text))
-                                result = result + '\n' + parseMFM(content[i].children[j].text)
-                            } else if (content[i].children[j].type == 'image') {
-                                var fileId = content[i].children[j].fileId
-                                var fileUrl = ''
-                                for (var k = 0; k <attFiles.length; k++){
-                                    if (attFiles[k].id == fileId) {
-                                        fileUrl = attFiles[k].url
+        if (token) {
+            var leaveComment = document.getElementById("leavecomment");
+            var commentText = document.getElementById("comment");
+    
+            console.log(leaveComment)
+            console.log(commentText)
+    
+            leaveComment.addEventListener('click', function(event) {
+                if (commentText.value == '') {
+                    alert('덧글 내용을 입력해주세요!');
+                } else {
+                    var leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
+                    var leaveCommentParam = {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            i: token,
+                            visibility: 'home',
+                            text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+commentText.value,
+                        }),
+                    }
+                    fetch(leaveCommentUrl, leaveCommentParam)
+                    .then((leavedcommentData) => {return leavedcommentData.json()})
+                    .then((leavedcommentRes) => {
+                        location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
+                    })
+                    .catch(err => {throw err});
+                }
+            })
+        }
+        
+    }
+
+    const commentFunc = () => {
+        return new Promise((resolve, reject) => {
+            fetch(findPageUrl, findPageParam)
+            .then((PageData) => {return PageData.json()})
+            .then((PageRes) => {
+
+                function makePageText(content, attFiles) {
+
+                    var result = ''
+                    for (var i=0; i <content.length; i++){
+                        if (content[i].type == 'section') {
+                                result = result + '\n#' + content[i].title
+                                for (var j = 0; j < content[i].children.length; j++){
+                                    if (content[i].children[j].type == 'text') {
+                                        console.log(parseMFM(content[i].children[j].text))
+                                        result = result + '\n' + parseMFM(content[i].children[j].text)
+                                    } else if (content[i].children[j].type == 'image') {
+                                        var fileId = content[i].children[j].fileId
+                                        var fileUrl = ''
+                                        for (var k = 0; k <attFiles.length; k++){
+                                            if (attFiles[k].id == fileId) {
+                                                fileUrl = attFiles[k].url
+                                            }
+                                        }
+                                        result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
+                                    } else if (content[i].children[j].type == 'note') {
+                                        var noteId = content[i].children[j].note
+                                        result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
                                     }
                                 }
-                                result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
-                            } else if (content[i].children[j].type == 'note') {
-                                var noteId = content[i].children[j].note
-                                result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
+                        } else if (content[i].type == 'text') {
+                            result = result + '\n' + parseMFM(content[i].text)
+                        } else if (content[i].type == 'image') {
+                            var fileId = content[i].fileId
+                            var fileUrl = ''
+                            for (var k = 0; k <attFiles.length; k++){
+                                if (attFiles[k].id == fileId) {
+                                    fileUrl = attFiles[k].url
+                                }
                             }
-                        }
-                } else if (content[i].type == 'text') {
-                    result = result + '\n' + parseMFM(content[i].text)
-                } else if (content[i].type == 'image') {
-                    var fileId = content[i].fileId
-                    var fileUrl = ''
-                    for (var k = 0; k <attFiles.length; k++){
-                        if (attFiles[k].id == fileId) {
-                            fileUrl = attFiles[k].url
+                            result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
+                        } else if (content[i].type == 'note') {
+                            var noteId = content[i].note
+                            result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
                         }
                     }
-                    result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
-                } else if (content[i].type == 'note') {
-                    var noteId = content[i].note
-                    result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
+                    return result
                 }
-            }
-            return result
-        }
 
-        var pageUrl = "https://"+host+"/@"+username+"/pages/"+PageRes.name
-        var pageTitle = PageRes.title
-        var pageImage = ''
-        if (PageRes.eyeCatchingImage) {
-            pageImage = PageRes.eyeCatchingImage.url
-        } else {
-            pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
-        }
-        var pageText = makePageText(PageRes.content, PageRes.attachedFiles)
-        document.querySelector("#page_title").innerText = pageTitle
-        document.querySelector("#page_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
-        console.log(pageText)
-        document.querySelector("#page_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
-        document.querySelector("#page_content").innerHTML += parseMd(pageText)
-        if (signedusername == username && signedHost == host) {
-            document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update&a='+article+'">수정</div></a> <a href="./?p=delete&a='+article+'"><div class="button" id="delete">삭제</div></a></div>'
-        } 
-        document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
-        if (token) {
-
-            const leaveCommentFunc = async() => {
-                await commentFunc()
-
-                var leaveComment = document.getElementById("leavecomment");
-                var commentText = document.getElementById("comment");
-
-                console.log(leaveComment)
-                console.log(commentText)
-
-                document.getElementById("leavecomment").addEventListener('click', function(event) {
-                    if (document.getElementById("comment").value == '') {
-                        alert('덧글 내용을 입력해주세요!');
-                    } else {
-                        var leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
-                        var leaveCommentParam = {
-                            method: 'POST',
-                            headers: {
-                                'content-type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                i: token,
-                                visibility: 'home',
-                                text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+document.getElementById("comment").value,
-                            }),
-                        }
-                        fetch(leaveCommentUrl, leaveCommentParam)
-                        .then((leavedcommentData) => {return leavedcommentData.json()})
-                        .then((leavedcommentRes) => {
-                            location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
-                        })
-                        .catch(err => {throw err});
-                    }
-                })
-            }
-            
-            const commentFunc = () => {
-                return new Promise((resolve, reject) => {
+                var pageUrl = "https://"+host+"/@"+username+"/pages/"+PageRes.name
+                var pageTitle = PageRes.title
+                var pageImage = ''
+                if (PageRes.eyeCatchingImage) {
+                    pageImage = PageRes.eyeCatchingImage.url
+                } else {
+                    pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
+                }
+                var pageText = makePageText(PageRes.content, PageRes.attachedFiles)
+                document.querySelector("#page_title").innerText = pageTitle
+                document.querySelector("#page_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
+                console.log(pageText)
+                document.querySelector("#page_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
+                document.querySelector("#page_content").innerHTML += parseMd(pageText)
+                if (signedusername == username && signedHost == host) {
+                    document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update&a='+article+'">수정</div></a> <a href="./?p=delete&a='+article+'"><div class="button" id="delete">삭제</div></a></div>'
+                } 
+                document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
+                if (token) {
                     document.getElementById("commentbox").innerHTML = '<textarea id="comment" placeholder="덧글을 작성해보세요. 작성된 덧글은 수정하기 어렵습니다."></textarea><div class="button" id="leavecomment">덧글 작성</div>'
+                }
+                const findCommentUrl = 'https://'+host+'/api/notes/search'
+                const findCommentParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: article,
+                    }),
+                }
+                fetch(findCommentUrl, findCommentParam)
+                .then((commentData) => {return commentData.json()})
+                .then((commentRes) => {
+                    if (commentRes.length > 0) {
+                        for (var i=0; i<commentRes.length; i++) {
+                            var commentUserHost = ''
+                            if (commentRes[i].user.host) {
+                                commentUserHost = commentRes[i].user.host
+                            } else {
+                                commentUserHost = host
+                            }
+                            var commentText = commentRes[i].text.substr(commentRes[i].text.indexOf('\n'))
+                            document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
+                        }
+                    } else {
+                        document.querySelector("#commentbox").innerHTML += '<div class="commentList">작성된 덧글이 없습니다.</div>'
+                    }
                     resolve()
                 })
-            }
-
-            leaveCommentFunc()
-        }
-        const findCommentUrl = 'https://'+host+'/api/notes/search'
-        const findCommentParam = {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-            },
-            body: JSON.stringify({
-                query: article,
-            }),
-        }
-        fetch(findCommentUrl, findCommentParam)
-        .then((commentData) => {return commentData.json()})
-        .then((commentRes) => {
-            if (commentRes.length > 0) {
-                for (var i=0; i<commentRes.length; i++) {
-                    var commentUserHost = ''
-                    if (commentRes[i].user.host) {
-                        commentUserHost = commentRes[i].user.host
-                    } else {
-                        commentUserHost = host
-                    }
-                    var commentText = commentRes[i].text.substr(commentRes[i].text.indexOf('\n'))
-                    document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
-                }
-            } else {
-                document.querySelector("#commentbox").innerHTML += '<div class="commentList">작성된 덧글이 없습니다.</div>'
-            }
+                .catch(err => {throw err});
+                
+            })
+            .catch(err => { throw err });
+            
         })
-        .catch(err => {throw err});
-        
-    })
-    .catch(err => { throw err });
+    }
+
+    leaveCommentFunc()
+    
 } else if (page == 'signout') {
     localStorage.clear();
     location.href = domainName
