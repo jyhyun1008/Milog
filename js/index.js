@@ -628,8 +628,8 @@ if (!blog && !page) {
                     if (commentText.value == '') {
                         alert('덧글 내용을 입력해주세요!')
                     } else {
-                        const leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
-                        const leaveCommentParam = {
+                        var leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
+                        var leaveCommentParam = {
                             method: 'POST',
                             headers: {
                                 'content-type': 'application/json',
