@@ -331,8 +331,8 @@ if (!blog && !page) {
                         .then((postData) => {return postData.json()})
                         .then((postRes) => {
                             for (var i=0; i<postRes.length; i++) {
-                                postRes[i].user.host = resulthost
                                 if (postRes[i].summary.includes('#MiLog ')) {
+                                    postRes[i].user.host = resulthost
                                     blogPosts.push(postRes[i])
                                 }
                             }
