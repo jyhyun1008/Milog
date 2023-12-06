@@ -623,7 +623,6 @@ if (!blog && !page) {
 
             var leaveComment = document.getElementById("leavecomment");
             var commentText = document.getElementById("comment");
-            setTimeout(() => {
                 leaveComment.addEventListener('click', function(event){
                     if (commentText.value == '') {
                         alert('덧글 내용을 입력해주세요!')
@@ -648,7 +647,6 @@ if (!blog && !page) {
                         .catch(err => {throw err});
                     }
                 })
-            }, 100);
         }
         const findCommentUrl = 'https://'+host+'/api/notes/search'
         const findCommentParam = {
