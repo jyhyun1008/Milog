@@ -149,7 +149,15 @@ function parseToJSON(md){
     md = md.replace(/\[\,\{/g, '[{')
     md = md.replace(/\n/g, '&nbsp;')
 
-    return JSON.parse(md);
+    mdJson = JSON.parse(md)
+
+    for (var i=0; i<mdJson.length; i++) {
+        if (mdJson[i].type == 'text') {
+            mdJson[i].text = mdJson[i].text.replace(/\&quot\;/gm, '"').replace(/\&\#39\;/gm, "'").replace(/\&rbrack\;/gm, "]").replace(/\&lbrack\;/gm, "[").replace(/\&nbsp\;/gm, "\n")
+        }
+    }
+
+    return mdJson;
 }
 
 function parseMFM(md){
