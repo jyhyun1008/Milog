@@ -632,9 +632,9 @@ if (!blog && !page) {
                 console.log(leaveComment)
                 console.log(commentText)
 
-                leaveComment.addEventListener('click', function(event){
-                    if (commentText.value == '') {
-                        alert('덧글 내용을 입력해주세요!')
+                document.getElementById("leavecomment").addEventListener('click', function(event) {
+                    if (document.getElementById("comment").value == '') {
+                        alert('덧글 내용을 입력해주세요!');
                     } else {
                         var leaveCommentUrl = 'https://'+signedHost+'/api/notes/create'
                         var leaveCommentParam = {
@@ -645,7 +645,7 @@ if (!blog && !page) {
                             body: JSON.stringify({
                                 i: token,
                                 visibility: 'home',
-                                text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+commentText.value,
+                                text: '@'+username+'@'+host+' <[MiLog 게시글]('+domainName+'?b='+username+'@'+host+'&a='+article+')에 대한 덧글입니다>\n'+document.getElementById("comment").value,
                             }),
                         }
                         fetch(leaveCommentUrl, leaveCommentParam)
