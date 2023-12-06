@@ -628,6 +628,10 @@ if (!blog && !page) {
 
                 var leaveComment = document.getElementById("leavecomment");
                 var commentText = document.getElementById("comment");
+
+                console.log(leaveComment)
+                console.log(commentText)
+
                 leaveComment.addEventListener('click', function(event){
                     if (commentText.value == '') {
                         alert('덧글 내용을 입력해주세요!')
