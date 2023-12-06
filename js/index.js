@@ -332,8 +332,10 @@ if (!blog && !page) {
                         .then((postRes) => {
                             for (var i=0; i<postRes.length; i++) {
                                 postRes[i].user.host = resulthost
+                                if (postRes[i].summary.includes('#MiLog ')) {
+                                    blogPosts.push(postRes[i])
+                                }
                             }
-                            blogPosts = blogPosts.concat(postRes)
                             resolve()
                         })
                         .catch(err => {throw err});
@@ -344,23 +346,20 @@ if (!blog && !page) {
 
             const filterPosts = (post) => {
                 return new Promise((resolve, reject) => {
-                    if (post.summary.includes('#MiLog')) {
-                        filteredPosts.push(post)
-                        var eyeCatchUrl = ''
-                        var userhost = ''
-                        if (!post.eyeCatchingImage) {
-                            eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
-                        } else {
-                            eyeCatchUrl = post.eyeCatchingImage.url
-                        }
-                        if (!post.user.host) {
-                            userhost = initialHost
-                        } else {
-                            userhost = post.user.host
-                        }
-                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><a href="'+domainName+'?b='+post.user.username+'@'+userhost+'&a='+post.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+post.title+'</div></a><div class="post_summary">'+post.summary+'</div><div class="post_author">@'+post.user.username+'@'+userhost+'</div></div>'
-                        resolve()
+                    var eyeCatchUrl = ''
+                    var userhost = ''
+                    if (!post.eyeCatchingImage) {
+                        eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
+                    } else {
+                        eyeCatchUrl = post.eyeCatchingImage.url
                     }
+                    if (!post.user.host) {
+                        userhost = initialHost
+                    } else {
+                        userhost = post.user.host
+                    }
+                    document.querySelector("#postlist").innerHTML += '<div class="postlist"><a href="'+domainName+'?b='+post.user.username+'@'+userhost+'&a='+post.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+post.title+'</div></a><div class="post_summary">'+post.summary+'</div><div class="post_author">@'+post.user.username+'@'+userhost+'</div></div>'
+                    resolve()
                 })
             }
 
