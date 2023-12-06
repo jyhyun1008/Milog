@@ -278,9 +278,14 @@ if (!blog && !page) {
                     await loadUsers(result);
                 }
 
-                blogPosts.sort(function(a, b)  {
-                    return a.createdAt - b.createdAt;
+                blogPosts.sort(function(a, b) {
+
+                    if(a.createdAt > b.createdAt) return 1;
+                    if(a.createdAt < b.createdAt) return -1;
+                    if(a.createdAt === b.createdAt) return 0;
                 });
+
+                console.log(blogPosts)
 
                 document.querySelector("#page_content").innerHTML += '<div id="postlist"></div>'
                 
