@@ -131,7 +131,7 @@ function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 ht
 
 function parseToJSON(md){
 
-    md = md.replace(/\"/gm, "&quot;").replace(/\'/gm, "&#39;");
+    md = md.replace(/\"/gm, "&quot;").replace(/\'/gm, "&#39;").replace(/\]/gm, "&rbrack;").replace(/\[/gm, "&lbrack;");
     md = "[\n"+md+"\n]"
 
     md = md.replace(/\n[\#]{6}(.+)/g, '\n$1');
@@ -145,9 +145,9 @@ function parseToJSON(md){
     md = md.replace(/\[\n([\s\S]+)\,\{/g, '[{"type": "text", "text": "$1"},{')
     md = md.replace(/\}\n([\s\S]+)\]/g, '},{"type": "text", "text": "$1"}]')
 
-    md = md.replace(/\[\n([\s\S]+)\]/g, '[{"type": "text", "text": "$1"}]')
+    md = md.replace(/\[\n([\s\S][^\{]+)\]/g, '[{"type": "text", "text": "$1"}]')
     md = md.replace(/\[\,\{/g, '[{')
-    md = md.replace(/\n/g, '\\n')
+    md = md.replace(/\n/g, '&nbsp;')
 
     return JSON.parse(md);
 }
@@ -265,11 +265,6 @@ if (!blog && !page) {
             var filteredPosts = []
 
             const loadUsersFunc = async() => {
-                
-                //noteRes.forEach(async (result) => {
-                  //  await loadUsers(result);
-                //})
-                console.log(noteRes)
 
                 for (let result of noteRes) {
                     await loadUsers(result);
@@ -278,8 +273,6 @@ if (!blog && !page) {
                 blogPosts.sort(function(a, b)  {
                     return a.createdAt - b.createdAt;
                 });
-
-                console.log(blogPosts)
 
                 document.querySelector("#page_content").innerHTML += '<div id="postlist"></div>'
                 
