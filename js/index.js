@@ -622,9 +622,10 @@ if (!blog && !page) {
         } 
         document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
         if (token) {
-            document.getElementById("commentbox").innerHTML = '<textarea id="comment" placeholder="덧글을 작성해보세요. 작성된 덧글은 수정하기 어렵습니다."></textarea><div class="button" id="leavecomment">덧글 작성</div>'
 
-            setTimeout(() => {
+            const leaveCommentFunc = async() => {
+                await commentFunc()
+
                 var leaveComment = document.getElementById("leavecomment");
                 var commentText = document.getElementById("comment");
                 leaveComment.addEventListener('click', function(event){
@@ -651,7 +652,16 @@ if (!blog && !page) {
                         .catch(err => {throw err});
                     }
                 })
-            }, 1000);
+            }
+            
+            const commentFunc = () => {
+                return new Promise((resolve, reject) => {
+                    document.getElementById("commentbox").innerHTML = '<textarea id="comment" placeholder="덧글을 작성해보세요. 작성된 덧글은 수정하기 어렵습니다."></textarea><div class="button" id="leavecomment">덧글 작성</div>'
+                    resolve()
+                })
+            }
+
+            leaveCommentFunc()
         }
         const findCommentUrl = 'https://'+host+'/api/notes/search'
         const findCommentParam = {
