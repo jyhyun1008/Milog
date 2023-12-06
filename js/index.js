@@ -330,6 +330,9 @@ if (!blog && !page) {
                         fetch(findPostsUrl, findPostParam)
                         .then((postData) => {return postData.json()})
                         .then((postRes) => {
+                            for (var i=0; i<postRes.length; i++) {
+                                postRes[i].user.host = resulthost
+                            }
                             blogPosts = blogPosts.concat(postRes)
                             resolve()
                         })
