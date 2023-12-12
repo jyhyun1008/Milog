@@ -640,13 +640,11 @@ if (!blog && !page) {
                                 if (emojinames) {
                                     for await (let emojiname of emojinames) {
                                         insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                        console.log('에모지 출력')
                                     }
                                 } else {
-                                    await new Promise((resolve, reject) => {
-                                        console.log('null')
-                                        result += '\n' + mfm
-                                        resolve()
-                                    });
+                                    console.log('null')
+                                    result += '\n' + mfm
                                 }
                                 resolve()
                             }
