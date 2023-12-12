@@ -742,6 +742,7 @@ if (!blog && !page) {
 
             var imgReader = new FileReader();
             imgReader.onload = (e) => {
+                console.log(e.target.result)
                 imagePreview.innerHTML = '<img src="'+e.target.result+'">'
             };
             imgReader.readAsDataURL(input.files[0]);
