@@ -636,7 +636,7 @@ if (!blog && !page) {
                                 })
                             }
 
-                            const insertEmoji = async () => {
+                            const insertEmoji = async(emojinames) => {
                                 if (emojinames) {
                                     for await (let emojiname of emojinames) {
                                         insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
@@ -649,7 +649,7 @@ if (!blog && !page) {
                                 resolve()
                             }
                             
-                            insertEmoji()
+                            insertEmoji(emojinames)
                             
                         } else if (content.type == 'image') {
                             var fileId = content.fileId
@@ -671,8 +671,67 @@ if (!blog && !page) {
 
                 const makePageText = async(contents, attFiles) => {
 
-                    for await(let content of contents) {
-                        addContent(content, attFiles)
+                    for (let content of contents) {
+                        
+                        if (content.type == 'section') {
+                            result += '\n#' + content.title
+                        } else if (content.type == 'text') {
+                            var mfm = parseMFM(content.text, host)
+
+                            var emojinames = mfm.match(/\:([^\:\/\`\n\s\(\)\,]+)\:/g);
+                            var emojiurl = []
+
+                            const insertEmojiUrl = (name) => {
+                                return new Promise((resolve2, reject) => {
+                                    var searchEmojiUrl = 'https://'+host+'/api/emoji'
+                                    var searchEmojiParam = {
+                                        method: 'POST',
+                                        headers: {
+                                            'content-type': 'application/json',
+                                        },
+                                        body:  JSON.stringify({
+                                            name: name
+                                        })
+                                    }
+                                    fetch(searchEmojiUrl, searchEmojiParam)
+                                    .then((emojiData) => {return emojiData.json()})
+                                    .then((emojiRes) => {
+                                        emojiurl.push(emojiRes.url)
+                                        mfm = mfm.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                                        result += '\n' + mfm
+                                        console.log(result)
+                                        resolve2()
+                                    })
+                                    .catch(err => {throw err});
+                                })
+                            }
+
+                            const insertEmoji = async(emojinames) => {
+                                if (emojinames) {
+                                    for (let emojiname of emojinames) {
+                                        await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                        console.log('에모지 출력')
+                                    }
+                                } else {
+                                    console.log('null')
+                                    result += '\n' + mfm
+                                }
+                            }
+                            
+                            insertEmoji(emojinames)
+                            
+                        } else if (content.type == 'image') {
+                            var fileId = content.fileId
+                            var fileUrl = ''
+                            for (var k = 0; k <attFiles.length; k++){
+                                if (attFiles[k].id == fileId) {
+                                    fileUrl = attFiles[k].url
+                                }
+                            }
+                            result += '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
+                        } else if (content.type == 'note') {
+                            result += '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
+                        }
                     }
 
                     // for (var i=0; i <content.length; i++){
