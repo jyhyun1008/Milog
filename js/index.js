@@ -780,6 +780,7 @@ if (!blog && !page) {
                         fetch(searchEmojiUrl, searchEmojiParam)
                         .then((emojiData) => {return emojiData.json()})
                         .then((emojiRes) => {
+                            emojiurl[name] = emojiRes.url
                             if (emojiurl[name] && emojiurl[name] !== 'undefined') {
                                 resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
                             }
