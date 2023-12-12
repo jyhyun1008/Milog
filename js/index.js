@@ -718,7 +718,8 @@ if (!blog && !page) {
     const userid = localStorage.getItem("userid");
 
     if (token) {
-        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
+        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg">사진을 선택해주세요</div><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
+        document.querySelector('#page_content').innerHTML += '<input type="file" id="real-upload" accept="image/*" style="display: none;">'
 
         var editor = document.getElementById('editor');
         editor.addEventListener('keyup', function(event){
@@ -728,6 +729,15 @@ if (!blog && !page) {
         var title = document.getElementById('postTitle');
         title.addEventListener('keyup', function(event){
             document.querySelector('#titlepreview').innerHTML = parseMd(title.value)
+        })
+
+        var realUpload = document.querySelector('#real-upload')
+        var eyeCatchUpload = document.querySelector('#eyeCatchImg')
+
+        eyeCatchUpload.addEventListener('click', () => realUpload.click())
+        realUpload.addEventListener('change', function(e) {
+            var files = e.currentTarget.files;
+            console.log(files.name)
         })
     
         var postButton = document.getElementById('postButton');
