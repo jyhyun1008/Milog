@@ -781,7 +781,7 @@ if (!blog && !page) {
                         .then((emojiData) => {return emojiData.json()})
                         .then((emojiRes) => {
                             emojiurl[name] = emojiRes.url
-                            resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiurl[name]+'" class="emoji">')
+                            resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
                             resolve()
                         })
                         .catch(err => {throw err});
