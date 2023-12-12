@@ -656,6 +656,7 @@ if (!blog && !page) {
                         } else if (content.type == 'note') {
                             result += '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
                         }
+                        resolve()
                     })
                 }
 
