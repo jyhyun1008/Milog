@@ -754,13 +754,14 @@ if (!blog && !page) {
 
         var editor = document.getElementById('editor');
         editor.addEventListener('keyup', function(event){
+            
             resultHTML = parseMd(editor.value)
+
+            var emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
+            var emojiurl = []
 
             if (event.key == ':') {
                 console.log('눌름')
-
-                var emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
-                var emojiurl = []
     
                 const insertEmojiUrl = (name) => {
                     return new Promise((resolve, reject) => {
