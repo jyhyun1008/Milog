@@ -159,7 +159,7 @@ function parseToJSON(md){
     return mdJson;
 }
 
-const parseMFM = async (md, mfmhost) => {
+const parseMFM = (md, mfmhost) => {
     // MFM으로 작성된 텍스트를 마크다운으로 변환하는 코드입니다.
 
     const md0 = md.replace(/\</gm,"&lt;").replace(/\>/gm, "&gt;").replace(/\`/gm, "&grave;").replace(/\-/gm, "&dash;").replace(/\*/gm, "&ast;").replace(/\#/gm, "&num;").replace(/\~/gm, "&tilde;").replace(/\]/gm, "&rbrack;").replace(/\:/gm, "&colon;").replace(/\//gm, "&sol;");
@@ -240,15 +240,15 @@ const parseMFM = async (md, mfmhost) => {
         })
     }
 
-    const insertEmoji = async (names) => {
-        for (let emojiname of names) {
+    const insertEmoji = async () => {
+        for (let emojiname of emojinames) {
             await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
         }
     }
 
     console.log(emojinames);
 
-    insertEmoji(emojinames);
+    insertEmoji();
 
     return md;
 }
