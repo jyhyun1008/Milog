@@ -745,7 +745,7 @@ if (!blog && !page) {
                 console.log(e.target.result)
                 imagePreview.innerHTML = '<img src="'+e.target.result+'">'
             };
-            imgReader.readAsDataURL(input.files[0]);
+            imgReader.readAsDataURL(this.files[0]);
         })
     
         var postButton = document.getElementById('postButton');
