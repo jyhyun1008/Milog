@@ -246,6 +246,8 @@ function parseMFM(md, mfmhost){
         }
     }
 
+    console.log(emojinames);
+
     insertEmoji(emojinames);
 
     return md;
