@@ -737,7 +737,7 @@ if (!blog && !page) {
         eyeCatchUpload.addEventListener('click', () => realUpload.click())
         realUpload.addEventListener('change', function(e) {
             var files = e.currentTarget.files;
-            console.log(files[0].name)
+            eyeCatchUpload.innerText = files[0].name
         })
     
         var postButton = document.getElementById('postButton');
