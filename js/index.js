@@ -792,10 +792,7 @@ if (!blog && !page) {
                     if (emojinames) {
                         for (let emojiname of emojinames) {
                             await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
-                            console.log('에모지 출력')
                         }
-                    } else {
-                        console.log('null')
                     }
                     
                     document.querySelector('#contentpreview').innerHTML = resultHTML
@@ -803,7 +800,6 @@ if (!blog && !page) {
                 
                 insertEmoji(emojinames)
             } else {
-                console.log(emojinames)
                 for (let i = 0; i < emojinames.length; i++) {
                     resultHTML = resultHTML.replace(emojinames[i], '<img src="'+emojiurl[emojinames[i]]+'" class="emoji">')
                 }
