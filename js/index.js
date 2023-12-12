@@ -628,8 +628,8 @@ if (!blog && !page) {
                                     .then((emojiRes) => {
                                         emojiurl.push(emojiRes.url)
                                         mfm = mfm.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
-                                        console.log(mfm)
                                         result += '\n' + mfm
+                                        console.log(result)
                                         resolve2()
                                     })
                                     .catch(err => {throw err});
