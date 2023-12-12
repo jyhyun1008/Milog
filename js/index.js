@@ -760,12 +760,12 @@ if (!blog && !page) {
             
             resultHTML = parseMd(editor.value)
 
-            if (resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)) {
-                emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
-            }
-
             if (event.key == ':') {
                 console.log('눌름')
+
+                if (resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)) {
+                    emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
+                }
     
                 const insertEmojiUrl = (name) => {
                     return new Promise((resolve, reject) => {
@@ -805,10 +805,10 @@ if (!blog && !page) {
                 
                 insertEmoji(emojinames)
             } else {
-                document.querySelector('#contentpreview').innerHTML = resultHTML
                 for (let i = 0; i < emojinames.length; i++) {
                     resultHTML = resultHTML.replace(':'+emojinames[i]+':', '<img src="'+emojiurl[emojinames[i]]+'" class="emoji">')
                 }
+                document.querySelector('#contentpreview').innerHTML = resultHTML
             }
         })
 
