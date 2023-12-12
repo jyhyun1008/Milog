@@ -214,47 +214,6 @@ const parseMFM = (md, mfmhost) => {
         }
     }
 
-    var emojinames = md.match(/\:([^\:\/\`\n\s\(\)\,]+)\:/g);
-    var emojiurl = []
-
-    const insertEmojiUrl = (name) => {
-        return new Promise((resolve, reject) => {
-            var searchEmojiUrl = 'https://'+mfmhost+'/api/emoji'
-            var searchEmojiParam = {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                body:  JSON.stringify({
-                    name: name
-                })
-            }
-            fetch(searchEmojiUrl, searchEmojiParam)
-            .then((emojiData) => {return emojiData.json()})
-            .then((emojiRes) => {
-                emojiurl.push(emojiRes.url)
-                md = md.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
-                console.log(md)
-                resolve()
-            })
-            .catch(err => {throw err});
-        })
-    }
-
-    const insertEmoji = async () => {
-        for (let emojiname of emojinames) {
-            await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
-        }
-    }
-
-    console.log(emojinames);
-
-    if (emojinames) {
-        insertEmoji();
-    } else {
-        console.log('null')
-    }
-
     return md;
 }
 
@@ -646,7 +605,50 @@ if (!blog && !page) {
                         if (content.type == 'section') {
                             result += '\n#' + content.title
                         } else if (content.type == 'text') {
-                            result += '\n' + parseMFM(content.text, host)
+                            var mfm = parseMFM(content.text, host)
+
+                            var emojinames = mfm.match(/\:([^\:\/\`\n\s\(\)\,]+)\:/g);
+                            var emojiurl = []
+
+                            const insertEmojiUrl = (name) => {
+                                return new Promise((resolve, reject) => {
+                                    var searchEmojiUrl = 'https://'+mfmhost+'/api/emoji'
+                                    var searchEmojiParam = {
+                                        method: 'POST',
+                                        headers: {
+                                            'content-type': 'application/json',
+                                        },
+                                        body:  JSON.stringify({
+                                            name: name
+                                        })
+                                    }
+                                    fetch(searchEmojiUrl, searchEmojiParam)
+                                    .then((emojiData) => {return emojiData.json()})
+                                    .then((emojiRes) => {
+                                        emojiurl.push(emojiRes.url)
+                                        mfm = mfm.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                                        console.log(mfm)
+                                        resolve()
+                                    })
+                                    .catch(err => {throw err});
+                                })
+                            }
+
+                            const insertEmoji = async () => {
+                                for (let emojiname of emojinames) {
+                                    await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                }
+                            }
+
+                            console.log(emojinames);
+
+                            if (emojinames) {
+                                insertEmoji();
+                            } else {
+                                console.log('null')
+                            }
+
+                            result += '\n' + mfm
                         } else if (content.type == 'image') {
                             var fileId = content.fileId
                             var fileUrl = ''
