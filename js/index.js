@@ -117,7 +117,6 @@ function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 ht
             diff[i+2] = diff[i] + mdSubStringLength - rawSubStringLength;
 
             console.log(diff)
-
         }
     }
 
@@ -160,14 +159,10 @@ function parseToJSON(md){
     return mdJson;
 }
 
-function parseMFM(md){
+function parseMFM(md, mfmhost){
     // MFM으로 작성된 텍스트를 마크다운으로 변환하는 코드입니다.
 
     const md0 = md.replace(/\</gm,"&lt;").replace(/\>/gm, "&gt;").replace(/\`/gm, "&grave;").replace(/\-/gm, "&dash;").replace(/\*/gm, "&ast;").replace(/\#/gm, "&num;").replace(/\~/gm, "&tilde;").replace(/\]/gm, "&rbrack;").replace(/\:/gm, "&colon;").replace(/\//gm, "&sol;");
-  
-    //치환하고 싶은 에모지 치환
-    md = md.replace(/\:arrow\_right\:/gm, '*');
-    md = md.replace(/\:peachtart\:\s/gm, '🍑')
     
     //h
     md = md.replace(/\n\$\[x2\s([^\]]+)\]/gm, '\n## $1');
@@ -176,9 +171,6 @@ function parseMFM(md){
     
     //links
     md = md.replace(/\?\[/gm, '[');
-
-    //치환하지 않을 에모지 삭제
-    md = md.replace(/\:([^\:\/\`\n\s\(\)\,]+)\:/gm, '')
 
     //pre
     
@@ -221,6 +213,40 @@ function parseMFM(md){
 
         }
     }
+
+    var emojinames = md.match(/\:([^\:\/\`\n\s\(\)\,]+)\:/g);
+    var emojiurl = []
+
+    const insertEmojiUrl = (name) => {
+        return new Promise((resolve, reject) => {
+            var searchEmojiUrl = 'https://'+mfmhost+'/api/emoji'
+            var searchEmojiParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body:  JSON.stringify({
+                    name: name
+                })
+            }
+            fetch(searchEmojiUrl, searchEmojiParam)
+            .then((emojiData) => {return emojiData.json()})
+            .then((emojiRes) => {
+                emojiurl.push(emojiRes.url)
+                md = md.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                resolve()
+            })
+            .catch(err => {throw err});
+        })
+    }
+
+    const insertEmoji = async () => {
+        for (let emojiname of emojinames) {
+            await insertEmojiUrl(emojiname)
+        }
+    }
+
+    insertEmoji();
 
     return md;
 }
@@ -614,8 +640,9 @@ if (!blog && !page) {
                                 result = result + '\n#' + content[i].title
                                 for (var j = 0; j < content[i].children.length; j++){
                                     if (content[i].children[j].type == 'text') {
-                                        console.log(parseMFM(content[i].children[j].text))
-                                        result = result + '\n' + parseMFM(content[i].children[j].text)
+                                        var asdfresult = parseMFM(content[i].children[j].text, host)
+                                        console.log(asdfresult)
+                                        result = result + '\n' + asdfresult
                                     } else if (content[i].children[j].type == 'image') {
                                         var fileId = content[i].children[j].fileId
                                         var fileUrl = ''
@@ -631,7 +658,7 @@ if (!blog && !page) {
                                     }
                                 }
                         } else if (content[i].type == 'text') {
-                            result = result + '\n' + parseMFM(content[i].text)
+                            result = result + '\n' + parseMFM(content[i].text, host)
                         } else if (content[i].type == 'image') {
                             var fileId = content[i].fileId
                             var fileUrl = ''
@@ -692,7 +719,7 @@ if (!blog && !page) {
                                 commentUserHost = host
                             }
                             var commentText = commentRes[i].text.substr(commentRes[i].text.indexOf('\n'))
-                            document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
+                            document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+parseMFM(commentText, commentUserHost)+'</div></div>'
                         }
                     } else {
                         document.querySelector("#commentbox").innerHTML += '<div class="commentList">작성된 덧글이 없습니다.</div>'
@@ -716,10 +743,11 @@ if (!blog && !page) {
 
     const sessionId = localStorage.getItem("sessionId");
     const userid = localStorage.getItem("userid");
+    var eyeCatchImgId = ''
 
     if (token) {
-        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg">사진을 선택해주세요</div><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="imagepreview"></div><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
-        document.querySelector('#page_content').innerHTML += '<input type="file" id="real-upload" accept="image/*" style="display: none;">'
+        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg">배경 사진을 선택해주세요</div><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><div id="imgupload">📷</div><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="imagepreview"></div><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
+        document.querySelector('#page_content').innerHTML += '<input type="file" id="eyecatchrealupload" accept="image/*" style="display: none;"><input type="file" id="imgrealupload" accept="image/*" style="display: none;">'
 
         var editor = document.getElementById('editor');
         editor.addEventListener('keyup', function(event){
@@ -731,12 +759,21 @@ if (!blog && !page) {
             document.querySelector('#titlepreview').innerHTML = parseMd(title.value)
         })
 
-        var realUpload = document.querySelector('#real-upload')
-        var eyeCatchUpload = document.querySelector('#eyeCatchImg')
-        var imagePreview = document.querySelector('#imagepreview');
+        const insertText = (text) => {
+            var position = editor.selectionStart;
+            editor.setRangeText(text, position, position, 'select');
+        };
 
-        eyeCatchUpload.addEventListener('click', () => realUpload.click())
-        realUpload.addEventListener('change', function(e) {
+        var eyeCatchRealUpload = document.querySelector('#eyecatchrealupload')
+        var imgRealUpload = document.querySelector('#imgrealupload')
+        var eyeCatchUpload = document.querySelector('#eyeCatchImg')
+        var imgUpload = document.querySelector('#imgupload')
+        var imagePreview = document.querySelector('#imagepreview')
+
+        eyeCatchUpload.addEventListener('click', () => eyeCatchRealUpload.click())
+        imgUpload.addEventListener('click', () => imgRealUpload.click())
+
+        eyeCatchRealUpload.addEventListener('change', function(e) {
             var files = e.currentTarget.files;
             eyeCatchUpload.innerText = files[0].name
 
@@ -746,6 +783,45 @@ if (!blog && !page) {
                 imagePreview.innerHTML = '<img src="'+e.target.result+'">'
             };
             imgReader.readAsDataURL(this.files[0]);
+
+            var eyeCatchUrl = 'https://'+signedHost+'/api/drive/files/create'
+            var eyeCatchParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body:  JSON.stringify({
+                    i: token,
+                    file: files[0]
+                })
+            }
+            fetch(eyeCatchUrl, eyeCatchParam)
+            .then((eyecatchData) => {return eyecatchData.json()})
+            .then((eyecatchRes) => {
+                eyeCatchImgId = eyecatchRes.id
+            })
+            .catch(err => {throw err});
+        })
+
+        imgRealUpload.addEventListener('change', function(e) {
+            var file = e.currentTarget.files;
+            var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
+            var imgUploadParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body:  JSON.stringify({
+                    i: token,
+                    file: file[0]
+                })
+            }
+            fetch(imgUploadURL, imgUploadParam)
+            .then((eyecatchData) => {return eyecatchData.json()})
+            .then((eyecatchRes) => {
+                insertText('![]('+eyecatchRes.id+')')
+            })
+            .catch(err => {throw err});
         })
     
         var postButton = document.getElementById('postButton');
@@ -769,7 +845,8 @@ if (!blog && !page) {
                         summary: '#MiLog #'+postCategory.value,
                         variables: [],
                         script: '',
-                        content: parseToJSON(editor.value)
+                        content: parseToJSON(editor.value),
+                        eyeCatchingImageId: eyeCatchImgId
                     })
                 }
                 fetch(postCreateUrl, postCreateParam)
@@ -851,78 +928,6 @@ if (!blog && !page) {
             document.getElementsByClassName("section")[i].innerHTML += '<div><a href="?p=blog&a='+pageId[i]+'"><img class="eyecatchimg" src="'+pageImage[i]+'"></div>'
             document.getElementsByClassName("section")[i].innerHTML += '<div>'+pageSummary[i]+'</div>'
         }
-    })
-    .catch(err => { throw err });
-} else if (page == 'blog' && article != null) {
-    document.querySelector("#page_title").innerText = 'BLOG'
-    const findPageUrl = 'https://'+host+'/api/pages/show'
-    const findPageParam = {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-            pageId: article,
-        }),
-    }
-    fetch(findPageUrl, findPageParam)
-    .then((PageData) => {return PageData.json()})
-    .then((PageRes) => {
-
-        function makePageText(content, attFiles) {
-
-            var result = ''
-            for (var i=0; i <content.length; i++){
-                if (content[i].type == 'section') {
-                    if (!content[i].title.includes("𝙹𝙰𝙴𝚈𝙴𝙾𝙽'𝚜 𝙿𝚘𝚛𝚝𝚏𝚘𝚕𝚒𝚘") && !content[i].title.includes("𝕁𝔸𝔼𝕐𝔼𝕆ℕ'𝕤 ℕ𝕆𝕋𝔼ℙ𝔸𝔻")) {
-                        result = result + '\n#' + content[i].title
-                        for (var j = 0; j < content[i].children.length; j++){
-                            if (content[i].children[j].type == 'text') {
-                                console.log(parseMFM(content[i].children[j].text))
-                                result = result + '\n' + parseMFM(content[i].children[j].text)
-                            } else if (content[i].children[j].type == 'image') {
-                                var fileId = content[i].children[j].fileId
-                                var fileUrl = ''
-                                for (var k = 0; k <attFiles.length; k++){
-                                    if (attFiles[k].id == fileId) {
-                                        fileUrl = attFiles[k].url
-                                    }
-                                }
-                                result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
-                            } else if (content[i].children[j].type == 'note') {
-                                var noteId = content[i].children[j].note
-                                result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
-                            }
-                        }
-                    }
-                } else if (content[i].type == 'text') {
-                    result = result + '\n' + parseMFM(content[i].text)
-                } else if (content[i].type == 'image') {
-                    var fileId = content[i].fileId
-                    var fileUrl = ''
-                    for (var k = 0; k <attFiles.length; k++){
-                        if (attFiles[k].id == fileId) {
-                            fileUrl = attFiles[k].url
-                        }
-                    }
-                    result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
-                } else if (content[i].type == 'note') {
-                    var noteId = content[i].note
-                    result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
-                }
-            }
-            return result
-        }
-
-        var pageUrl = "https://"+host+"/@"+misskeyUserName+"/pages/"+PageRes.name
-        var pageTitle = PageRes.title
-        var pageImage = PageRes.eyeCatchingImage.url
-        var pageText = makePageText(PageRes.content, PageRes.attachedFiles)
-        document.querySelector("#page_title").innerText = pageTitle
-        document.querySelector("#page_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
-        console.log(pageText)
-        document.querySelector("#page_content").innerHTML += parseMd(pageText)
-        
     })
     .catch(err => { throw err });
 } else if (page) {
