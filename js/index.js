@@ -752,13 +752,17 @@ if (!blog && !page) {
         document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg">배경 사진을 선택해주세요</div><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><div id="imgupload">📷</div><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="imagepreview"></div><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
         document.querySelector('#page_content').innerHTML += '<input type="file" id="eyecatchrealupload" accept="image/*" style="display: none;"><input type="file" id="imgrealupload" accept="image/*" style="display: none;">'
 
+        var emojinames = []
+        var emojiurl = {}
+
         var editor = document.getElementById('editor');
         editor.addEventListener('keyup', function(event){
             
             resultHTML = parseMd(editor.value)
 
-            var emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
-            var emojiurl = []
+            if (resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)) {
+                emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
+            }
 
             if (event.key == ':') {
                 console.log('눌름')
@@ -778,8 +782,8 @@ if (!blog && !page) {
                         fetch(searchEmojiUrl, searchEmojiParam)
                         .then((emojiData) => {return emojiData.json()})
                         .then((emojiRes) => {
-                            emojiurl.push(emojiRes.url)
-                            resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                            emojiurl[name] = emojiRes.url
+                            resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiurl[name]+'" class="emoji">')
                             resolve()
                         })
                         .catch(err => {throw err});
@@ -803,7 +807,7 @@ if (!blog && !page) {
             } else {
                 document.querySelector('#contentpreview').innerHTML = resultHTML
                 for (let i = 0; i < emojinames.length; i++) {
-                    resultHTML = resultHTML.replace(':'+emojinames[i]+':', '<img src="'+emojiurl[i]+'" class="emoji">')
+                    resultHTML = resultHTML.replace(':'+emojinames[i]+':', '<img src="'+emojiurl[emojinames[i]]+'" class="emoji">')
                 }
             }
         })
