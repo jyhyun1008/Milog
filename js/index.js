@@ -638,12 +638,15 @@ if (!blog && !page) {
 
                             const insertEmoji = async () => {
                                 if (emojinames) {
-                                    for (let emojiname of emojinames) {
-                                        await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                    for await (let emojiname of emojinames) {
+                                        insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
                                     }
                                 } else {
-                                    console.log('null')
-                                    result += '\n' + mfm
+                                    await new Promise((resolve, reject) => {
+                                        console.log('null')
+                                        result += '\n' + mfm
+                                        resolve()
+                                    });
                                 }
                                 resolve()
                             }
