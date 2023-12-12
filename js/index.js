@@ -756,7 +756,7 @@ if (!blog && !page) {
         editor.addEventListener('keyup', function(event){
             resultHTML = parseMd(editor.value)
 
-            if (event.keyCode == 58 || event.keyCode == 59) {
+            if (event.key == ':') {
                 console.log('눌름')
 
                 var emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
@@ -801,6 +801,9 @@ if (!blog && !page) {
                 insertEmoji(emojinames)
             } else {
                 document.querySelector('#contentpreview').innerHTML = resultHTML
+                for (let i = 0; i < emojinames.length; i++) {
+                    resultHTML = resultHTML.replace(':'+emojinames[i]+':', '<img src="'+emojiurl[i]+'" class="emoji">')
+                }
             }
         })
 
