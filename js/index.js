@@ -604,6 +604,7 @@ if (!blog && !page) {
                     return new Promise((resolve, reject) => {
                         if (content.type == 'section') {
                             result += '\n#' + content.title
+                            resolve()
                         } else if (content.type == 'text') {
                             var mfm = parseMFM(content.text, host)
 
@@ -636,19 +637,18 @@ if (!blog && !page) {
                             }
 
                             const insertEmoji = async () => {
-                                for (let emojiname of emojinames) {
-                                    await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                if (emojinames) {
+                                    for (let emojiname of emojinames) {
+                                        await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                    }
+                                } else {
+                                    console.log('null')
+                                    result += '\n' + mfm
                                 }
                             }
-
-                            console.log(emojinames);
-
-                            if (emojinames) {
-                                insertEmoji();
-                            } else {
-                                console.log('null')
-                                result += '\n' + mfm
-                            }
+                            
+                            insertEmoji()
+                            resolve()
                             
                         } else if (content.type == 'image') {
                             var fileId = content.fileId
@@ -659,10 +659,12 @@ if (!blog && !page) {
                                 }
                             }
                             result += '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
+                            resolve()
                         } else if (content.type == 'note') {
                             result += '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
+                            resolve()
                         }
-                        resolve()
+                        
                     })
                 }
 
