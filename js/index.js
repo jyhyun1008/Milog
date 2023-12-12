@@ -757,6 +757,8 @@ if (!blog && !page) {
             resultHTML = parseMd(editor.value)
 
             if (event.keyCode == 58 || event.keyCode == 59) {
+                console.log('눌름')
+
                 var emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
                 var emojiurl = []
     
