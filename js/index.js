@@ -756,7 +756,7 @@ if (!blog && !page) {
         editor.addEventListener('keyup', function(event){
             resultHTML = parseMd(editor.value)
 
-            if (event.keyCode == 58) {
+            if (event.keyCode == 58 || event.keyCode == 59) {
                 var emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
                 var emojiurl = []
     
@@ -791,13 +791,14 @@ if (!blog && !page) {
                         }
                     } else {
                         console.log('null')
-                        result += '\n' + mfm
                     }
                     
                     document.querySelector('#contentpreview').innerHTML = resultHTML
                 }
                 
                 insertEmoji(emojinames)
+            } else {
+                document.querySelector('#contentpreview').innerHTML = resultHTML
             }
         })
 
