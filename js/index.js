@@ -780,7 +780,11 @@ if (!blog && !page) {
                         fetch(searchEmojiUrl, searchEmojiParam)
                         .then((emojiData) => {return emojiData.json()})
                         .then((emojiRes) => {
-                            emojiurl[name] = emojiRes.url
+                            if (!emojiRes.url) {
+                                emojiurl[name] = 'https://peachtart2.s3.ap-northeast-1.amazonaws.com/tart/98be4639-6750-498b-bd92-1a117db1331c.webp'
+                            } else {
+                                emojiurl[name] = emojiRes.url
+                            }
                             resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
                             resolve()
                         })
