@@ -744,6 +744,7 @@ if (!blog && !page) {
             imgReader.onload = (e) => {
                 imagePreview.innerHTML = '<img src="'+e.target.result+'">'
             };
+            imgReader.readAsDataURL(input.files[0]);
         })
     
         var postButton = document.getElementById('postButton');
