@@ -242,7 +242,7 @@ function parseMFM(md, mfmhost){
 
     const insertEmoji = async () => {
         for (let emojiname of emojinames) {
-            await insertEmojiUrl(emojiname)
+            await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
         }
     }
 
