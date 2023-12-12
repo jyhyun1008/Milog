@@ -645,10 +645,10 @@ if (!blog && !page) {
                                     console.log('null')
                                     result += '\n' + mfm
                                 }
+                                resolve()
                             }
                             
                             insertEmoji()
-                            resolve()
                             
                         } else if (content.type == 'image') {
                             var fileId = content.fileId
@@ -670,8 +670,8 @@ if (!blog && !page) {
 
                 const makePageText = async(contents, attFiles) => {
 
-                    for (let content of contents) {
-                        await addContent(content, attFiles)
+                    for await(let content of contents) {
+                        addContent(content, attFiles)
                     }
 
                     // for (var i=0; i <content.length; i++){
