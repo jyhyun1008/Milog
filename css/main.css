@@ -105,6 +105,11 @@ input {
 .emoji {
     height: 2em;
     vertical-align: middle;
+    transition: transform .2s ease;
+}
+
+.emoji:hover {
+    transform: scale(1.2);
 }
 
 .post_title {
