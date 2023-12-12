@@ -250,6 +250,8 @@ const parseMFM = (md, mfmhost) => {
 
     if (emojinames) {
         insertEmoji();
+    } else {
+        console.log('null')
     }
 
     return md;
@@ -705,6 +707,13 @@ if (!blog && !page) {
                     //     }
                     // }
                     // return result
+
+                    document.querySelector("#page_title").innerText = pageTitle
+                    document.querySelector("#page_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
+                    console.log(result)
+                    document.querySelector("#page_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
+                    document.querySelector("#page_content").innerHTML += parseMd(result)
+
                 }
 
                 var pageUrl = "https://"+host+"/@"+username+"/pages/"+PageRes.name
@@ -716,11 +725,6 @@ if (!blog && !page) {
                     pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
                 }
                 makePageText(PageRes.content, PageRes.attachedFiles)
-                document.querySelector("#page_title").innerText = pageTitle
-                document.querySelector("#page_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
-                console.log(result)
-                document.querySelector("#page_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
-                document.querySelector("#page_content").innerHTML += parseMd(result)
                 if (signedusername == username && signedHost == host) {
                     document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update&a='+article+'">수정</div></a> <a href="./?p=delete&a='+article+'"><div class="button" id="delete">삭제</div></a></div>'
                 } 
