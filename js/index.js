@@ -612,7 +612,7 @@ if (!blog && !page) {
 
                             const insertEmojiUrl = (name) => {
                                 return new Promise((resolve, reject) => {
-                                    var searchEmojiUrl = 'https://'+mfmhost+'/api/emoji'
+                                    var searchEmojiUrl = 'https://'+host+'/api/emoji'
                                     var searchEmojiParam = {
                                         method: 'POST',
                                         headers: {
@@ -628,6 +628,7 @@ if (!blog && !page) {
                                         emojiurl.push(emojiRes.url)
                                         mfm = mfm.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
                                         console.log(mfm)
+                                        result += '\n' + mfm
                                         resolve()
                                     })
                                     .catch(err => {throw err});
@@ -646,9 +647,9 @@ if (!blog && !page) {
                                 insertEmoji();
                             } else {
                                 console.log('null')
+                                result += '\n' + mfm
                             }
-
-                            result += '\n' + mfm
+                            
                         } else if (content.type == 'image') {
                             var fileId = content.fileId
                             var fileUrl = ''
