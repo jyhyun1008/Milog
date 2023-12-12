@@ -801,7 +801,7 @@ if (!blog && !page) {
                 insertEmoji(emojinames)
             } else {
                 for (let i = 0; i < emojinames.length; i++) {
-                    resultHTML = resultHTML.replace(emojinames[i], '<img src="'+emojiurl[emojinames[i]]+'" class="emoji">')
+                    resultHTML = resultHTML.replace(emojinames[i], '<img src="'+emojiurl[emojinames[i].substring(1, emojiname.length - 1)]+'" class="emoji">')
                 }
                 document.querySelector('#contentpreview').innerHTML = resultHTML
             }
