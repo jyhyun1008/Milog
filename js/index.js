@@ -636,48 +636,74 @@ if (!blog && !page) {
             .then((PageData) => {return PageData.json()})
             .then((PageRes) => {
 
-                function makePageText(content, attFiles) {
+                var result = ''
 
-                    var result = ''
-                    for (var i=0; i <content.length; i++){
-                        if (content[i].type == 'section') {
-                                result = result + '\n#' + content[i].title
-                                for (var j = 0; j < content[i].children.length; j++){
-                                    if (content[i].children[j].type == 'text') {
-                                        var asdfresult = parseMFM(content[i].children[j].text, host)
-                                        console.log(asdfresult)
-                                        result = result + '\n' + asdfresult
-                                    } else if (content[i].children[j].type == 'image') {
-                                        var fileId = content[i].children[j].fileId
-                                        var fileUrl = ''
-                                        for (var k = 0; k <attFiles.length; k++){
-                                            if (attFiles[k].id == fileId) {
-                                                fileUrl = attFiles[k].url
-                                            }
-                                        }
-                                        result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
-                                    } else if (content[i].children[j].type == 'note') {
-                                        var noteId = content[i].children[j].note
-                                        result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
-                                    }
-                                }
-                        } else if (content[i].type == 'text') {
-                            result = result + '\n' + parseMFM(content[i].text, host)
-                        } else if (content[i].type == 'image') {
-                            var fileId = content[i].fileId
+                const addContent = (content, attFiles) => {
+                    return new Promise((resolve, reject) => {
+                        if (content.type == 'section') {
+                            result += '\n#' + content.title
+                        } else if (content.type == 'text') {
+                            result += '\n' + parseMFM(content.text, host)
+                        } else if (content.type == 'image') {
+                            var fileId = content.fileId
                             var fileUrl = ''
                             for (var k = 0; k <attFiles.length; k++){
                                 if (attFiles[k].id == fileId) {
                                     fileUrl = attFiles[k].url
                                 }
                             }
-                            result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
-                        } else if (content[i].type == 'note') {
-                            var noteId = content[i].note
-                            result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
+                            result += '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
+                        } else if (content.type == 'note') {
+                            result += '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
                         }
+                    })
+                }
+
+                const makePageText = async(contents, attFiles) => {
+
+                    for (let content of contents) {
+                        await addContent(content, attFiles)
                     }
-                    return result
+
+                    // for (var i=0; i <content.length; i++){
+                    //     if (content[i].type == 'section') {
+                    //         result = result + '\n#' + content[i].title
+                    //         for (var j = 0; j < content[i].children.length; j++){
+                    //             if (content[i].children[j].type == 'text') {
+                    //                 var asdfresult = parseMFM(content[i].children[j].text, host)
+                    //                 console.log(asdfresult)
+                    //                 result = result + '\n' + asdfresult
+                    //             } else if (content[i].children[j].type == 'image') {
+                    //                 var fileId = content[i].children[j].fileId
+                    //                 var fileUrl = ''
+                    //                 for (var k = 0; k <attFiles.length; k++){
+                    //                     if (attFiles[k].id == fileId) {
+                    //                         fileUrl = attFiles[k].url
+                    //                     }
+                    //                 }
+                    //                 result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
+                    //             } else if (content[i].children[j].type == 'note') {
+                    //                 var noteId = content[i].children[j].note
+                    //                 result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
+                    //             }
+                    //         }
+                    //     } else if (content[i].type == 'text') {
+                    //         result = result + '\n' + parseMFM(content[i].text, host)
+                    //     } else if (content[i].type == 'image') {
+                    //         var fileId = content[i].fileId
+                    //         var fileUrl = ''
+                    //         for (var k = 0; k <attFiles.length; k++){
+                    //             if (attFiles[k].id == fileId) {
+                    //                 fileUrl = attFiles[k].url
+                    //             }
+                    //         }
+                    //         result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
+                    //     } else if (content[i].type == 'note') {
+                    //         var noteId = content[i].note
+                    //         result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
+                    //     }
+                    // }
+                    // return result
                 }
 
                 var pageUrl = "https://"+host+"/@"+username+"/pages/"+PageRes.name
@@ -688,12 +714,12 @@ if (!blog && !page) {
                 } else {
                     pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
                 }
-                var pageText = makePageText(PageRes.content, PageRes.attachedFiles)
+                makePageText(PageRes.content, PageRes.attachedFiles)
                 document.querySelector("#page_title").innerText = pageTitle
                 document.querySelector("#page_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
-                console.log(pageText)
+                console.log(result)
                 document.querySelector("#page_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
-                document.querySelector("#page_content").innerHTML += parseMd(pageText)
+                document.querySelector("#page_content").innerHTML += parseMd(result)
                 if (signedusername == username && signedHost == host) {
                     document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update&a='+article+'">수정</div></a> <a href="./?p=delete&a='+article+'"><div class="button" id="delete">삭제</div></a></div>'
                 } 
