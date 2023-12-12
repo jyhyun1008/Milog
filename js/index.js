@@ -608,7 +608,7 @@ if (!blog && !page) {
                         } else if (content.type == 'text') {
                             var mfm = parseMFM(content.text, host)
 
-                            var emojinames = mfm.match(/\:([^\:\/\`\n\s\(\)\,]+)\:/g);
+                            var emojinames = mfm.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
                             var emojiurl = []
 
                             const insertEmojiUrl = (name) => {
@@ -674,46 +674,6 @@ if (!blog && !page) {
                     for (let content of contents) {
                         await addContent(content, attFiles)
                     }
-
-                    // for (var i=0; i <content.length; i++){
-                    //     if (content[i].type == 'section') {
-                    //         result = result + '\n#' + content[i].title
-                    //         for (var j = 0; j < content[i].children.length; j++){
-                    //             if (content[i].children[j].type == 'text') {
-                    //                 var asdfresult = parseMFM(content[i].children[j].text, host)
-                    //                 console.log(asdfresult)
-                    //                 result = result + '\n' + asdfresult
-                    //             } else if (content[i].children[j].type == 'image') {
-                    //                 var fileId = content[i].children[j].fileId
-                    //                 var fileUrl = ''
-                    //                 for (var k = 0; k <attFiles.length; k++){
-                    //                     if (attFiles[k].id == fileId) {
-                    //                         fileUrl = attFiles[k].url
-                    //                     }
-                    //                 }
-                    //                 result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
-                    //             } else if (content[i].children[j].type == 'note') {
-                    //                 var noteId = content[i].children[j].note
-                    //                 result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
-                    //             }
-                    //         }
-                    //     } else if (content[i].type == 'text') {
-                    //         result = result + '\n' + parseMFM(content[i].text, host)
-                    //     } else if (content[i].type == 'image') {
-                    //         var fileId = content[i].fileId
-                    //         var fileUrl = ''
-                    //         for (var k = 0; k <attFiles.length; k++){
-                    //             if (attFiles[k].id == fileId) {
-                    //                 fileUrl = attFiles[k].url
-                    //             }
-                    //         }
-                    //         result = result + '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
-                    //     } else if (content[i].type == 'note') {
-                    //         var noteId = content[i].note
-                    //         result = result + '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
-                    //     }
-                    // }
-                    // return result
 
                     document.querySelector("#page_title").innerText = pageTitle
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
@@ -794,7 +754,51 @@ if (!blog && !page) {
 
         var editor = document.getElementById('editor');
         editor.addEventListener('keyup', function(event){
-            document.querySelector('#contentpreview').innerHTML = parseMd(editor.value)
+            resultHTML = parseMd(editor.value)
+
+            if (event.keyCode == 58) {
+                var emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
+                var emojiurl = []
+    
+                const insertEmojiUrl = (name) => {
+                    return new Promise((resolve, reject) => {
+                        var searchEmojiUrl = 'https://'+signedHost+'/api/emoji'
+                        var searchEmojiParam = {
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json',
+                            },
+                            body:  JSON.stringify({
+                                name: name
+                            })
+                        }
+                        fetch(searchEmojiUrl, searchEmojiParam)
+                        .then((emojiData) => {return emojiData.json()})
+                        .then((emojiRes) => {
+                            emojiurl.push(emojiRes.url)
+                            resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                            resolve()
+                        })
+                        .catch(err => {throw err});
+                    })
+                }
+
+                const insertEmoji = async(emojinames) => {
+                    if (emojinames) {
+                        for (let emojiname of emojinames) {
+                            await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                            console.log('에모지 출력')
+                        }
+                    } else {
+                        console.log('null')
+                        result += '\n' + mfm
+                    }
+                    
+                    document.querySelector('#contentpreview').innerHTML = resultHTML
+                }
+                
+                insertEmoji(emojinames)
+            }
         })
 
         var title = document.getElementById('postTitle');
