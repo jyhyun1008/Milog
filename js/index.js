@@ -780,12 +780,9 @@ if (!blog && !page) {
                         fetch(searchEmojiUrl, searchEmojiParam)
                         .then((emojiData) => {return emojiData.json()})
                         .then((emojiRes) => {
-                            if (!emojiRes.url) {
-                                emojiurl[name] = 'https://peachtart2.s3.ap-northeast-1.amazonaws.com/tart/98be4639-6750-498b-bd92-1a117db1331c.webp'
-                            } else {
-                                emojiurl[name] = emojiRes.url
+                            if (emojiurl[name] && emojiurl[name] !== 'undefined') {
+                                resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
                             }
-                            resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
                             resolve()
                         })
                         .catch(err => {throw err});
@@ -805,7 +802,9 @@ if (!blog && !page) {
                 insertEmoji(emojinames)
             } else {
                 for (let i = 0; i < emojinames.length; i++) {
-                    resultHTML = resultHTML.replace(emojinames[i], '<img src="'+emojiurl[emojinames[i].substring(1, emojinames[i].length - 1)]+'" class="emoji">')
+                    if (emojiurl[emojinames[i].substring(1, emojinames[i].length - 1)] && emojiurl[emojinames[i].substring(1, emojinames[i].length - 1)] !== 'undefined') {
+                        resultHTML = resultHTML.replace(emojinames[i], '<img src="'+emojiurl[emojinames[i].substring(1, emojinames[i].length - 1)]+'" class="emoji">')
+                    }
                 }
                 document.querySelector('#contentpreview').innerHTML = resultHTML
             }
