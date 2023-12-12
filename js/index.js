@@ -612,7 +612,7 @@ if (!blog && !page) {
                             var emojiurl = []
 
                             const insertEmojiUrl = (name) => {
-                                return new Promise((resolve, reject) => {
+                                return new Promise((resolve2, reject) => {
                                     var searchEmojiUrl = 'https://'+host+'/api/emoji'
                                     var searchEmojiParam = {
                                         method: 'POST',
@@ -630,7 +630,7 @@ if (!blog && !page) {
                                         mfm = mfm.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
                                         console.log(mfm)
                                         result += '\n' + mfm
-                                        resolve()
+                                        resolve2()
                                     })
                                     .catch(err => {throw err});
                                 })
