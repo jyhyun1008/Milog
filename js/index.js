@@ -248,7 +248,9 @@ const parseMFM = (md, mfmhost) => {
 
     console.log(emojinames);
 
-    insertEmoji();
+    if (emojinames) {
+        insertEmoji();
+    }
 
     return md;
 }
