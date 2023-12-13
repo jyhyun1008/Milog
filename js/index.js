@@ -959,6 +959,7 @@ if (!blog && !page) {
                 console.log('Encoded Binary File String:', binaryBlob);
 
                 blob = new Blob([binaryBlob], { type: "image/png" });
+                console.log(blob)
             }
             reader.readAsDataURL(this.files[0]);
             var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
