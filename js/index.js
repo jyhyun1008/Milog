@@ -995,7 +995,6 @@ if (!blog && !page) {
                     document.querySelector("#titlepreview").innerText = pageTitle
                     document.querySelector("#postCategory").value = pageCategory
                     document.querySelector("#postUrl").value = pageUrl
-                    document.querySelector("#eyeCatchImg").innerText = eyeCatchImgId
                     document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
                     document.querySelector("#editor").value = result
                     editorInitial()
@@ -1006,6 +1005,7 @@ if (!blog && !page) {
                 if (PageRes.eyeCatchingImage) {
                     eyeCatchImgId = PageRes.eyeCatchingImage.id
                     pageImage = PageRes.eyeCatchingImage.url
+                    document.querySelector("#eyeCatchImg").innerText = eyeCatchImgId
                 }
                 var pageUrl = PageRes.name
                 var pageCategory = PageRes.summary.substring(PageRes.summary.indexOf(' #')+2)
