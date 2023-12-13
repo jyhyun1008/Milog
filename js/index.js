@@ -151,7 +151,7 @@ function parseToJSON(md){
 
     md = md.replace(/\[([\s\S][^\{]+)\]/g, '[{"type": "text", "text": "$1"}]')
     md = md.replace(/\[\,\{/g, '[{')
-    md = md.replace(/\n/g, '&nbsp;')
+    md = md.replace(/\n/g, '&nbsp;').replace(/\"children\"\:\s\&lbrack\;\&rbrack\;\}/gm, '"children": []}')
 
     mdJson = JSON.parse(md)
 
