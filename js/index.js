@@ -762,7 +762,7 @@ if (!blog && !page) {
                                         await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
                                     }
                                 }
-                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
+                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+text.user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
 
                                 resolve()
                             }
