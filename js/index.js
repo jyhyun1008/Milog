@@ -950,26 +950,28 @@ if (!blog && !page) {
               
                 binaryBlob = convertDataURIToBinary(reader.result);
                 console.log('Encoded Binary File String:', binaryBlob);
-                var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
-                var imgUploadParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body:  JSON.stringify({
-                        i: token,
-                        file: reader.result
-                    })
-                }
-                fetch(imgUploadURL, imgUploadParam)
-                .then((imgData) => {return imgData.json()})
-                .then((imgRes) => {
-                    insertText('\n\n!['+imgRes.id+']('+imgRes.url+')\n\n')
-                    console.log(parseToJSON(editor.value))
-                })
-                .catch(err => {throw err});
+                
             }
             reader.readAsDataURL(this.files[0]);
+            
+            var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
+            var imgUploadParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body:  JSON.stringify({
+                    i: token,
+                    file: JSON.stringify(this.files[0])
+                })
+            }
+            fetch(imgUploadURL, imgUploadParam)
+            .then((imgData) => {return imgData.json()})
+            .then((imgRes) => {
+                insertText('\n\n!['+imgRes.id+']('+imgRes.url+')\n\n')
+                console.log(parseToJSON(editor.value))
+            })
+            .catch(err => {throw err});
             
         })
     
