@@ -825,115 +825,6 @@ if (!blog && !page) {
         var emojinames = []
         var emojiurl = {}
 
-        if (article){
-
-            const findPageUrl = 'https://'+signedHost+'/api/pages/show'
-            const findPageParam = {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                body: JSON.stringify({
-                    pageId: article,
-                }),
-            }
-        
-            fetch(findPageUrl, findPageParam)
-            .then((PageData) => {return PageData.json()})
-            .then((PageRes) => {
-        
-                var result = ''
-        
-                const addContent = (content, attFiles) => {
-                    return new Promise((resolve, reject) => {
-                        if (content.type == 'section') {
-                            result += '\n#' + content.title
-                            resolve()
-                        } else if (content.type == 'text') {
-                            var mfm = parseMFM(content.text)
-
-                            var emojinames = mfm.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
-        
-                            const insertEmojiUrl = (name) => {
-                                return new Promise((resolve2, reject) => {
-                                    var searchEmojiUrl = 'https://'+signedHost+'/api/emoji'
-                                    var searchEmojiParam = {
-                                        method: 'POST',
-                                        headers: {
-                                            'content-type': 'application/json',
-                                        },
-                                        body:  JSON.stringify({
-                                            name: name
-                                        })
-                                    }
-                                    fetch(searchEmojiUrl, searchEmojiParam)
-                                    .then((emojiData) => {return emojiData.json()})
-                                    .then((emojiRes) => {
-                                        emojiurl[name] = emojiRes.url
-                                        mfm = mfm.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
-                                        result += '\n' + mfm
-                                        resolve2()
-                                    })
-                                    .catch(err => {throw err});
-                                })
-                            }
-    
-                            const insertEmoji = async(emojinames) => {
-                                if (emojinames) {
-                                    for (let emojiname of emojinames) {
-                                        await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
-                                    }
-                                } else {
-                                    result += '\n' + mfm
-                                }
-                            }
-                            
-                            insertEmoji(emojinames)
-                            
-                        } else if (content.type == 'image') {
-                            var fileId = content.fileId
-                            var fileUrl = ''
-                            for (var k = 0; k <attFiles.length; k++){
-                                if (attFiles[k].id == fileId) {
-                                    fileUrl = attFiles[k].url
-                                }
-                            }
-                            result += '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
-                            resolve()
-                        } else if (content.type == 'note') {
-                            result += '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
-                            resolve()
-                        }
-                        
-                    })
-                }
-        
-                const makePageText = async(contents, attFiles) => {
-        
-                    for (let content of contents) {
-                        await addContent(content, attFiles)
-                    }
-        
-                    document.querySelector("#titlepreview").innerText = pageTitle
-                    document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
-                    document.querySelector("#contentpreview").innerHTML = parseMd(result)
-
-                }
-        
-                var pageTitle = PageRes.title
-                var pageImage = ''
-                if (PageRes.eyeCatchingImage) {
-                    pageImage = PageRes.eyeCatchingImage.url
-                } else {
-                    pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
-                }
-                document.querySelector("#contentpreview").innerHTML += '<div id="post_content"></div>'
-                makePageText(PageRes.content, PageRes.attachedFiles)
-            })
-            .catch(err => {throw err});
-                        
-        } 
-
         var editor = document.getElementById('editor');
         function editorChange(event) {
 
@@ -998,6 +889,79 @@ if (!blog && !page) {
                 document.querySelector('#contentpreview').innerHTML = resultHTML
             }
         }
+        
+        if (article){
+
+            const findPageUrl = 'https://'+signedHost+'/api/pages/show'
+            const findPageParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    pageId: article,
+                }),
+            }
+        
+            fetch(findPageUrl, findPageParam)
+            .then((PageData) => {return PageData.json()})
+            .then((PageRes) => {
+        
+                var result = ''
+        
+                const addContent = (content, attFiles) => {
+                    return new Promise((resolve, reject) => {
+                        if (content.type == 'section') {
+                            result += '\n#' + content.title
+                            resolve()
+                        } else if (content.type == 'text') {
+                            var mfm = parseMFM(content.text)
+                            result += '\n' + mfm
+                            resolve()
+                        } else if (content.type == 'image') {
+                            var fileId = content.fileId
+                            var fileUrl = ''
+                            for (var k = 0; k <attFiles.length; k++){
+                                if (attFiles[k].id == fileId) {
+                                    fileUrl = attFiles[k].url
+                                }
+                            }
+                            result += '\n![](' + fileUrl + ')'
+                            resolve()
+                        } else if (content.type == 'note') {
+                            result += '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
+                            resolve()
+                        }
+                        
+                    })
+                }
+        
+                const makePageText = async(contents, attFiles) => {
+        
+                    for (let content of contents) {
+                        await addContent(content, attFiles)
+                    }
+        
+                    document.querySelector("#postTitle").value = pageTitle
+                    document.querySelector("#titlepreview").innerText = pageTitle
+                    document.querySelector("#eyeCatchImg").innerText = pageImage
+                    document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
+                    document.querySelector("#editor").value = result
+                    editorChange(null)
+
+                }
+        
+                var pageTitle = PageRes.title
+                if (PageRes.eyeCatchingImage) {
+                    eyeCatchImgId = PageRes.eyeCatchingImage.id
+                }
+                document.querySelector("#contentpreview").innerHTML += '<div id="post_content"></div>'
+                makePageText(PageRes.content, PageRes.attachedFiles)
+            })
+            .catch(err => {throw err});
+                        
+        } 
+
         editor.addEventListener('keyup', editorChange)
         editor.addEventListener('change', editorChange)
 
@@ -1110,13 +1074,9 @@ if (!blog && !page) {
             if (postTitle.value == '' || postUrl.value == '' || postCategory.value == '' || editor.value == '') {
                 alert("빈칸을 모두 채워주세요!");
             } else {
-                var postCreateUrl = 'https://'+signedHost+'/api/pages/create'
-                var postCreateParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body:  JSON.stringify({
+                var postBody = ''
+                if (eyeCatchImgId !== '') {
+                    postBody = JSON.stringify({
                         i: token,
                         title: postTitle.value,
                         name: postUrl.value,
@@ -1126,6 +1086,24 @@ if (!blog && !page) {
                         content: parseToJSON(editor.value),
                         eyeCatchingImageId: eyeCatchImgId
                     })
+                } else {
+                    postBody = JSON.stringify({
+                        i: token,
+                        title: postTitle.value,
+                        name: postUrl.value,
+                        summary: '#MiLog #'+postCategory.value,
+                        variables: [],
+                        script: '',
+                        content: parseToJSON(editor.value),
+                    })
+                }
+                var postCreateUrl = 'https://'+signedHost+'/api/pages/create'
+                var postCreateParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: postBody
                 }
                 fetch(postCreateUrl, postCreateParam)
                 .then((postData) => {return postData.json()})
