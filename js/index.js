@@ -956,6 +956,17 @@ if (!blog && !page) {
               
                 binaryBlob = convertDataURIToBinary(reader.result);
                 console.log('Encoded Binary File String:', binaryBlob);
+				var blob = new Blob([binaryImg], {type: f.type});
+                blobURL = window.URL.createObjectURL(blob);
+				fileName = f.name;
+				document.getElementById('nameImg').value = fileName;
+				document.getElementById('typeImg').value = f.type;
+				document.getElementById('sizeImg').value = f.size;
+				document.getElementById('base64Url').value = base64Img;
+				document.getElementById('blobUrl').value = blobURL;
+				document.getElementById('base64Img').src = base64Img;
+				document.getElementById('blobImg').src = blobURL;
+				document.getElementById('binaryImg').innerHTML = JSON.stringify(binaryImg, null, 2);
             }
             reader.readAsDataURL(this.files[0]);
             var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
@@ -966,7 +977,7 @@ if (!blog && !page) {
                 },
                 body:  JSON.stringify({
                     i: token,
-                    file: binaryBlob
+                    file: reader.result
                 })
             }
             fetch(imgUploadURL, imgUploadParam)
