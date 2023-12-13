@@ -21,6 +21,9 @@ function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 ht
 
     md = "\n"+md
     const md0 = md.replace(/\</gm,"&lt;").replace(/\>/gm, "&gt;");
+
+    //루비
+    md = md.replace(/\$\[ruby\s([^\]]+)\s([^\]]+)\]/gm, '<ruby>$1<rp>(</rp><rt>$2</rt><rp>)</rp></ruby>');
   
     //ul
     md = md.replace(/^\s*\n\*\s/gm, '<ul">\n* ');
