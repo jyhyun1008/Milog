@@ -946,7 +946,7 @@ if (!blog && !page) {
             var binaryBlob = ''
             var blob
             reader.onloadend = function() {
-                console.log('Encoded Base 64 File String:', reader.result);
+                console.log('Encoded Base 64 File String:', Buffer.from(reader.result));
               
                 //binaryBlob = convertDataURIToBinary(reader.result);
                 //console.log('Encoded Binary File String:', binaryBlob);
@@ -959,7 +959,7 @@ if (!blog && !page) {
                     },
                     body:  JSON.stringify({
                         i: token,
-                        file: reader.result
+                        file: Buffer.from(reader.result)
                     })
                 }
                 console.log(imgUploadParam.body)
