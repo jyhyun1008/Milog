@@ -938,7 +938,7 @@ if (!blog && !page) {
                 console.log('Encoded Base 64 File String:', reader.result);
               
                 fileData = (reader.result).split(',')[1];
-                binaryBlob = atob(data);
+                binaryBlob = atob(fileData);
                 console.log('Encoded Binary File String:', binaryBlob);
             }
             reader.readAsDataURL(this.files[0]);
