@@ -932,11 +932,13 @@ if (!blog && !page) {
         imgRealUpload.addEventListener('change', function(e) {
             var file = e.currentTarget.files;
             var reader = new FileReader();
+            var fileData = ''
+            var binaryBlob = ''
             reader.onloadend = function() {
                 console.log('Encoded Base 64 File String:', reader.result);
               
-                var data=(reader.result).split(',')[1];
-                var binaryBlob = atob(data);
+                fileData = (reader.result).split(',')[1];
+                binaryBlob = atob(data);
                 console.log('Encoded Binary File String:', binaryBlob);
             }
             reader.readAsDataURL(this.files[0]);
@@ -948,7 +950,7 @@ if (!blog && !page) {
                 },
                 body:  JSON.stringify({
                     i: token,
-                    file: file[0]
+                    file: binaryBlob
                 })
             }
             fetch(imgUploadURL, imgUploadParam)
