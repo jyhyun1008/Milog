@@ -944,12 +944,11 @@ if (!blog && !page) {
             var file = e.currentTarget.files;
             var reader = new FileReader();
             var binaryBlob = ''
-            var blob
             reader.onloadend = function() {
-                console.log('Encoded Base 64 File String:', buffer.Buffer.from(reader.result));
-
+                var blob = window.dataURLtoBlob(reader.result);
+                console.log('Encoded Base 64 File String:', blob);
                 const formData = new FormData()
-                formData.append('file', reader.result, {
+                formData.append('file', blob, {
                     filename: file[0].name + '.png',
                     contentType: 'image/png',
                 });
@@ -977,7 +976,7 @@ if (!blog && !page) {
                 .catch(err => {throw err});
                 
             }
-            reader.readAsBinaryString(this.files[0]);
+            reader.readAsDataURL(this.files[0]);
             
         })
     
