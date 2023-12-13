@@ -709,7 +709,7 @@ if (!blog && !page) {
                 document.querySelector("#page_content").innerHTML += '<div id="post_content"></div>'
                 makePageText(PageRes.content, PageRes.attachedFiles)
                 if (signedusername == username && signedHost == host) {
-                    document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=update"><div class="button" id="update&a='+article+'">수정</div></a> <a href="./?p=delete&a='+article+'"><div class="button" id="delete">삭제</div></a></div>'
+                    document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=editor&a='+article+'"><div class="button" id="update">수정</div></a> <a href="./?p=delete&a='+article+'"><div class="button" id="delete">삭제</div></a></div>'
                 } 
                 document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
                 if (token) {
@@ -818,11 +818,121 @@ if (!blog && !page) {
     var eyeCatchImgId = ''
 
     if (token) {
+
         document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg">배경 사진을 선택해주세요</div><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><div id="imgupload">📷</div><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="imagepreview"></div><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
         document.querySelector('#page_content').innerHTML += '<input type="file" id="eyecatchrealupload" accept="image/*" style="display: none;"><input type="file" id="imgrealupload" accept="image/*" style="display: none;">'
 
         var emojinames = []
         var emojiurl = {}
+
+        if (article){
+
+            const findPageUrl = 'https://'+host+'/api/pages/show'
+            const findPageParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    pageId: article,
+                }),
+            }
+        
+            fetch(findPageUrl, findPageParam)
+            .then((PageData) => {return PageData.json()})
+            .then((PageRes) => {
+        
+                var result = ''
+        
+                const addContent = (content, attFiles) => {
+                    return new Promise((resolve, reject) => {
+                        if (content.type == 'section') {
+                            result += '\n#' + content.title
+                            resolve()
+                        } else if (content.type == 'text') {
+                            var mfm = parseMFM(content.text)
+
+                            var emojinames = mfm.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
+        
+                            const insertEmojiUrl = (name) => {
+                                return new Promise((resolve2, reject) => {
+                                    var searchEmojiUrl = 'https://'+host+'/api/emoji'
+                                    var searchEmojiParam = {
+                                        method: 'POST',
+                                        headers: {
+                                            'content-type': 'application/json',
+                                        },
+                                        body:  JSON.stringify({
+                                            name: name
+                                        })
+                                    }
+                                    fetch(searchEmojiUrl, searchEmojiParam)
+                                    .then((emojiData) => {return emojiData.json()})
+                                    .then((emojiRes) => {
+                                        emojiurl[name] = emojiRes.url
+                                        mfm = mfm.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                                        result += '\n' + mfm
+                                        resolve2()
+                                    })
+                                    .catch(err => {throw err});
+                                })
+                            }
+    
+                            const insertEmoji = async(emojinames) => {
+                                if (emojinames) {
+                                    for (let emojiname of emojinames) {
+                                        await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                    }
+                                } else {
+                                    result += '\n' + mfm
+                                }
+                            }
+                            
+                            insertEmoji(emojinames)
+                            
+                        } else if (content.type == 'image') {
+                            var fileId = content.fileId
+                            var fileUrl = ''
+                            for (var k = 0; k <attFiles.length; k++){
+                                if (attFiles[k].id == fileId) {
+                                    fileUrl = attFiles[k].url
+                                }
+                            }
+                            result += '\n<div class="gallery"><img class="postimage" src="' + fileUrl + '"></div>'
+                            resolve()
+                        } else if (content.type == 'note') {
+                            result += '\n<div>[노트 참조](https://'+host+'/notes/' + noteId + ')</div>'
+                            resolve()
+                        }
+                        
+                    })
+                }
+        
+                const makePageText = async(contents, attFiles) => {
+        
+                    for (let content of contents) {
+                        await addContent(content, attFiles)
+                    }
+        
+                    document.querySelector("#titlepreview").innerText = pageTitle
+                    document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
+                    document.querySelector("#contentpreview").innerHTML = parseMd(result)
+
+                }
+        
+                var pageTitle = PageRes.title
+                var pageImage = ''
+                if (PageRes.eyeCatchingImage) {
+                    pageImage = PageRes.eyeCatchingImage.url
+                } else {
+                    pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
+                }
+                document.querySelector("#contentpreview").innerHTML += '<div id="post_content"></div>'
+                makePageText(PageRes.content, PageRes.attachedFiles)
+            })
+            .catch(err => {throw err});
+                        
+        } 
 
         var editor = document.getElementById('editor');
         function editorChange(event) {
