@@ -93,6 +93,7 @@ input, .imageUploader {
     aspect-ratio: 16 / 9;
     border-radius: 15px;
     width: 100%;
+    object-fit: cover;
 }
 
 .eyecatchimg, #imagepreview img {
