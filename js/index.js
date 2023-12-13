@@ -949,7 +949,6 @@ if (!blog && !page) {
                 console.log('Encoded Base 64 File String:', blob);
                 const formData = new FormData()
                 formData.append('file', blob, {
-                    filename: file[0].name + '.png',
                     contentType: 'image/png',
                 });
                 formData.append("i", token)
