@@ -939,7 +939,7 @@ if (!blog && !page) {
                 var binaryBlob = atob(data);
                 console.log('Encoded Binary File String:', binaryBlob);
             }
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(this.files[0]);
             var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
             var imgUploadParam = {
                 method: 'POST',
