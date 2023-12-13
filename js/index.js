@@ -958,7 +958,7 @@ if (!blog && !page) {
                     },
                     body:  JSON.stringify({
                         i: token,
-                        file: binaryBlob
+                        file: reader.result
                     })
                 }
                 fetch(imgUploadURL, imgUploadParam)
