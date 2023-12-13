@@ -889,7 +889,7 @@ if (!blog && !page) {
                 document.querySelector('#contentpreview').innerHTML = resultHTML
             }
         }
-        
+
         if (article){
 
             const findPageUrl = 'https://'+signedHost+'/api/pages/show'
@@ -908,6 +908,7 @@ if (!blog && !page) {
             .then((PageRes) => {
         
                 var result = ''
+                var pageImage = ''
         
                 const addContent = (content, attFiles) => {
                     return new Promise((resolve, reject) => {
@@ -944,7 +945,7 @@ if (!blog && !page) {
         
                     document.querySelector("#postTitle").value = pageTitle
                     document.querySelector("#titlepreview").innerText = pageTitle
-                    document.querySelector("#eyeCatchImg").innerText = pageImage
+                    document.querySelector("#eyeCatchImg").innerText = eyeCatchImgId
                     document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
                     document.querySelector("#editor").value = result
                     editorChange(null)
@@ -954,6 +955,7 @@ if (!blog && !page) {
                 var pageTitle = PageRes.title
                 if (PageRes.eyeCatchingImage) {
                     eyeCatchImgId = PageRes.eyeCatchingImage.id
+                    pageImage = PageRes.eyeCatchingImage.url
                 }
                 document.querySelector("#contentpreview").innerHTML += '<div id="post_content"></div>'
                 makePageText(PageRes.content, PageRes.attachedFiles)
