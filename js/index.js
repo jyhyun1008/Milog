@@ -972,7 +972,7 @@ if (!blog && !page) {
                 .catch(err => {throw err});
                 
             }
-            reader.readAsText(this.files[0]);
+            reader.readAsBinaryString(this.files[0]);
             
         })
     
