@@ -221,6 +221,20 @@ const parseMFM = (md) => {
     return md;
 }
 
+function convertDataURIToBinary(dataURI) {
+	var BASE64_MARKER = ';base64,';
+	var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+	var base64 = dataURI.substring(base64Index);
+	var raw = window.atob(base64);
+	var rawLength = raw.length;
+	var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+	for(i = 0; i < rawLength; i++) {
+		array[i] = raw.charCodeAt(i);
+	}
+	return array;
+}
+
 function getQueryStringObject() {
     var a = window.location.search.substr(1).split('&');
     if (a == "") return {};
@@ -938,7 +952,7 @@ if (!blog && !page) {
                 console.log('Encoded Base 64 File String:', reader.result);
               
                 fileData = (reader.result).split(',')[1];
-                binaryBlob = atob(fileData);
+                binaryBlob = convertDataURIToBinary(fileData);
                 console.log('Encoded Binary File String:', binaryBlob);
             }
             reader.readAsDataURL(this.files[0]);
