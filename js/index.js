@@ -1155,12 +1155,20 @@ if (!blog && !page) {
                     },
                     body: JSON.stringify(postBody)
                 }
-                fetch(postCreateUrl, postCreateParam)
-                .then((postData) => {return postData.json()})
-                .then((postRes) => {
-                    location.href = domainName + '?b='+ signedusername +'@'+ signedHost +'&a='+ postRes.id
-                })
-                .catch(err => {throw err});
+
+                if (article) {
+                    fetch(postCreateUrl, postCreateParam)
+                    .then(() => {
+                        location.href = domainName + '?b='+ signedusername +'@'+ signedHost +'&a='+ article
+                    })
+                    .catch(err => {throw err});
+                } else {
+                    fetch(postCreateUrl, postCreateParam)
+                    .then((postData) => {return postData.json()})
+                    .then((postRes) => {
+                        location.href = domainName + '?b='+ signedusername +'@'+ signedHost +'&a='+ postRes.id
+                    })
+                }
             }
         })
     } else {
