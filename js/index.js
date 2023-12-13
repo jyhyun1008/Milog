@@ -949,7 +949,7 @@ if (!blog && !page) {
         imgRealUpload.addEventListener('change', function(e) {
             var file = e.currentTarget.files;
             var reader = new FileReader();
-            var fileData = ''
+            var formData = new FormData();
             var binaryBlob = ''
             var blob
             reader.onloadend = function() {
@@ -960,8 +960,10 @@ if (!blog && !page) {
 
                 blob = new Blob([binaryBlob], { type: "image/png" });
                 console.log(blob)
+                formData.append("file", blob);
             }
             reader.readAsDataURL(this.files[0]);
+            
             var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
             var imgUploadParam = {
                 method: 'POST',
@@ -970,7 +972,7 @@ if (!blog && !page) {
                 },
                 body:  JSON.stringify({
                     i: token,
-                    file: blob
+                    file: formData
                 })
             }
             fetch(imgUploadURL, imgUploadParam)
