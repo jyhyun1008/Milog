@@ -168,6 +168,8 @@ const parseMFM = (md) => {
     
     //h
     md = md.replace(/\n\$\[x2\s([^\]]+)\]/gm, '\n## $1');
+    //루비
+    md = md.replace(/\$\[ruby\s([^\]]+)\s([^\]]+)\]/gm, '<ruby>$1<rp>(</rp><rt>$2</rt><rp>)</rp></ruby>');
     //h
     md = md.replace(/\n\$\[([^\]]+)\]/gm, '\n$1');
     
