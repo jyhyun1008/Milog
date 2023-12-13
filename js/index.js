@@ -1128,36 +1128,32 @@ if (!blog && !page) {
             if (postTitle.value == '' || postUrl.value == '' || postCategory.value == '' || editor.value == '') {
                 alert("빈칸을 모두 채워주세요!");
             } else {
-                var postBody = ''
-                if (eyeCatchImgId !== '') {
-                    postBody = JSON.stringify({
-                        i: token,
-                        title: postTitle.value,
-                        name: postUrl.value,
-                        summary: '#MiLog #'+postCategory.value,
-                        variables: [],
-                        script: '',
-                        content: parseToJSON(editor.value),
-                        eyeCatchingImageId: eyeCatchImgId
-                    })
-                } else {
-                    postBody = JSON.stringify({
-                        i: token,
-                        title: postTitle.value,
-                        name: postUrl.value,
-                        summary: '#MiLog #'+postCategory.value,
-                        variables: [],
-                        script: '',
-                        content: parseToJSON(editor.value),
-                    })
+                var postBody = {
+                    i: token,
+                    title: postTitle.value,
+                    name: postUrl.value,
+                    summary: '#MiLog #'+postCategory.value,
+                    variables: [],
+                    script: '',
+                    content: parseToJSON(editor.value),
                 }
-                var postCreateUrl = 'https://'+signedHost+'/api/pages/create'
+                if (eyeCatchImgId !== '') {
+                    postBody.eyeCatchingImageId = eyeCatchImgId
+                }
+
+                var postCreateUrl
+                if (article) {
+                    postCreateUrl = 'https://'+signedHost+'/api/pages/update'
+                    postBody.pageId = article
+                } else {
+                    postCreateUrl = 'https://'+signedHost+'/api/pages/create'
+                }
                 var postCreateParam = {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
                     },
-                    body: postBody
+                    body: JSON.stringify(postBody)
                 }
                 fetch(postCreateUrl, postCreateParam)
                 .then((postData) => {return postData.json()})
