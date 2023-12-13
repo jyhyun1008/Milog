@@ -812,51 +812,60 @@ if (!blog && !page) {
         var emojiurl = {}
 
         var editor = document.getElementById('editor');
-        editor.addEventListener('change', function(event){
-            
+        function editorChange(event) {
+
             resultHTML = parseMd(editor.value)
 
-            if (event.key == ':') {
-                if (resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)) {
-                    emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
-                }
-    
-                const insertEmojiUrl = (name) => {
-                    return new Promise((resolve, reject) => {
-                        var searchEmojiUrl = 'https://'+signedHost+'/api/emoji'
-                        var searchEmojiParam = {
-                            method: 'POST',
-                            headers: {
-                                'content-type': 'application/json',
-                            },
-                            body:  JSON.stringify({
-                                name: name
-                            })
-                        }
-                        fetch(searchEmojiUrl, searchEmojiParam)
-                        .then((emojiData) => {return emojiData.json()})
-                        .then((emojiRes) => {
-                            emojiurl[name] = emojiRes.url
-                            if (emojiurl[name] && emojiurl[name] !== 'undefined') {
-                                resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+            if (event.key) {
+                if (event.key  == ':') {
+                    if (resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)) {
+                        emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
+                    }
+        
+                    const insertEmojiUrl = (name) => {
+                        return new Promise((resolve, reject) => {
+                            var searchEmojiUrl = 'https://'+signedHost+'/api/emoji'
+                            var searchEmojiParam = {
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json',
+                                },
+                                body:  JSON.stringify({
+                                    name: name
+                                })
                             }
-                            resolve()
+                            fetch(searchEmojiUrl, searchEmojiParam)
+                            .then((emojiData) => {return emojiData.json()})
+                            .then((emojiRes) => {
+                                emojiurl[name] = emojiRes.url
+                                if (emojiurl[name] && emojiurl[name] !== 'undefined') {
+                                    resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                                }
+                                resolve()
+                            })
+                            .catch(err => {throw err});
                         })
-                        .catch(err => {throw err});
-                    })
-                }
-
-                const insertEmoji = async(emojinames) => {
-                    if (emojinames) {
-                        for (let emojiname of emojinames) {
-                            await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                    }
+    
+                    const insertEmoji = async(emojinames) => {
+                        if (emojinames) {
+                            for (let emojiname of emojinames) {
+                                await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                            }
                         }
+                        
+                        document.querySelector('#contentpreview').innerHTML = resultHTML
                     }
                     
+                    insertEmoji(emojinames)
+                } else {
+                    for (let i = 0; i < emojinames.length; i++) {
+                        if (emojiurl[emojinames[i].substring(1, emojinames[i].length - 1)] && emojiurl[emojinames[i].substring(1, emojinames[i].length - 1)] !== 'undefined') {
+                            resultHTML = resultHTML.replace(emojinames[i], '<img src="'+emojiurl[emojinames[i].substring(1, emojinames[i].length - 1)]+'" class="emoji">')
+                        }
+                    }
                     document.querySelector('#contentpreview').innerHTML = resultHTML
                 }
-                
-                insertEmoji(emojinames)
             } else {
                 for (let i = 0; i < emojinames.length; i++) {
                     if (emojiurl[emojinames[i].substring(1, emojinames[i].length - 1)] && emojiurl[emojinames[i].substring(1, emojinames[i].length - 1)] !== 'undefined') {
@@ -865,7 +874,9 @@ if (!blog && !page) {
                 }
                 document.querySelector('#contentpreview').innerHTML = resultHTML
             }
-        })
+        }
+        editor.addEventListener('keyup', editorChange)
+        editor.addEventListener('change', editorChange)
 
         var title = document.getElementById('postTitle');
         title.addEventListener('keyup', function(event){
@@ -918,7 +929,7 @@ if (!blog && !page) {
 
         imgRealUpload.addEventListener('change', function(e) {
             var file = e.currentTarget.files;
-            console.timeLog(file)
+            console.log(file)
             var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
             var imgUploadParam = {
                 method: 'POST',
