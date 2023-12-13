@@ -143,13 +143,13 @@ function parseToJSON(md){
     md = md.replace(/\n[\#]{2}(.+)/g, '\n\$[x2$1]');
     md = md.replace(/\n[\#]{1}(.+)/g, ',{"type": "section", "title": "$1", "children": []}');
 
-    md = md.replace(/\n\!\[([^\(\[]+)\]\(([^\(\[]+)\)\n/g, ',{"type": "image", "fileId": "$1"}')
+    md = md.replace(/\n\!\&lbrack\;([^\(\&\;]+)\&rbrack\;\(([^\(\&\;]+)\)\n/g, ',{"type": "image", "fileId": "$1"}')
 
     md = md.replace(/\}\n([\s\S][^\{]+)\,\{/g, '},{"type": "text", "text": "$1"},{')
-    md = md.replace(/\[\n([\s\S][^\{]+)\,\{/g, '[{"type": "text", "text": "$1"},{')
+    md = md.replace(/\[([\s\S][^\{]+)\,\{/g, '[{"type": "text", "text": "$1"},{')
     md = md.replace(/\}\n([\s\S][^\{]+)\]/g, '},{"type": "text", "text": "$1"}]')
 
-    md = md.replace(/\[\n([\s\S][^\{]+)\]/g, '[{"type": "text", "text": "$1"}]')
+    md = md.replace(/\[([\s\S][^\{]+)\]/g, '[{"type": "text", "text": "$1"}]')
     md = md.replace(/\[\,\{/g, '[{')
     md = md.replace(/\n/g, '&nbsp;')
 
@@ -921,35 +921,48 @@ if (!blog && !page) {
             };
             imgReader.readAsDataURL(this.files[0]);
 
-            var eyeCatchUrl = 'https://'+signedHost+'/api/drive/files/create'
-            var eyeCatchParam = {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                body:  JSON.stringify({
-                    i: token,
-                    file: files[0]
-                })
-            }
-            fetch(eyeCatchUrl, eyeCatchParam)
-            .then((eyecatchData) => {return eyecatchData.json()})
-            .then((eyecatchRes) => {
-                eyeCatchImgId = eyecatchRes.id
-            })
-            .catch(err => {throw err});
-        })
-
-        imgRealUpload.addEventListener('change', function(e) {
-            var file = e.currentTarget.files;
             var reader = new FileReader();
-            var binaryBlob = ''
             reader.onloadend = function() {
                 var blob = window.dataURLtoBlob(reader.result);
                 console.log('Encoded Base 64 File String:', blob);
                 const formData = new FormData()
                 formData.append('file', blob, {
-                    filename: file[0].name + '.png',
+                    filename: 'milogattachedfile.png',
+                    contentType: 'image/png',
+                });
+                formData.append("i", token)
+              
+                //binaryBlob = convertDataURIToBinary(reader.result);
+                //console.log('Encoded Binary File String:', binaryBlob);
+                console.log(formData)
+                
+                var eyeCatchUrl = 'https://'+signedHost+'/api/drive/files/create'
+                var eyeCatchParam = {
+                    method: 'POST',
+                    headers: {
+                    },
+                    body: formData
+                }
+                fetch(eyeCatchUrl, eyeCatchParam)
+                .then((eyecatchData) => {return eyecatchData.json()})
+                .then((eyecatchRes) => {
+                    eyeCatchImgId = eyecatchRes.id
+                })
+                .catch(err => {throw err});
+                
+            }
+            reader.readAsDataURL(this.files[0]);
+            
+        })
+
+        imgRealUpload.addEventListener('change', function(e) {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                var blob = window.dataURLtoBlob(reader.result);
+                console.log('Encoded Base 64 File String:', blob);
+                const formData = new FormData()
+                formData.append('file', blob, {
+                    filename: 'milogattachedfile.png',
                     contentType: 'image/png',
                 });
                 formData.append("i", token)
