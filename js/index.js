@@ -948,8 +948,8 @@ if (!blog && !page) {
             reader.onloadend = function() {
                 console.log('Encoded Base 64 File String:', reader.result);
               
-                binaryBlob = convertDataURIToBinary(reader.result);
-                console.log('Encoded Binary File String:', binaryBlob);
+                //binaryBlob = convertDataURIToBinary(reader.result);
+                //console.log('Encoded Binary File String:', binaryBlob);
                 
                 var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
                 var imgUploadParam = {
