@@ -918,6 +918,7 @@ if (!blog && !page) {
 
         imgRealUpload.addEventListener('change', function(e) {
             var file = e.currentTarget.files;
+            console.timeLog(file)
             var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
             var imgUploadParam = {
                 method: 'POST',
