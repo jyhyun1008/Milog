@@ -962,7 +962,7 @@ if (!blog && !page) {
                         file: binaryBlob
                     })
                 }
-                console.log(body)
+                console.log(imgUploadParam.body)
                 fetch(imgUploadURL, imgUploadParam)
                 .then((imgData) => {return imgData.json()})
                 .then((imgRes) => {
