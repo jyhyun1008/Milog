@@ -959,7 +959,7 @@ if (!blog && !page) {
                     },
                     body:  JSON.stringify({
                         i: token,
-                        file: binaryBlob
+                        file: reader.result
                     })
                 }
                 console.log(imgUploadParam.body)
@@ -972,7 +972,7 @@ if (!blog && !page) {
                 .catch(err => {throw err});
                 
             }
-            reader.readAsDataURL(this.files[0]);
+            reader.readAsText(this.files[0]);
             
         })
     
