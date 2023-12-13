@@ -140,6 +140,8 @@ function parseToJSON(md){
     md = md.replace(/\n[\#]{2}(.+)/g, '\n\$[x2$1]');
     md = md.replace(/\n[\#]{1}(.+)/g, ',{"type": "section", "title": "$1", "children": []}');
 
+    md = md.replace(/\n\!\[([^\(\[]+)\]\(([^\(\[]+)\)\n/g, ',{"type": "image", "fileId": "$1"}')
+
     md = md.replace(/\}\n([\s\S][^\{]+)\,\{/g, '},{"type": "text", "text": "$1"},{')
     md = md.replace(/\[\n([\s\S][^\{]+)\,\{/g, '[{"type": "text", "text": "$1"},{')
     md = md.replace(/\}\n([\s\S][^\{]+)\]/g, '},{"type": "text", "text": "$1"}]')
@@ -810,7 +812,7 @@ if (!blog && !page) {
         var emojiurl = {}
 
         var editor = document.getElementById('editor');
-        editor.addEventListener('keyup', function(event){
+        editor.addEventListener('change', function(event){
             
             resultHTML = parseMd(editor.value)
 
@@ -928,9 +930,10 @@ if (!blog && !page) {
                 })
             }
             fetch(imgUploadURL, imgUploadParam)
-            .then((eyecatchData) => {return eyecatchData.json()})
-            .then((eyecatchRes) => {
-                insertText('![]('+eyecatchRes.id+')')
+            .then((imgData) => {return imgData.json()})
+            .then((imgRes) => {
+                insertText('\n\n!['+imgRes.id+']('+imgRes.url+')\n\n')
+                console.log(parseToJSON(editor.value))
             })
             .catch(err => {throw err});
         })
