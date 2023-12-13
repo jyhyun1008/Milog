@@ -954,8 +954,7 @@ if (!blog && !page) {
             reader.onloadend = function() {
                 console.log('Encoded Base 64 File String:', reader.result);
               
-                fileData = (reader.result).split(',')[1];
-                binaryBlob = convertDataURIToBinary(fileData);
+                binaryBlob = convertDataURIToBinary(reader.result);
                 console.log('Encoded Binary File String:', binaryBlob);
             }
             reader.readAsDataURL(this.files[0]);
