@@ -816,11 +816,13 @@ if (!blog && !page) {
     const sessionId = localStorage.getItem("sessionId");
     const userid = localStorage.getItem("userid");
     var eyeCatchImgId = ''
+    var pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
 
     if (token) {
 
         document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg">배경 사진을 선택해주세요</div><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><div id="imgupload">📷</div><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="imagepreview"></div><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
         document.querySelector('#page_content').innerHTML += '<input type="file" id="eyecatchrealupload" accept="image/*" style="display: none;"><input type="file" id="imgrealupload" accept="image/*" style="display: none;">'
+        document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
 
         var emojinames = []
         var emojiurl = {}
@@ -890,6 +892,53 @@ if (!blog && !page) {
             }
         }
 
+        function editorInitial() {
+
+            resultHTML = parseMd(editor.value)
+
+            if (resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)) {
+                emojinames = resultHTML.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
+            }
+        
+            const insertEmojiUrl = (name) => {
+                return new Promise((resolve, reject) => {
+                    var searchEmojiUrl = 'https://'+signedHost+'/api/emoji'
+                    var searchEmojiParam = {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body:  JSON.stringify({
+                            name: name
+                        })
+                    }
+                    fetch(searchEmojiUrl, searchEmojiParam)
+                    .then((emojiData) => {return emojiData.json()})
+                    .then((emojiRes) => {
+                        emojiurl[name] = emojiRes.url
+                        if (emojiurl[name] && emojiurl[name] !== 'undefined') {
+                            resultHTML = resultHTML.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                        }
+                        resolve()
+                    })
+                    .catch(err => {throw err});
+                })
+            }
+    
+            const insertEmoji = async(emojinames) => {
+                if (emojinames) {
+                    for (let emojiname of emojinames) {
+                        await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                    }
+                }
+                        
+                document.querySelector('#contentpreview').innerHTML = resultHTML
+            }
+                    
+            insertEmoji(emojinames)
+                
+        }
+
         if (article){
 
             const findPageUrl = 'https://'+signedHost+'/api/pages/show'
@@ -908,7 +957,6 @@ if (!blog && !page) {
             .then((PageRes) => {
         
                 var result = ''
-                var pageImage = ''
         
                 const addContent = (content, attFiles) => {
                     return new Promise((resolve, reject) => {
@@ -945,10 +993,12 @@ if (!blog && !page) {
         
                     document.querySelector("#postTitle").value = pageTitle
                     document.querySelector("#titlepreview").innerText = pageTitle
+                    document.querySelector("#postCategory").value = pageCategory
+                    document.querySelector("#postUrl").value = pageUrl
                     document.querySelector("#eyeCatchImg").innerText = eyeCatchImgId
                     document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
                     document.querySelector("#editor").value = result
-                    editorChange(null)
+                    editorInitial()
 
                 }
         
@@ -957,6 +1007,8 @@ if (!blog && !page) {
                     eyeCatchImgId = PageRes.eyeCatchingImage.id
                     pageImage = PageRes.eyeCatchingImage.url
                 }
+                var pageUrl = PageRes.name
+                var pageCategory = PageRes.summary.substring(PageRes.summary.indexOf(' #')+2)
                 document.querySelector("#contentpreview").innerHTML += '<div id="post_content"></div>'
                 makePageText(PageRes.content, PageRes.attachedFiles)
             })
