@@ -947,28 +947,10 @@ if (!blog && !page) {
         })
 
         imgRealUpload.addEventListener('change', function(e) {
-            var file = e.currentTarget.files;
-            var reader = new FileReader();
-            var fileData = ''
-            var binaryBlob = ''
-            reader.onloadend = function() {
-                console.log('Encoded Base 64 File String:', reader.result);
-              
-                binaryBlob = convertDataURIToBinary(reader.result);
-                console.log('Encoded Binary File String:', binaryBlob);
-				var blob = new Blob([binaryImg], {type: f.type});
-                blobURL = window.URL.createObjectURL(blob);
-				fileName = f.name;
-				document.getElementById('nameImg').value = fileName;
-				document.getElementById('typeImg').value = f.type;
-				document.getElementById('sizeImg').value = f.size;
-				document.getElementById('base64Url').value = base64Img;
-				document.getElementById('blobUrl').value = blobURL;
-				document.getElementById('base64Img').src = base64Img;
-				document.getElementById('blobImg').src = blobURL;
-				document.getElementById('binaryImg').innerHTML = JSON.stringify(binaryImg, null, 2);
-            }
-            reader.readAsDataURL(this.files[0]);
+            var file = e.currentTarget.files[0];
+            let send_data = new FormData();
+            send_data.append('file', file);
+
             var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
             var imgUploadParam = {
                 method: 'POST',
@@ -977,7 +959,7 @@ if (!blog && !page) {
                 },
                 body:  JSON.stringify({
                     i: token,
-                    file: reader.result
+                    file: send_data
                 })
             }
             fetch(imgUploadURL, imgUploadParam)
