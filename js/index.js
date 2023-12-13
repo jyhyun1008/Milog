@@ -159,7 +159,7 @@ function parseToJSON(md){
     return mdJson;
 }
 
-const parseMFM = (md, mfmhost) => {
+const parseMFM = (md) => {
     // MFM으로 작성된 텍스트를 마크다운으로 변환하는 코드입니다.
 
     const md0 = md.replace(/\</gm,"&lt;").replace(/\>/gm, "&gt;").replace(/\`/gm, "&grave;").replace(/\-/gm, "&dash;").replace(/\*/gm, "&ast;").replace(/\#/gm, "&num;").replace(/\~/gm, "&tilde;").replace(/\]/gm, "&rbrack;").replace(/\:/gm, "&colon;").replace(/\//gm, "&sol;");
@@ -606,7 +606,7 @@ if (!blog && !page) {
                             result += '\n#' + content.title
                             resolve()
                         } else if (content.type == 'text') {
-                            var mfm = parseMFM(content.text, host)
+                            var mfm = parseMFM(content.text)
 
                             var emojinames = mfm.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g);
                             var emojiurl = []
@@ -722,7 +722,52 @@ if (!blog && !page) {
                                 commentUserHost = host
                             }
                             var commentText = commentRes[i].text.substr(commentRes[i].text.indexOf('\n'))
-                            document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+parseMFM(commentText, commentUserHost)+'</div></div>'
+                            commentText = parseMFM(commentText)
+
+                            var emojinames = []
+                            var emojiurl = {}
+                            if (commentText.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)) {
+                                emojinames = commentText.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
+                            }
+                
+                            const insertEmojiUrl = (name) => {
+                                return new Promise((resolve, reject) => {
+                                    var searchEmojiUrl = 'https://'+commentUserHost+'/api/emoji'
+                                    var searchEmojiParam = {
+                                        method: 'POST',
+                                        headers: {
+                                            'content-type': 'application/json',
+                                        },
+                                        body:  JSON.stringify({
+                                            name: name
+                                        })
+                                    }
+                                    fetch(searchEmojiUrl, searchEmojiParam)
+                                    .then((emojiData) => {return emojiData.json()})
+                                    .then((emojiRes) => {
+                                        emojiurl[name] = emojiRes.url
+                                        if (emojiurl[name] && emojiurl[name] !== 'undefined') {
+                                            commentText = commentText.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                                        }
+                                        resolve()
+                                    })
+                                    .catch(err => {throw err});
+                                })
+                            }
+
+                            const insertEmoji = async(emojinames) => {
+                                if (emojinames) {
+                                    for (let emojiname of emojinames) {
+                                        await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                    }
+                                }
+                                
+                                document.querySelector('#contentpreview').innerHTML = resultHTML
+                            }
+                            
+                            insertEmoji(emojinames)
+
+                            document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
                         }
                     } else {
                         document.querySelector("#commentbox").innerHTML += '<div class="commentList">작성된 덧글이 없습니다.</div>'
