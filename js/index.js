@@ -856,7 +856,7 @@ if (!blog && !page) {
         
                             const insertEmojiUrl = (name) => {
                                 return new Promise((resolve2, reject) => {
-                                    var searchEmojiUrl = 'https://'+host+'/api/emoji'
+                                    var searchEmojiUrl = 'https://'+signedHost+'/api/emoji'
                                     var searchEmojiParam = {
                                         method: 'POST',
                                         headers: {
