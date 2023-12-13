@@ -59,11 +59,12 @@ a :hover {
     border-color: var(--darkaccent);
 }
 
-input {
+input, .imageUploader {
     height: 36px;
     width: 100%;
     padding: 0 2px;
     border-width: 0px;
+    background-color: #fff;
 }
 
 #container {
@@ -128,7 +129,7 @@ input {
 
 .editor textarea {
     width: 100%;
-    height: calc(100vh - 360px - 108px);
+    height: calc(100vh - 360px - 180px);
     padding: 0 2px;
     border-width: 0px;
 }
@@ -136,6 +137,7 @@ input {
 .parser {
     width: 50%;
     height: calc(100vh - 360px);
+    overflow: scroll;
 }
 
 #tools {
