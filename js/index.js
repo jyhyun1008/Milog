@@ -827,7 +827,7 @@ if (!blog && !page) {
 
         if (article){
 
-            const findPageUrl = 'https://'+host+'/api/pages/show'
+            const findPageUrl = 'https://'+signedHost+'/api/pages/show'
             const findPageParam = {
                 method: 'POST',
                 headers: {
