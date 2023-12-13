@@ -947,6 +947,14 @@ if (!blog && !page) {
             var blob
             reader.onloadend = function() {
                 console.log('Encoded Base 64 File String:', buffer.Buffer.from(reader.result));
+
+                const formData = new FormData()
+                formData.append('file', reader.result, {
+                    filename: file[0].name + '.png',
+                    contentType: 'image/png',
+                });
+                formData.append("i", token)
+                formData.append("name", file[0].name + ".png")
               
                 //binaryBlob = convertDataURIToBinary(reader.result);
                 //console.log('Encoded Binary File String:', binaryBlob);
@@ -957,12 +965,9 @@ if (!blog && !page) {
                     headers: {
                         'content-type': 'application/json',
                     },
-                    body:  JSON.stringify({
-                        i: token,
-                        file: buffer.Buffer.from(reader.result)
-                    })
+                    body: formData
                 }
-                console.log(imgUploadParam.body)
+                //console.log(imgUploadParam.body)
                 fetch(imgUploadURL, imgUploadParam)
                 .then((imgData) => {return imgData.json()})
                 .then((imgRes) => {
@@ -972,7 +977,7 @@ if (!blog && !page) {
                 .catch(err => {throw err});
                 
             }
-            reader.readAsArrayBuffer(this.files[0]);
+            reader.readAsBinaryString(this.files[0]);
             
         })
     
