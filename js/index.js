@@ -956,6 +956,7 @@ if (!blog && !page) {
               
                 //binaryBlob = convertDataURIToBinary(reader.result);
                 //console.log('Encoded Binary File String:', binaryBlob);
+                console.log(formData)
                 
                 var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
                 var imgUploadParam = {
