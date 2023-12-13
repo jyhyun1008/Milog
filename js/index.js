@@ -229,13 +229,7 @@ function convertDataURIToBinary(dataURI) {
 	var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
 	var base64 = dataURI.substring(base64Index);
 	var raw = window.atob(base64);
-	var rawLength = raw.length;
-	var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-	for(i = 0; i < rawLength; i++) {
-		array[i] = raw.charCodeAt(i);
-	}
-	return array;
+	return raw;
 }
 
 function getQueryStringObject() {
@@ -949,7 +943,6 @@ if (!blog && !page) {
         imgRealUpload.addEventListener('change', function(e) {
             var file = e.currentTarget.files;
             var reader = new FileReader();
-            var formData = new FormData();
             var binaryBlob = ''
             var blob
             reader.onloadend = function() {
@@ -957,10 +950,6 @@ if (!blog && !page) {
               
                 binaryBlob = convertDataURIToBinary(reader.result);
                 console.log('Encoded Binary File String:', binaryBlob);
-
-                blob = new Blob([binaryBlob], { type: "image/png" });
-                console.log(blob)
-                formData.append("file", blob);
             }
             reader.readAsDataURL(this.files[0]);
             
@@ -972,7 +961,7 @@ if (!blog && !page) {
                 },
                 body:  JSON.stringify({
                     i: token,
-                    file: formData
+                    file: binaryBlob
                 })
             }
             fetch(imgUploadURL, imgUploadParam)
