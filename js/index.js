@@ -713,15 +713,16 @@ if (!blog && !page) {
                 fetch(findCommentUrl, findCommentParam)
                 .then((commentData) => {return commentData.json()})
                 .then((commentRes) => {
-                    if (commentRes.length > 0) {
-                        for (var i=0; i<commentRes.length; i++) {
+
+                    const addComment = (text) => {
+                        return new Promise((resolve, reject) => {
                             var commentUserHost = ''
-                            if (commentRes[i].user.host) {
-                                commentUserHost = commentRes[i].user.host
+                            if (text.user.host) {
+                                commentUserHost = text.user.host
                             } else {
                                 commentUserHost = host
                             }
-                            var commentText = commentRes[i].text.substr(commentRes[i].text.indexOf('\n'))
+                            var commentText = text.text.substr(text.text.indexOf('\n'))
                             commentText = parseMFM(commentText)
 
                             var emojinames = []
@@ -730,7 +731,7 @@ if (!blog && !page) {
                                 emojinames = commentText.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
                             }
                 
-                            const insertEmojiUrl = (name) => {
+                            const commentEmojiUrl = (name) => {
                                 return new Promise((resolve, reject) => {
                                     var searchEmojiUrl = 'https://'+commentUserHost+'/api/emoji'
                                     var searchEmojiParam = {
@@ -755,20 +756,28 @@ if (!blog && !page) {
                                 })
                             }
 
-                            const insertEmoji = async(emojinames) => {
+                            const commentEmoji = async(emojinames) => {
                                 if (emojinames) {
                                     for (let emojiname of emojinames) {
-                                        await insertEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                        await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
                                     }
                                 }
-                                
-                                document.querySelector('#contentpreview').innerHTML = resultHTML
+                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
+
+                                resolve()
                             }
                             
-                            insertEmoji(emojinames)
+                            commentEmoji(emojinames)
+                        })
+                    }
 
-                            document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+commentRes[i].user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
+                    if (commentRes.length > 0) {
+                        const makeCommentText = async(commentRes) => {
+                            for (let comment of commentRes) {
+                                await addComment(comment)
+                            }
                         }
+                        makeCommentText(commentRes)
                     } else {
                         document.querySelector("#commentbox").innerHTML += '<div class="commentList">작성된 덧글이 없습니다.</div>'
                     }
