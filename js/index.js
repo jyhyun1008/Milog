@@ -953,7 +953,6 @@ if (!blog && !page) {
                     contentType: 'image/png',
                 });
                 formData.append("i", token)
-                formData.append("name", file[0].name + ".png")
               
                 //binaryBlob = convertDataURIToBinary(reader.result);
                 //console.log('Encoded Binary File String:', binaryBlob);
