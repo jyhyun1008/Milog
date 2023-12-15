@@ -693,6 +693,7 @@ if (!blog && !page) {
                     document.querySelector("#page_title").innerText = pageTitle
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
                     console.log(result)
+                    document.querySelector("#post_content").innerHTML += '<div>@'+blog+'</div>'
                     document.querySelector("#post_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
                     document.querySelector("#post_content").innerHTML += parseMd(result)
 
@@ -777,8 +778,10 @@ if (!blog && !page) {
                                         await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
                                     }
                                 }
-                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+text.user.username+'@'+commentUserHost+'</div><div class="commentText">'+commentText+'</div></div>'
-
+                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+text.user.username+'@'+commentUserHost+'</div><div class="commentTime">'+text.createdAt+'</div><div class="commentText">'+commentText+'</div></div>'
+                                if (signedHost == commentUserHost && signedusername == text.user.username) {
+                                    document.querySelector("#commentList").innerHTML += '<a href="./?p=deletenote&a='+text.id+'"><div class="button">삭제<div></a>'
+                                }
                                 resolve()
                             }
                             
