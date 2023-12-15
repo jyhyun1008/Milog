@@ -9,7 +9,7 @@ const token = localStorage.getItem("token");
 const signedusername = localStorage.getItem("username");
 
 const signedBlogInfoId = localStorage.getItem('blogInfoId')
-var signedBlogInfo = localStorage.getItem('blogInfo')
+var signedBlogInfo = JSON.parse(localStorage.getItem('blogInfo'))
 
 var cssRoot = document.querySelector(':root');
 
@@ -468,7 +468,7 @@ if (!blog && !page) {
                     .then((pageData) => {return pageData.json()})
                     .then((pageRes) => {
                         localStorage.setItem('blogInfoId', pageRes.id)
-                        localStorage.setItem('blogInfo', JSON.parse(pageRes.content[0].text.split('`')[1]))
+                        localStorage.setItem('blogInfo', pageRes.content[0].text.split('`')[1])
 
                         var createNoteUrl = 'https://'+signinHost+'/api/notes/create'
                         var createNoteParam = {
