@@ -1283,7 +1283,7 @@ if (!blog && !page) {
                 signedBlogInfo.theme = blogTheme.value.replace('`', '&#x60;').replace('"', '&quot;')
                 signedBlogInfo.category = category.value.replace('`', '&#x60;').replace('"', '&quot;').split('\n')
 
-                localStorage.setItem('BlogInfo', signedBlogInfo)
+                localStorage.setItem('blogInfo', JSON.stringify(signedBlogInfo))
 
                 var pageUpdateUrl = 'https://'+signedHost+'/api/pages/update'
                 var pageUpdateParam = {
