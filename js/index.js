@@ -883,7 +883,7 @@ if (!blog && !page) {
             document.querySelector('#postCategory').innerHTML += '<option value="'+signedBlogInfo.category[i]+'">'+signedBlogInfo.category[i]+'</option>'
         }
         document.querySelector('#page_content').innerHTML += '<input type="file" id="eyecatchrealupload" accept="image/*" style="display: none;"><input type="file" id="imgrealupload" accept="image/*" style="display: none;">'
-        document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
+        document.querySelector("#imagepreview").innerHTML = '<img src="'+pageImage+'">'
 
         var emojinames = []
         var emojiurl = {}
