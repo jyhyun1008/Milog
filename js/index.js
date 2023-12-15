@@ -507,6 +507,7 @@ if (!blog && !page) {
                         .then((page2Res) => {
                             localStorage.setItem('blogInfoId', blogInfoId)
                             localStorage.setItem('blogInfo', JSON.parse(page2Res.content[0].text.split('`')[1]))
+                            location.href = domainName
                         })
                         .catch(err => {throw err});
                 }
