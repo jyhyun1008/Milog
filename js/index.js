@@ -1284,7 +1284,6 @@ if (!blog && !page) {
                 signedBlogInfo.category = category
 
                 var pageUpdateUrl = 'https://'+signedHost+'/api/pages/update'
-                    postBody.pageId = article
                 var pageUpdateParam = {
                     method: 'POST',
                     headers: {
