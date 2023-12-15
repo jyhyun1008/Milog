@@ -1,12 +1,15 @@
 const initialHost = 'i.peacht.art' // 처음 불러올 때 호스트
 const githubUserName = 'jyhyun1008' // 깃허브 아이디
 const githubRepoName = 'Milog' // 깃허브 레포지토리 이름
-const domainName = 'https://milog.yna.bz'
+const domainName = 'https://milog.yna.bz' // 도메인
 
 const sessionId = localStorage.getItem("sessionId");
 const signedHost = localStorage.getItem("signinHost");
 const token = localStorage.getItem("token");
 const signedusername = localStorage.getItem("username");
+
+const signedBlogInfoId = localStorage.getItem('blogInfoId')
+var signedBlogInfo = localStorage.getItem('blogInfo')
 
 var isLogin = false;
 if (sessionId && signedHost) {
@@ -453,7 +456,7 @@ if (!blog && !page) {
                             variables: [],
                             script: '',
                             content: [{
-                                text: 'blogTitle: '+tokenRes.user.username+'.log\n\nblogIntro: @'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.\n\nfollowing: ',
+                                text: 'Setting: `{"blogTitle": "'+tokenRes.user.username+'.log", "blogIntro": "@'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.", "theme": "#86b300", "category": ["미분류"], "following": []}`',
                                 type: 'text'
                             }]
                         })
@@ -461,8 +464,8 @@ if (!blog && !page) {
                     fetch(createPageUrl, createPageParam)
                     .then((pageData) => {return pageData.json()})
                     .then((pageRes) => {
+                        localStorage.setItem('blogInfoId', pageRes.id)
 
-                        console.log(pageRes)
                         var createNoteUrl = 'https://'+signinHost+'/api/notes/create'
                         var createNoteParam = {
                             method: 'POST',
@@ -472,7 +475,7 @@ if (!blog && !page) {
                             body: JSON.stringify({
                                 i: tokenRes.token,
                                 visibility: 'home',
-                                text: 'https://'+signinHost+'/@'+tokenRes.user.username+'/pages/milogsetup #MiLogSetup'
+                                text: pageRes.id + ' #MiLogSetup'
                             })
                         }
                         fetch(createNoteUrl, createNoteParam)
@@ -483,6 +486,25 @@ if (!blog && !page) {
                         .catch(err => {throw err});
                     })
                     .catch(err => {throw err});
+                } else if (infoRes.length == 1) {
+                    var blogInfoId = infoRes[0].text.split(' #MiLogSetup')[0]
+                    var ShowPageUrl = 'https://'+signinHost+'/api/pages/pageId'
+                    var ShowPageParam = {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            pageId: blogInfoId
+                        })
+                    }
+                    fetch(ShowPageUrl, ShowPageParam)
+                        .then((page2Data) => {return page2Data.json()})
+                        .then((page2Res) => {
+                            localStorage.setItem('blogInfoId', blogInfoId)
+                            localStorage.setItem('blogInfo', JSON.parse(page2Res.content[0].text.split('`')[1]))
+                        })
+                        .catch(err => {throw err});
                 }
             })
             .catch(err => {throw err});
@@ -840,14 +862,15 @@ if (!blog && !page) {
     location.href = domainName
 } else if (page == 'editor') {
 
-    const sessionId = localStorage.getItem("sessionId");
-    const userid = localStorage.getItem("userid");
     var eyeCatchImgId = ''
     var pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
 
     if (token) {
 
-        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg" class="imageUploader">배경 사진을 선택해주세요</div><input id="postCategory" placeholder="카테고리를 입력해주세요"></input><input id="postUrl" placeholder="url을 지정해주세요"></input><div id="imgupload" class="imageUploader">📷</div><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="imagepreview"></div><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
+        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg" class="imageUploader">배경 사진을 선택해주세요</div><select id="postCategory" placeholder="카테고리를 입력해주세요"></select><input id="postUrl" placeholder="url을 지정해주세요"></input><div id="imgupload" class="imageUploader">📷</div><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="imagepreview"></div><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
+        for (var i = 0; i<signedBlogInfo.category; i++) {
+            document.querySelector('#postCategory').innerHTML = '<option value="'+signedBlogInfo.category[i]+'">'+signedBlogInfo.category[i]+'</option>'
+        }
         document.querySelector('#page_content').innerHTML += '<input type="file" id="eyecatchrealupload" accept="image/*" style="display: none;"><input type="file" id="imgrealupload" accept="image/*" style="display: none;">'
         document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
 
@@ -1151,15 +1174,16 @@ if (!blog && !page) {
         var postTitle = document.getElementById('postTitle');
         var postCategory = document.getElementById('postCategory');
         var postUrl = document.getElementById('postUrl');
+        var selectedCategory = postCategory.options[postCategory.selectedIndex].value;
         postButton.addEventListener('click', function(event) {
-            if (postTitle.value == '' || postUrl.value == '' || postCategory.value == '' || editor.value == '') {
+            if (postTitle.value == '' || postUrl.value == '' || selectedCategory == '' || editor.value == '') {
                 alert("빈칸을 모두 채워주세요!");
             } else {
                 var postBody = {
                     i: token,
                     title: postTitle.value,
                     name: postUrl.value,
-                    summary: '#MiLog #'+postCategory.value,
+                    summary: '#MiLog #'+selectedCategory,
                     variables: [],
                     script: '',
                     content: parseToJSON(editor.value),
@@ -1229,6 +1253,58 @@ if (!blog && !page) {
         alert("권한이 없습니다.")
         location.href = domainName
     }
+} else if (page == 'setting') {
+
+    if (token) {
+
+        document.querySelector('#page_content').innerHTML = '<div class="setting_container"><div>블로그 제목:</div><input id="blogTitle" value="'+signedBlogInfo.blogTitle+'"></input><div>블로그 소개:</div><textarea id="blogIntro" value="'+signedBlogInfo.blogIntro+'"></textarea><div>테마 색상:<br>(블로그의 테마 색상을 변경하는 것이 아닌, 여러분의 브라우저에서 보이는 사이트 전체의 테마 색상을 변경하는 것입니다.)</div><input id="blogTheme" value="'+signedBlogInfo.blogTheme+'"></input><div>카테고리:<br>(개행으로 구분합니다. 최소 1개의 카테고리는 남겨 두셔야 글을 작성하실 수 있습니다.)</div><textarea id="category" value="'+signedBlogInfo.category+'"></textarea></div><div class="button" id="settingChange">설정 변경</div>'
+
+        var settingChange = document.getElementById('settingChange');
+        var blogTitle = document.getElementById('blogTitle').value.replace('`', '&#x60;').replace('"', '&quot;');
+        var blogIntro = document.getElementById('blogIntro').value.replace('`', '&#x60;').replace('"', '&quot;');
+        var blogTheme = document.getElementById('blogTheme').value.replace('`', '&#x60;').replace('"', '&quot;');
+        var category = document.getElementById('category').value.replace('`', '&#x60;').replace('"', '&quot;').split('\n');
+        settingChange.addEventListener('click', function(event) {
+            if (blogTitle == '' || blogIntro == '' || blogTheme == '' || category == '') {
+                alert("빈칸을 모두 채워주세요!");
+            } else {
+
+                signedBlogInfo.blogTitle = blogTitle
+                signedBlogInfo.blogIntro = blogIntro
+                signedBlogInfo.blogTheme = blogTheme
+                signedBlogInfo.category = category
+
+                var pageUpdateUrl = 'https://'+signedHost+'/api/pages/update'
+                    postBody.pageId = article
+                var pageUpdateParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        i: token,
+                        pageId: signedBlogInfoId,
+                        title: 'MiLogSetup',
+                        name: 'milogsetup',
+                        summary: '#MiLogSetup',
+                        variables: [],
+                        script: '',
+                        content: [{
+                            text: 'Setting: `'+JSON.stringify(signedBlogInfo)+'`',
+                            type: 'text'
+                        }]
+                    })
+                }
+
+                fetch(pageUpdateUrl, pageUpdateParam)
+                .then(() => {
+                    location.href = domainName + '?b='+ signedusername +'@'+ signedHost
+                })
+                .catch(err => {throw err});
+            }
+        })
+    }
+
 } else if (page == 'blog' && category != null) {
     document.querySelector("#page_title").innerText = category
     const findPageUrl = 'https://'+host+'/api/users/pages'

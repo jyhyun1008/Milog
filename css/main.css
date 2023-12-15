@@ -3,8 +3,8 @@
 
 :root {
     --accent: #86b300;
-    --darkaccent: rgb(96, 128, 0);
-    --bg: rgb(249, 249, 249);
+    --darkaccent: color-mix(in srgb, var(--accent) 40%, black);
+    --bg: white;
 }
 
 body {
