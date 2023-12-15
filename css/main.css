@@ -107,7 +107,12 @@ textarea {
     padding: 130px 5px;
 }
 
-#page_title, #titlepreview {
+#page_title {
+    font-size: 2rem;
+    padding: 10px 0;
+}
+
+#post_title, #titlepreview {
     color: white;
     position: absolute;
     z-index: 1;
@@ -136,10 +141,14 @@ textarea {
     filter:brightness(85%);
     aspect-ratio: 4 / 1;
     border-radius: 15px 15px 0 0;
-    margin: 0 -5px;
     width: 100vw;
-    max-width: 750px;
+    max-width: 740px;
     object-fit: cover;
+}
+
+.eyecatchimg {
+    max-width: 750px !important;
+    margin: 0 -5px;
 }
 
 .emoji {
@@ -154,6 +163,7 @@ textarea {
 
 .post_title {
     font-size: 1.7rem;
+    text-decoration: none;
 }
 
 .editor_container {
