@@ -1102,7 +1102,6 @@ if (!blog && !page) {
 
         eyeCatchRealUpload.addEventListener('change', function(e) {
             var files = e.currentTarget.files;
-            eyeCatchUpload.innerText = files[0].name
 
             var imgReader = new FileReader();
             imgReader.onload = (e) => {
@@ -1137,6 +1136,7 @@ if (!blog && !page) {
                 .then((eyecatchData) => {return eyecatchData.json()})
                 .then((eyecatchRes) => {
                     eyeCatchImgId = eyecatchRes.id
+                    eyeCatchUpload.innerText = eyecatchRes.id
                 })
                 .catch(err => {throw err});
                 
