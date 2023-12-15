@@ -479,7 +479,7 @@ if (!blog && !page) {
                             body: JSON.stringify({
                                 i: tokenRes.token,
                                 visibility: 'home',
-                                text: pageRes.id + ' #MiLogSetup'
+                                text: '`' + pageRes.id + '` #MiLogSetup'
                             })
                         }
                         fetch(createNoteUrl, createNoteParam)
@@ -491,7 +491,7 @@ if (!blog && !page) {
                     })
                     .catch(err => {throw err});
                 } else if (infoRes.length == 1) {
-                    var blogInfoId = infoRes[0].text.split(' #MiLogSetup')[0]
+                    var blogInfoId = infoRes[0].text.split('`')[1]
                     var ShowPageUrl = 'https://'+signinHost+'/api/pages/show'
                     var ShowPageParam = {
                         method: 'POST',
