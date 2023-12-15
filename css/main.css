@@ -3,7 +3,7 @@
 
 :root {
     --accent: white;
-    --darkaccent: color-mix(in srgb, var(--accent) 75%, black);
+    --darkaccent: color-mix(in srgb, var(--accent) 70%, #470046);
     --bg: white;
 }
 
