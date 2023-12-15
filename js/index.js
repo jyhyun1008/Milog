@@ -492,7 +492,7 @@ if (!blog && !page) {
                     .catch(err => {throw err});
                 } else if (infoRes.length == 1) {
                     var blogInfoId = infoRes[0].text.split(' #MiLogSetup')[0]
-                    var ShowPageUrl = 'https://'+signinHost+'/api/pages/pageId'
+                    var ShowPageUrl = 'https://'+signinHost+'/api/pages/show'
                     var ShowPageParam = {
                         method: 'POST',
                         headers: {
