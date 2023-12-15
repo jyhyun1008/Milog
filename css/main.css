@@ -44,6 +44,10 @@ a :hover {
     margin: 10px;
 }
 
+.float-right {
+    float: right;
+}
+
 .button {
     padding: 10px;
     background-color: var(--accent);
