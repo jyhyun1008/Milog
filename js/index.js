@@ -792,6 +792,7 @@ if (!blog && !page) {
                                                     'content-type': 'application/json',
                                                 },
                                                 body:  JSON.stringify({
+                                                    i: token,
                                                     noteId: text.id
                                                 })
                                             }
