@@ -17,9 +17,14 @@ var isLogin = false;
 if (sessionId && signedHost) {
     isLogin = true;
     document.getElementsByClassName('nav-item')[0].innerHTML += '<div class="float-right"><a href="./?p=editor"><div class="button" id="editorbt">글쓰기</div></a><a href="./?p=signout"><div class="button" id="loginout">로그아웃</div></a></div>'
-    if (signedBlogInfo) {cssRoot.style.setProperty('--accent', signedBlogInfo.theme)}
+    if (signedBlogInfo) {
+        cssRoot.style.setProperty('--accent', signedBlogInfo.theme)
+    } else {
+        cssRoot.style.setProperty('--accent', '#86b300')
+    }
 } else {
     document.getElementsByClassName('nav-item')[0].innerHTML += '<div class="float-right"><a href="./?p=signin"><div class="button" id="loginout">로그인</div></a></div>'
+    cssRoot.style.setProperty('--accent', '#86b300')
 }
 
 function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 html로 변환시켜 줍니다.

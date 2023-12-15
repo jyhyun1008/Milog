@@ -2,7 +2,7 @@
 
 
 :root {
-    --accent: #86b300;
+    --accent: white;
     --darkaccent: color-mix(in srgb, var(--accent) 75%, black);
     --bg: white;
 }
