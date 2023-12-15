@@ -34,7 +34,6 @@ a :hover {
 .nav-item {
     display: flex;
     margin: 0 auto;
-    padding: 0 5px;
     width: 100%;
     max-width: 1486px;
     align-items: center;
@@ -103,10 +102,12 @@ textarea {
     width: 100%;
     max-width: 740px;
     margin: 0 auto;
-    padding: 130px 0;
+    padding: 130px 5px;
 }
 
 #page_title, #titlepreview {
+    color: white;
+    position: absolute;
     font-size: 2rem;
     padding: 10px 0;
 }
@@ -129,10 +130,12 @@ textarea {
 }
 
 .eyecatchimg, #imagepreview img {
+    filter:brightness(50%);
     aspect-ratio: 4 / 1;
     border-radius: 15px 15px 0 0;
     margin: 0 -5px;
-    width: 100%;
+    width: 100vw;
+    max-width: 750px;
     object-fit: cover;
 }
 
