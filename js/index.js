@@ -17,7 +17,7 @@ var isLogin = false;
 if (sessionId && signedHost) {
     isLogin = true;
     document.getElementsByClassName('nav-item')[0].innerHTML += '<a href="./?p=editor"><div class="button" id="editorbt">글쓰기</div></a><a href="./?p=signout"><div class="button" id="loginout">로그아웃</div></a>'
-    if (signedBlogInfo) {cssRoot.style.setProperty('--accent', JSON.parse(signedBlogInfo).theme)}
+    if (signedBlogInfo) {cssRoot.style.setProperty('--accent', signedBlogInfo.theme)}
 } else {
     document.getElementsByClassName('nav-item')[0].innerHTML += '<a href="./?p=signin"><div class="button" id="loginout">로그인</div></a>'
 }
