@@ -201,7 +201,7 @@ textarea {
     border-width: 0px;
 }
 
-.commentlist {
+.commentList {
     border-top: 2px solid var(--lightaccent);
     padding: 10px 0;
 }
