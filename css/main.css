@@ -14,7 +14,7 @@ body {
 }
 
 a {
-    text-decoration: none;
+    text-decoration: var(--accent) wavy underline;
     color: inherit;
 }
 
@@ -60,6 +60,10 @@ a :hover {
     border-radius: 15px;
     max-width: 100px;
     text-align: center;
+}
+
+.button :hover {
+    cursor: pointer;
 }
 
 #loginout, #editorbt {
