@@ -780,7 +780,30 @@ if (!blog && !page) {
                                 }
                                 document.querySelector("#commentbox").innerHTML += '<div class="commentList" id="comment'+text.id+'"><div class="commentUser">@'+text.user.username+'@'+commentUserHost+'</div><div class="commentTime">'+text.createdAt+'</div><div class="commentText">'+commentText+'</div></div>'
                                 if (signedHost == commentUserHost && signedusername == text.user.username) {
-                                    document.querySelector("#comment"+text.id).innerHTML += '<a href="./?p=deletenote&a='+text.id+'"><div class="button">삭제<div></a>'
+                                    document.querySelector("#comment"+text.id).innerHTML += '<div class="button" id="delete'+text.id+'">삭제<div>'
+                                    document.querySelector("#comment"+text.id).addEventListener('click', function(e) {
+                                        var letsDelete = confirm("덧글을 삭제하시겠습니까?")
+
+                                        if (letsDelete === true) {
+                                            var deleteCommentUrl = 'https://'+signedHost+'/api/notes/delete'
+                                            var deleteCommentParam = {
+                                                method: 'POST',
+                                                headers: {
+                                                    'content-type': 'application/json',
+                                                },
+                                                body:  JSON.stringify({
+                                                    noteId: text.id
+                                                })
+                                            }
+                                            fetch(deleteCommentUrl, deleteCommentParam)
+                                            .then((result) => {
+                                                location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
+                                            })
+                                            .catch(err => {throw err});
+                                        } else {
+                                            alert("취소되었습니다.")
+                                        }
+                                    })
                                 }
                                 resolve()
                             }
