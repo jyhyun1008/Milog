@@ -59,7 +59,7 @@ a :hover {
     border-color: var(--darkaccent);
 }
 
-input, .imageUploader {
+input, select, .imageUploader {
     height: 36px;
     width: 100%;
     padding: 0 2px;

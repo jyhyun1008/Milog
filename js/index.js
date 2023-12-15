@@ -468,6 +468,7 @@ if (!blog && !page) {
                     .then((pageData) => {return pageData.json()})
                     .then((pageRes) => {
                         localStorage.setItem('blogInfoId', pageRes.id)
+                        localStorage.setItem('blogInfo', JSON.parse(pageRes.content[0].text.split('`')[1]))
 
                         var createNoteUrl = 'https://'+signinHost+'/api/notes/create'
                         var createNoteParam = {
