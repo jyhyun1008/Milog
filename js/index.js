@@ -872,6 +872,8 @@ if (!blog && !page) {
 
     if (token) {
 
+        document.querySelector('#container').style.maxWidth = 'auto'
+
         document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg" class="imageUploader">배경 사진을 선택해주세요</div><select id="postCategory" placeholder="카테고리를 입력해주세요"></select><input id="postUrl" placeholder="url을 지정해주세요"></input><div id="imgupload" class="imageUploader">📷</div><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="imagepreview"></div><div id="titlepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
         for (var i = 0; i<signedBlogInfo.category; i++) {
             document.querySelector('#postCategory').innerHTML = '<option value="'+signedBlogInfo.category[i]+'">'+signedBlogInfo.category[i]+'</option>'
@@ -1179,11 +1181,12 @@ if (!blog && !page) {
         var postTitle = document.getElementById('postTitle');
         var postCategory = document.getElementById('postCategory');
         var postUrl = document.getElementById('postUrl');
-        var selectedCategory = postCategory.options[postCategory.selectedIndex].value;
         postButton.addEventListener('click', function(event) {
-            if (postTitle.value == '' || postUrl.value == '' || selectedCategory == '' || editor.value == '') {
+            if (postTitle.value == '' || postUrl.value == '' || editor.value == '') {
                 alert("빈칸을 모두 채워주세요!");
             } else {
+
+                var selectedCategory = postCategory.options[postCategory.selectedIndex].value;
                 var postBody = {
                     i: token,
                     title: postTitle.value,
