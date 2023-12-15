@@ -1269,19 +1269,19 @@ if (!blog && !page) {
         document.querySelector('#page_content').innerHTML = '<div class="setting_container"><div>블로그 제목:</div><input id="blogTitle" value="'+signedBlogInfo.blogTitle+'"></input><div>블로그 소개:</div><textarea id="blogIntro">'+signedBlogInfo.blogIntro+'</textarea><div>테마 색상:<br>(블로그의 테마 색상을 변경하는 것이 아닌, 여러분의 브라우저에서 보이는 사이트 전체의 테마 색상을 변경하는 것입니다.)</div><input id="blogTheme" value="'+signedBlogInfo.theme+'"></input><div>카테고리:<br>(개행으로 구분합니다. 최소 1개의 카테고리는 남겨 두셔야 글을 작성하실 수 있습니다.)</div><textarea id="category">'+signedBlogInfo.category+'</textarea></div><div class="button" id="settingChange">설정 변경</div>'
 
         var settingChange = document.getElementById('settingChange');
-        var blogTitle = document.getElementById('blogTitle').value.replace('`', '&#x60;').replace('"', '&quot;');
-        var blogIntro = document.getElementById('blogIntro').value.replace('`', '&#x60;').replace('"', '&quot;');
-        var blogTheme = document.getElementById('blogTheme').value.replace('`', '&#x60;').replace('"', '&quot;');
-        var category = document.getElementById('category').value.replace('`', '&#x60;').replace('"', '&quot;').split('\n');
+        var blogTitle = document.getElementById('blogTitle')
+        var blogIntro = document.getElementById('blogIntro')
+        var blogTheme = document.getElementById('blogTheme')
+        var category = document.getElementById('category');
         settingChange.addEventListener('click', function(event) {
-            if (blogTitle == '' || blogIntro == '' || blogTheme == '' || category == '') {
+            if (blogTitle.value == '' || blogIntro.value == '' || blogTheme.value == '' || category.value == '') {
                 alert("빈칸을 모두 채워주세요!");
             } else {
 
-                signedBlogInfo.blogTitle = blogTitle
-                signedBlogInfo.blogIntro = blogIntro
-                signedBlogInfo.theme = blogTheme
-                signedBlogInfo.category = category
+                signedBlogInfo.blogTitle = blogTitle.value.replace('`', '&#x60;').replace('"', '&quot;')
+                signedBlogInfo.blogIntro = blogIntro.value.replace('`', '&#x60;').replace('"', '&quot;')
+                signedBlogInfo.theme = blogTheme.value.replace('`', '&#x60;').replace('"', '&quot;')
+                signedBlogInfo.category = category.value.replace('`', '&#x60;').replace('"', '&quot;').split('\n')
 
                 var pageUpdateUrl = 'https://'+signedHost+'/api/pages/update'
                 var pageUpdateParam = {
