@@ -65,6 +65,8 @@ input, .imageUploader {
     padding: 0 2px;
     border-width: 0px;
     background-color: #fff;
+    border: 0;
+    border-bottom: 2px solid var(--accent);
 }
 
 #container {
