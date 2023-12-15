@@ -725,8 +725,8 @@ if (!blog && !page) {
                     document.querySelector("#page_title").innerText = pageTitle
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
                     console.log(result)
-                    document.querySelector("#post_content").innerHTML += '<div>@'+blog+'</div>'
-                    document.querySelector("#post_content").innerHTML += '<div>'+PageRes.createdAt+'</div>'
+                    document.querySelector("#post_content").innerHTML += '<div class="usernameView">@'+blog+'</div>'
+                    document.querySelector("#post_content").innerHTML += '<div class="createdAtView">'+PageRes.createdAt+'</div>'
                     document.querySelector("#post_content").innerHTML += parseMd(result)
 
                 }
