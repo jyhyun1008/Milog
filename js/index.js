@@ -77,7 +77,7 @@ function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 ht
     //links
     md = md.replace(/[\[]{1}([^\]]+)[\]]{1}[\(]{1}([^\)\"]+)(\"(.+)\")?[\)]{1}/g, '<a href="$2" title="$4">$1</a>');
     //mentions
-    md = md.replace(/\@([^\@]+)\@([^\@]+)/gm, '<span class="handle"><a href="https://$2/@$1">@$1@$2</a></span>')
+    md = md.replace(/\@([\-\_0-9A-z]+)\@([\-\_0-9A-z.]+)/gm, '<span class="handle"><a href="https://$2/@$1">@$1@$2</a></span>')
     
     //font styles
     md = md.replace(/[\*]{2}([^\*]+)[\*]{2}/g, '<strong>$1</strong>');
@@ -326,7 +326,7 @@ if (!blog && !page) {
                         } else {
                             eyeCatchUrl = postRes.eyeCatchingImage.url
                         }
-                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+resultusername+'@'+resulthost+'&a='+pageId+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div><div class="post_author"><a class="nodeco" href="./b='+resultusername+'@'+resulthost+'"><img class="emoji" src="'+postUserAvatar+'"> @'+resultusername+'@'+resulthost+'</a></div></div>'
+                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+resultusername+'@'+resulthost+'&a='+pageId+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div><div class="post_author"><a class="nodeco" href="./?b='+resultusername+'@'+resulthost+'"><img class="emoji" src="'+postUserAvatar+'"> @'+resultusername+'@'+resulthost+'</a></div></div>'
                         resolve()
                     })
                 })
@@ -904,7 +904,7 @@ if (!blog && !page) {
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
                     console.log(result)
                     document.querySelector("#post_content").innerHTML += parseMd(result)
-                    document.querySelector("#post_content").innerHTML += '<a class="nodeco" href="./b='+blog+'"><div class="usernameView"><img class="emoji" src="'+userAvatar+'"> @'+blog+'</div></a>'
+                    document.querySelector("#post_content").innerHTML += '<a class="nodeco" href="./?b='+blog+'"><div class="usernameView"><img class="emoji" src="'+userAvatar+'"> @'+blog+'</div></a>'
                     document.querySelector("#post_content").innerHTML += '<div class="createdAtView">'+PageRes.createdAt+'</div>'
 
                 }
@@ -990,7 +990,7 @@ if (!blog && !page) {
                                         await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
                                     }
                                 }
-                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser"><a class="nodeco" href="./b='+text.user.username+'@'+commentUserHost+'"><img class="emoji" src="'+text.user.avatarUrl+'"> @'+text.user.username+'@'+commentUserHost+'</a></div><div class="commentTime">'+text.createdAt+'</div><div class="commentText" id="comment'+text.id+'"><div>'+commentText+'</div></div></div>'
+                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser"><a class="nodeco" href="./?b='+text.user.username+'@'+commentUserHost+'"><img class="emoji" src="'+text.user.avatarUrl+'"> @'+text.user.username+'@'+commentUserHost+'</a></div><div class="commentTime">'+text.createdAt+'</div><div class="commentText" id="comment'+text.id+'"><div>'+commentText+'</div></div></div>'
                                 if (signedHost == commentUserHost && signedusername == text.user.username) {
                                     document.querySelector("#comment"+text.id).innerHTML += '<div class="button" id="delete'+text.id+'">삭제<div>'
                                     document.querySelector("#delete"+text.id).addEventListener('click', function(e) {
