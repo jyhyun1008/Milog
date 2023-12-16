@@ -554,9 +554,9 @@ if (!blog && !page) {
                 var filter = postRes.filter((item) => {
                     return item.summary !== null
                 })
-                postList += filter.filter((item) => {
+                postList.concat(filter.filter((item) => {
                     return item.summary == '#MiLog #' + cat
-                })
+                }))
                 if (postList.length > 10) {
                     postList += postList.slice(0, 10)
                     lastPost = postList[10].pageId
@@ -604,9 +604,9 @@ if (!blog && !page) {
                 var filter = postRes.filter((item) => {
                     return item.summary !== null
                 })
-                postList += filter.filter((item) => {
+                postList.concat(filter.filter((item) => {
                     return item.summary.split('#')[1] == 'MiLog '
-                })
+                }))
                 console.log(postList)
                 if (postList.length > 10) {
                     postList += postList.slice(0, 10)
