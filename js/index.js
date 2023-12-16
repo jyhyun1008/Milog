@@ -694,7 +694,7 @@ if (!blog && !page) {
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
                     console.log(result)
                     document.querySelector("#post_content").innerHTML += parseMd(result)
-                    document.querySelector("#post_content").innerHTML += '<div class="usernameView"><img class="emoji" src="'+userAvatar+'">@'+blog+'</div>'
+                    document.querySelector("#post_content").innerHTML += '<div class="usernameView"><img class="emoji" src="'+userAvatar+'"> @'+blog+'</div>'
                     document.querySelector("#post_content").innerHTML += '<div class="createdAtView">'+PageRes.createdAt+'</div>'
 
                 }
@@ -780,7 +780,7 @@ if (!blog && !page) {
                                         await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
                                     }
                                 }
-                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser"><img class="emoji" src="'+text.user.avatarUrl+'">@'+text.user.username+'@'+commentUserHost+'</div><div class="commentTime">'+text.createdAt+'</div><div class="commentText" id="comment'+text.id+'"><div>'+commentText+'</div></div></div>'
+                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser"><img class="emoji" src="'+text.user.avatarUrl+'"> @'+text.user.username+'@'+commentUserHost+'</div><div class="commentTime">'+text.createdAt+'</div><div class="commentText" id="comment'+text.id+'"><div>'+commentText+'</div></div></div>'
                                 if (signedHost == commentUserHost && signedusername == text.user.username) {
                                     document.querySelector("#comment"+text.id).innerHTML += '<div class="button" id="delete'+text.id+'">삭제<div>'
                                     document.querySelector("#delete"+text.id).addEventListener('click', function(e) {
