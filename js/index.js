@@ -704,7 +704,7 @@ if (!blog && !page) {
                         location.href = domainName + '?b=' + blog
                     })
                     
-                    for (let i = 0; i < blogInfo.category; i++) {
+                    for (let i = 0; i < blogInfo.category.length; i++) {
                         if (blogInfo.category[i] == page) {
                             document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
                         } else {
@@ -754,7 +754,7 @@ if (!blog && !page) {
             location.href = domainName + '?b=' + blog
         })
         
-        for (let i = 0; i < blogInfo.category; i++) {
+        for (let i = 0; i < blogInfo.category.length; i++) {
             if (blogInfo.category[i] == page) {
                 document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
             } else {
