@@ -533,7 +533,7 @@ if (!blog && !page) {
         })
     }
     
-    function loadPostsbyCategory(cat, last = '') {
+    function loadPostsbyCategory(cat, last = '', loadPostFunc = loadPostFunc) {
         if (cat != '전체글'){
             var findPostsUrl = 'https://'+host+'/api/users/pages'
             if (last != '') {
