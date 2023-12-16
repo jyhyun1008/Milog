@@ -1058,7 +1058,7 @@ if (!blog && !page) {
             document.querySelector('#titlepart').innerHTML = parseMd(title.value)
         })
 
-        var category = document.getElementById('#postCategory');
+        var category = document.getElementById('postCategory');
         category.addEventListener('change', function(event){
             document.querySelector('#categorypart').innerHTML = parseMd(category.value)
         })
