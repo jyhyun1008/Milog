@@ -67,7 +67,7 @@ a :hover {
     text-align: center;
 }
 
-.button :hover {
+.button:hover {
     cursor: pointer;
     color: var(--darkaccent);
 }
@@ -247,4 +247,7 @@ textarea {
     margin: 10px 0;
     padding: 10px;
     border-left: 2px solid var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
