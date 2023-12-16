@@ -270,7 +270,7 @@ if (!blog && !page) {
     fetch(url)
     .then(res => res.text())
     .then((out) => {
-        document.querySelector("#page_title").innerHTML += '\n'+'최신 포스트'
+        document.querySelector("#page_title").innerHTML += '최신 포스트'
         const findUserNotesUrl = 'https://'+initialHost+'/api/notes/search-by-tag'
         const findUserNotesParam = {
             method: 'POST',
@@ -348,7 +348,7 @@ if (!blog && !page) {
     if (localStorage.getItem("sessionId")) {
         location.href = domainName
     } else {
-        document.querySelector("#page_title").innerText = '\n'+'로그인'
+        document.querySelector("#page_title").innerText = '로그인'
         document.querySelector("#page_content").innerHTML = '<div><input id="host" placeholder="계정이 있는 인스턴스 주소"></input><div class="button" id="signinButton">로그인</div></div>'
 
         var signHost = document.getElementById('host');
@@ -552,6 +552,9 @@ if (!blog && !page) {
     })
     .catch(err => {throw err});
 } else if (blog && article) {
+
+    document.querySelector("#page_title").style.display = 'none';
+
     var username = blog.split('@')[0]
     var host = blog.split('@')[1]
 
@@ -837,6 +840,8 @@ if (!blog && !page) {
     location.href = domainName
 } else if (page == 'editor') {
 
+    document.querySelector("#page_title").style.display = 'none';
+
     var eyeCatchImgId = ''
     var pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
 
@@ -1066,8 +1071,7 @@ if (!blog && !page) {
         imgUpload.addEventListener('click', () => imgRealUpload.click())
 
         eyeCatchRealUpload.addEventListener('change', function(e) {
-            var files = e.currentTarget.files;
-
+            
             var imgReader = new FileReader();
             imgReader.onload = (e) => {
                 console.log(e.target.result)
@@ -1252,7 +1256,7 @@ if (!blog && !page) {
 
     if (token) {
 
-        document.querySelector('#page_title').innerText = '\n'+'블로그 설정'
+        document.querySelector('#page_title').innerText = '블로그 설정'
         document.querySelector('#page_content').innerHTML = '<div class="setting_container"><div>블로그 제목:</div><input id="blogTitle" value="'+signedBlogInfo.blogTitle+'"></input><div>블로그 소개:</div><textarea id="blogIntro">'+signedBlogInfo.blogIntro+'</textarea><div>테마 색상:<br>(블로그의 테마 색상을 변경하는 것이 아닌, 여러분의 브라우저에서 보이는 사이트 전체의 테마 색상을 변경하는 것입니다.)</div><input id="blogTheme" value="'+signedBlogInfo.theme+'"></input><div>카테고리:<br>(개행으로 구분합니다. 최소 1개의 카테고리는 남겨 두셔야 글을 작성하실 수 있습니다.)</div><textarea id="category">'+signedBlogInfo.category+'</textarea></div><div class="button" id="settingChange">설정 변경</div>'
 
         var settingChange = document.getElementById('settingChange');
@@ -1303,7 +1307,7 @@ if (!blog && !page) {
     }
 
 } else if (page == 'blog' && category != null) {
-    document.querySelector("#page_title").innerText = '\n'+category
+    document.querySelector("#page_title").innerText = category
     const findPageUrl = 'https://'+host+'/api/users/pages'
     const findPageParam = {
         method: 'POST',
@@ -1349,7 +1353,7 @@ if (!blog && !page) {
     fetch(url)
     .then(res => res.text())
     .then((out) => {
-        document.querySelector("#page_title").innerText = '\n'+page
+        document.querySelector("#page_title").innerText = page
         document.querySelector("#page_content").innerHTML += parseMd(out)
     })
     .catch(err => { throw err });
