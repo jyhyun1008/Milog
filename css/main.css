@@ -41,7 +41,7 @@ a :hover {
     display: flex;
     margin: 0 auto;
     width: 100%;
-    max-width: 1486px;
+    max-width: 1480px;
     align-items: center;
 }
 
@@ -107,10 +107,10 @@ textarea {
 }
 
 #container {
-    width: 100%;
+    width: calc(100% - 10px);
     max-width: 740px;
     margin: 0 auto;
-    padding: 130px 5px;
+    padding: 64px 5px;
 }
 
 #page_title {
@@ -148,6 +148,7 @@ textarea {
     aspect-ratio: 4 / 1;
     border-radius: 15px 15px 0 0;
     width: 100vw;
+    min-height: 180px;
     max-width: 740px;
     object-fit: cover;
 }
@@ -177,13 +178,13 @@ textarea {
 
 .editor {
     width: 50%;
-    height: calc(100vh - 360px);
+    height: calc(100vh - 150px);
     padding-right: 10px;
 }
 
 .editor textarea {
     width: 100%;
-    height: calc(100vh - 360px - 180px);
+    height: calc(100vh - 150px - 180px);
     padding: 0 2px;
     border-width: 0px !important;
     border-radius: 0 !important;
@@ -191,7 +192,7 @@ textarea {
 
 .parser {
     width: 50%;
-    height: calc(100vh - 360px);
+    height: calc(100vh - 150px);
     overflow: scroll;
 }
 
@@ -251,4 +252,12 @@ textarea {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+@media (max-width: 1000px) {
+    
+    .parser{
+        display:none;
+    }
+
 }
