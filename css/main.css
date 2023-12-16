@@ -98,7 +98,7 @@ a :hover {
     padding: 64px 5px;
 }
 
-input, select, .imageUploader {
+input, .imageUploader {
     height: 34px;
     width: 100%;
     padding: 0 2px;
@@ -106,6 +106,9 @@ input, select, .imageUploader {
     background-color: #fff;
     border: 0;
     border-bottom: 2px solid var(--accent);
+    line-height: 1.8;
+    font-size: 1rem;
+    font-family: 'defaultGothic';
 }
 
 input::placeholder, textarea::placeholder {
@@ -113,6 +116,10 @@ input::placeholder, textarea::placeholder {
     font-family: 'defaultGothic';
     padding: 5px;
 }
+
+input:focus, textarea:focus, select:focus{
+    outline: #fff solid 0px;
+  }
 
 #host {
     margin-bottom: 10px;
@@ -127,12 +134,16 @@ select {
     border: 0;
     border-bottom: 2px solid var(--accent);
 }
+
 textarea {
     width: 100%;
     height: 100px;
     resize: none;
     border: 2px solid var(--accent);
     border-radius: 15px;
+    line-height: 1.8;
+    font-size: 1rem;
+    font-family: 'defaultGothic';
 }
 
 #page_title {
@@ -146,7 +157,7 @@ textarea {
     position: absolute;
     z-index: 1;
     font-size: 2rem;
-    padding: 10px 0;
+    padding: 10px;
 }
 
 #postlist {
@@ -221,6 +232,7 @@ textarea {
 #contentpreview {
     max-height: calc(100vh - 197px - max(180px, 735px / 4));
     overflow: scroll;
+    padding: 0 5px;
 }
 
 #tools {
