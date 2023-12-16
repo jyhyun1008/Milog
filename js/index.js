@@ -664,11 +664,12 @@ if (!blog && !page) {
                 .then((pageData) => {return pageData.json()})
                 .then((pageRes) => {
                     var blogInfo = JSON.parse(pageRes.content[0].text.split('`')[1])
-                    document.querySelector('#page_title').innerText = blogInfo.blogTitle
+                    document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+blogInfo.userAvatar+'"></div>'+blogInfo.blogTitle
 
                     lastVisited = {
                         blog: blog,
                         userId: userRes[0].id,
+                        userAvatar: userRes[0].avatarUrl,
                         blogInfo: blogInfo
                     }
                     localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
@@ -713,7 +714,7 @@ if (!blog && !page) {
     } else {
 
         var blogInfo = lastVisited.blogInfo
-        document.querySelector('#page_title').innerText = blogInfo.blogTitle
+        document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+blogInfo.userAvatar+'"></div>'+blogInfo.blogTitle
 
         var lastPost = ''
         var postList = []

@@ -164,6 +164,13 @@ textarea {
     padding-bottom: 30px;
 }
 
+#blogAvatar {
+    border-radius: 50%;
+    width: 150px;
+    aspect-ratio: 1 / 1;
+    margin: 15px;
+}
+
 #blogIntro {
     padding-bottom: 20px;
     padding-top: 10px;
