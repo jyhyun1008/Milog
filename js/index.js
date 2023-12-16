@@ -317,13 +317,14 @@ if (!blog && !page) {
                     .then((postRes) => {
                         var title = postRes.title
                         var category = postRes.summary.split(' #')[1]
+                        var postUserAvatar = postRes.user.avatarUrl
                         var eyeCatchUrl = ''
                         if (!postRes.eyeCatchingImage) {
                             eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
                         } else {
                             eyeCatchUrl = postRes.eyeCatchingImage.url
                         }
-                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+resultusername+'@'+resulthost+'&a='+pageId+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div><div class="post_author">@'+resultusername+'@'+resulthost+'</div></div>'
+                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+resultusername+'@'+resulthost+'&a='+pageId+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div><div class="post_author"><a class="nodeco" href="./b='+resultusername+'@'+resulthost+'"><img class="emoji" src="'+postUserAvatar+'"> @'+resultusername+'@'+resulthost+'</a></div></div>'
                         resolve()
                     })
                 })
@@ -519,7 +520,7 @@ if (!blog && !page) {
             document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+username+'@'+host+'&a='+result.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div></div>'
         }
     }
-    
+
     function loadPostsbyCategory(cat, last = '') {
         if (cat != '전체글'){
             var findPostsUrl = 'https://'+host+'/api/users/pages'
@@ -896,11 +897,12 @@ if (!blog && !page) {
                         await addContent(content, attFiles)
                     }
 
-                    document.querySelector("#post_content").innerHTML = '<div id="post_title"><div style="font-size:2rem;">'+pageTitle+'</div><div style="font-size:1.2rem;">'+pageCategory+'</div></div>'
+                    document.querySelector("#post_content").innerHTML = '<a class="nodeco" href="./b='+blog+'"><div style="margin:10px;"><i class="bx bx-chevron-left"></i></div></a>'
+                    document.querySelector("#post_content").innerHTML += '<div id="post_title"><div style="font-size:2rem;">'+pageTitle+'</div><div style="font-size:1.2rem;">'+pageCategory+'</div></div>'
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
                     console.log(result)
                     document.querySelector("#post_content").innerHTML += parseMd(result)
-                    document.querySelector("#post_content").innerHTML += '<div class="usernameView"><img class="emoji" src="'+userAvatar+'"> @'+blog+'</div>'
+                    document.querySelector("#post_content").innerHTML += '<a class="nodeco" href="./b='+blog+'"><div class="usernameView"><img class="emoji" src="'+userAvatar+'"> @'+blog+'</div></a>'
                     document.querySelector("#post_content").innerHTML += '<div class="createdAtView">'+PageRes.createdAt+'</div>'
 
                 }
@@ -986,7 +988,7 @@ if (!blog && !page) {
                                         await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
                                     }
                                 }
-                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser"><img class="emoji" src="'+text.user.avatarUrl+'"> @'+text.user.username+'@'+commentUserHost+'</div><div class="commentTime">'+text.createdAt+'</div><div class="commentText" id="comment'+text.id+'"><div>'+commentText+'</div></div></div>'
+                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser"><a class="nodeco" href="./b='+text.user.username+'@'+commentUserHost+'"><img class="emoji" src="'+text.user.avatarUrl+'"> @'+text.user.username+'@'+commentUserHost+'</a></div><div class="commentTime">'+text.createdAt+'</div><div class="commentText" id="comment'+text.id+'"><div>'+commentText+'</div></div></div>'
                                 if (signedHost == commentUserHost && signedusername == text.user.username) {
                                     document.querySelector("#comment"+text.id).innerHTML += '<div class="button" id="delete'+text.id+'">삭제<div>'
                                     document.querySelector("#delete"+text.id).addEventListener('click', function(e) {
