@@ -24,7 +24,6 @@ i {
 }
 
 a {
-    text-decoration: var(--accent) wavy underline;
     color: var(--accent);
 }
 
@@ -206,6 +205,7 @@ textarea {
 }
 
 #postlist {
+    margin: 20px auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
