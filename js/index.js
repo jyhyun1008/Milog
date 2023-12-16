@@ -16,7 +16,7 @@ var cssRoot = document.querySelector(':root');
 var isLogin = false;
 if (sessionId && signedHost) {
     isLogin = true;
-    document.getElementsByClassName('nav-item')[0].innerHTML += '<div class="item"><a href="./?b='+signedusername+'@'+signedHost+'"><i class="bx bx-home"></i></a></div>'
+    document.getElementsByClassName('nav-item')[0].innerHTML += '<div class="item"><a href="./?b='+signedusername+'@'+signedHost+'" class="nodeco"><i class="bx bx-home"></i></a></div>'
     document.getElementsByClassName('nav-item')[0].innerHTML += '<div class="float-right"><a href="./?p=editor"><div class="button" id="editorbt"><i class="bx bx-edit-alt"></i></div></a><a href="./?p=signout"><div class="button" id="loginout"><i class="bx bx-log-out" ></i></div></a></div>'
     if (signedBlogInfo) {
         cssRoot.style.setProperty('--accent', signedBlogInfo.theme)
