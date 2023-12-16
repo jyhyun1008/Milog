@@ -671,7 +671,7 @@ if (!blog && !page) {
                         blogInfo: blogInfo
                     }
                     localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
-                    document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+blogInfo.userAvatar+'"></div>'+blogInfo.blogTitle
+                    document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
     
                     var lastPost = ''
                     var postList = []
@@ -713,7 +713,7 @@ if (!blog && !page) {
     } else {
 
         var blogInfo = lastVisited.blogInfo
-        document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+blogInfo.userAvatar+'"></div>'+blogInfo.blogTitle
+        document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
 
         var lastPost = ''
         var postList = []
