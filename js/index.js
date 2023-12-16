@@ -562,15 +562,15 @@ if (!blog && !page) {
                 if (filter2.length > 10) {
                     postList = postList.concat(filter2.slice(0, 10))
                     lastPost = postList[10].pageId
-                    loadPostFunc()
+                    this.loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length == 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
-                    loadPostFunc()
+                    this.loadPostFunc()
                 } else if (postRes.length < 100 && filter2.length <= 10) {
                     postList = postList.concat(filter2)
                     lastPost = ''
-                    loadPostFunc()
+                    this.loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length < 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
@@ -611,15 +611,15 @@ if (!blog && !page) {
                 if (filter2.length > 10) {
                     postList = postList.concat(filter2.slice(0, 10))
                     lastPost = postList[10].pageId
-                    loadPostFunc()
+                    this.loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length == 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
-                    loadPostFunc()
+                    this.loadPostFunc()
                 } else if (postRes.length < 100 && filter2.length <= 10) {
                     postList = postList.concat(filter2)
                     lastPost = ''
-                    loadPostFunc()
+                    this.loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length < 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
