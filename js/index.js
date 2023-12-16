@@ -694,25 +694,17 @@ if (!blog && !page) {
                     }
 
                     if (!page) {
-                        document.querySelector("#blognav").innerHTML += '<div class="button selected" id="viewall">전체글</div>'
+                        document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button selected" id="viewall">전체글</div></a>'
                     } else {
-                        document.querySelector("#blognav").innerHTML += '<div class="button" id="viewall">전체글</div>'
+                        document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button" id="viewall">전체글</div></a>'
                     }
-
-                    document.querySelector('#viewall').addEventListener('click', function() {
-                        location.href = domainName + '?b=' + blog
-                    })
                     
                     for (let i = 0; i < blogInfo.category.length; i++) {
                         if (blogInfo.category[i] == page) {
-                            document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                            document.querySelector('#blognav').innerHTML += '<a href="./?b=' + blog + '&p=' + blogInfo.category[i]+'"><div class="button selected" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div></a>'
                         } else {
-                            document.querySelector('#blognav').innerHTML += '<div class="button" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                            document.querySelector('#blognav').innerHTML += '<a href="./?b=' + blog + '&p=' + blogInfo.category[i]+'"><div class="button" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div></a>'
                         }
-                        
-                        document.querySelector('#view'+i.toString()).addEventListener('click', function() {
-                            location.href = domainName + '?b=' + blog + '&p=' + blogInfo.category[i]
-                        })
                     }
 
                     loadPostsbyCategory(document.querySelector('.selected').innerText)
@@ -745,24 +737,17 @@ if (!blog && !page) {
         }
 
         if (!page) {
-            document.querySelector("#blognav").innerHTML += '<div class="button selected" id="viewall">전체글</div>'
+            document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button selected" id="viewall">전체글</div></a>'
         } else {
-            document.querySelector("#blognav").innerHTML += '<div class="button" id="viewall">전체글</div>'
+            document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button" id="viewall">전체글</div></a>'
         }
-        document.querySelector('#viewall').addEventListener('click', function() {
-            location.href = domainName + '?b=' + blog
-        })
-        
+
         for (let i = 0; i < blogInfo.category.length; i++) {
             if (blogInfo.category[i] == page) {
-                document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                document.querySelector('#blognav').innerHTML += '<a href="./?b=' + blog + '&p=' + blogInfo.category[i]+'"><div class="button selected" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div></a>'
             } else {
-                document.querySelector('#blognav').innerHTML += '<div class="button" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                document.querySelector('#blognav').innerHTML += '<a href="./?b=' + blog + '&p=' + blogInfo.category[i]+'"><div class="button" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div></a>'
             }
-            
-            document.querySelector('#view'+i.toString()).addEventListener('click', function() {
-                location.href = domainName + '?b=' + blog + '&p=' + blogInfo.category[i]
-            })
         }
 
         loadPostsbyCategory(document.querySelector('.selected').innerText)
