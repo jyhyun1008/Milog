@@ -507,8 +507,12 @@ if (!blog && !page) {
     document.querySelector('#page_title').style.paddingBottom = "0px"
 
     const loadPostFunc = async() => {
-        for (let result of postList) {
-            await loadPosts(result);
+        try {
+            for (let result of postList) {
+                await loadPosts(result);
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -562,15 +566,15 @@ if (!blog && !page) {
                 if (filter2.length > 10) {
                     postList = postList.concat(filter2.slice(0, 10))
                     lastPost = postList[10].pageId
-                    this.loadPostFunc()
+                    loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length == 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
-                    this.loadPostFunc()
+                    loadPostFunc()
                 } else if (postRes.length < 100 && filter2.length <= 10) {
                     postList = postList.concat(filter2)
                     lastPost = ''
-                    this.loadPostFunc()
+                    loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length < 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
@@ -611,15 +615,15 @@ if (!blog && !page) {
                 if (filter2.length > 10) {
                     postList = postList.concat(filter2.slice(0, 10))
                     lastPost = postList[10].pageId
-                    this.loadPostFunc()
+                    loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length == 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
-                    this.loadPostFunc()
+                    loadPostFunc()
                 } else if (postRes.length < 100 && filter2.length <= 10) {
                     postList = postList.concat(filter2)
                     lastPost = ''
-                    this.loadPostFunc()
+                    loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length < 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
