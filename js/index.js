@@ -664,8 +664,6 @@ if (!blog && !page) {
                 .then((pageData) => {return pageData.json()})
                 .then((pageRes) => {
                     var blogInfo = JSON.parse(pageRes.content[0].text.split('`')[1])
-                    document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+blogInfo.userAvatar+'"></div>'+blogInfo.blogTitle
-
                     lastVisited = {
                         blog: blog,
                         userId: userRes[0].id,
@@ -673,6 +671,7 @@ if (!blog && !page) {
                         blogInfo: blogInfo
                     }
                     localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
+                    document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+blogInfo.userAvatar+'"></div>'+blogInfo.blogTitle
     
                     var lastPost = ''
                     var postList = []
