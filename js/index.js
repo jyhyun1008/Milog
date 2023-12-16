@@ -279,116 +279,58 @@ if (!blog && !page) {
                 'content-type': 'application/json',
             },
             body:  JSON.stringify({
-                tag: 'MiLogSetup',
-                limit: 100,
+                tag: 'MiLogNewPost',
+                limit: 20,
             }),
         }
         fetch(findUserNotesUrl, findUserNotesParam)
         .then((noteData) => {return noteData.json()})
         .then((noteRes) => {
 
-            var blogs = []
-            var blogPosts = []
-            var filteredPosts = []
+            document.querySelector("#page_content").innerHTML += '<div id="postlist"></div>'
 
-            const loadUsersFunc = async() => {
-
+            const loadPostFunc = async() => {
                 for (let result of noteRes) {
-                    await loadUsers(result);
+                    await loadPosts(result);
                 }
-
-                blogPosts.sort(function(a, b) {
-
-                    if(a.createdAt > b.createdAt) return -1;
-                    if(a.createdAt < b.createdAt) return 1;
-                    if(a.createdAt === b.createdAt) return 0;
-                });
-
-                console.log(blogPosts)
-
-                document.querySelector("#page_content").innerHTML += '<div id="postlist"></div>'
-                
-                for (let post of blogPosts) {
-                    await filterPosts(post);
-                }
-
             }
 
-            const loadUsers = (res) => {
+            const loadPosts = (res) => {
                 return new Promise((resolve, reject) => {
+                    var pageId = res.text.split('&a=')[1].split(')')[0]
+                    var resultusername = res.user.username
                     var resulthost = res.user.host
-                    console.log(res)
                     if (!resulthost) {
                         resulthost = initialHost
                     }
-                    var findUserIdUrl = 'https://'+resulthost+'/api/users/search-by-username-and-host'
-                    var findUserIdParam = {
+                    var loadPostUrl = 'https://'+resulthost+'/api/pages/show'
+                    var loadPostParam = {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json',
                         },
                         body:  JSON.stringify({
-                            username: res.user.username,
-                            host: resulthost,
+                            pageId: pageId,
                         })
                     }
-                    fetch(findUserIdUrl, findUserIdParam)
-                    .then((userData) => {return userData.json()})
-                    .then((userRes) => {
-                        var blogInfo = {
-                            url: res.text.split(' ')[0],
-                            userId: userRes[0].id,
-                            username: res.user.username,
-                            host: resulthost
+                    fetch(loadPostUrl, loadPostParam)
+                    .then((postData) => {return postData.json()})
+                    .then((postRes) => {
+                        var title = postRes.title
+                        var category = postRes.summary.split(' #')[1]
+                        var eyeCatchUrl = ''
+                        if (!postRes.eyeCatchingImage) {
+                            eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
+                        } else {
+                            eyeCatchUrl = postRes.eyeCatchingImage.url
                         }
-                        blogs.push(blogInfo)
-                        var findPostsUrl = 'https://'+blogInfo.host+'/api/users/pages'
-                        var findPostParam = {
-                            method: 'POST',
-                            headers: {
-                                'content-type': 'application/json',
-                            },
-                            body:  JSON.stringify({
-                                userId: blogInfo.userId,
-                            })
-                        }
-                        fetch(findPostsUrl, findPostParam)
-                        .then((postData) => {return postData.json()})
-                        .then((postRes) => {
-                            for (var i=0; i<postRes.length; i++) {
-                                if (postRes[i].summary.includes('#MiLog ')) {
-                                    postRes[i].user.host = resulthost
-                                    blogPosts.push(postRes[i])
-                                }
-                            }
-                            resolve()
-                        })
-                        .catch(err => {throw err});
+                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+resultusername+'@'+resulthost+'&a='+pageId+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div><div class="post_author">@'+resultusername+'@'+resulthost+'</div></div>'
+                        resolve()
                     })
-                    .catch(err => {throw err});
                 })
             }
 
-            const filterPosts = (post) => {
-                return new Promise((resolve, reject) => {
-                    var eyeCatchUrl = ''
-                    var userhost = ''
-                    if (!post.eyeCatchingImage) {
-                        eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
-                    } else {
-                        eyeCatchUrl = post.eyeCatchingImage.url
-                    }
-                    if (!post.user.host) {
-                        userhost = initialHost
-                    } else {
-                        userhost = post.user.host
-                    }
-                    document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+post.user.username+'@'+userhost+'&a='+post.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+post.title+'</div></a><div class="post_summary">'+post.summary+'</div><div class="post_author">@'+post.user.username+'@'+userhost+'</div></div>'
-                    resolve()
-                })
-            }
-
-            loadUsersFunc()
+            loadPostFunc()
         })
         .catch(err => {throw err});
     })
@@ -400,7 +342,7 @@ if (!blog && !page) {
         let uuid = self.crypto.randomUUID();
         localStorage.setItem("signinHost", signinHost);
         localStorage.setItem("sessionId", uuid);
-        var signinUrl = 'https://'+signinHost+'/miauth/'+uuid+'?name=MiLog&callback=https%3A%2F%2Fyeojibur.in%2FMilog%3Fp%3Dcallback&permission=write:notes,write:pages,write:drive'
+        var signinUrl = 'https://'+signinHost+'/miauth/'+uuid+'?name=MiLog&callback=https%3A%2F%2Fyeojibur.in%2FMilog%3Fp%3Dcallback&permission=write:notes,write:pages,write:drive,write:account'
         location.href = signinUrl;
     }
 } else if (page == 'signin' && !signinHost) {
@@ -451,47 +393,71 @@ if (!blog && !page) {
             .then((infoData) => {return infoData.json()})
             .then((infoRes) => {
                 if (infoRes.length == 0) {
-                    var createPageUrl = 'https://'+signinHost+'/api/pages/create'
-                    var createPageParam = {
+                    var createAntennaUrl = 'https://'+signinHost+'/api/antennas/create'
+                    var createAntennaParam = {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json',
                         },
                         body: JSON.stringify({
                             i: tokenRes.token,
-                            title: 'MiLogSetup',
-                            name: 'milogsetup',
-                            summary: '#MiLogSetup',
-                            variables: [],
-                            script: '',
-                            content: [{
-                                text: 'Setting: `{"blogTitle": "'+tokenRes.user.username+'.log", "blogIntro": "@'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.", "theme": "#86b300", "category": ["미분류"], "following": []}`',
-                                type: 'text'
-                            }]
+                            name: "MiLogFollowingAntenna",
+                            src: "all",
+                            keywords: ["#MiLogNewPost"],
+                            excludeKeywords: [],
+                            users: ['@'+tokenRes.user.username+'@'+signinHost],
+                            caseSensitive: false,
+                            withReplies: false,
+                            withFile: false,
+                            notify: false
                         })
                     }
-                    fetch(createPageUrl, createPageParam)
-                    .then((pageData) => {return pageData.json()})
-                    .then((pageRes) => {
-                        localStorage.setItem('blogInfoId', pageRes.id)
-                        localStorage.setItem('blogInfo', pageRes.content[0].text.split('`')[1])
-
-                        var createNoteUrl = 'https://'+signinHost+'/api/notes/create'
-                        var createNoteParam = {
+                    fetch(createAntennaUrl, createAntennaParam)
+                    .then((antennaData) => {return antennaData.json()})
+                    .then((antennaRes) => {
+                        var createPageUrl = 'https://'+signinHost+'/api/pages/create'
+                        var createPageParam = {
                             method: 'POST',
                             headers: {
                                 'content-type': 'application/json',
                             },
                             body: JSON.stringify({
                                 i: tokenRes.token,
-                                visibility: 'home',
-                                text: '`' + pageRes.id + '` #MiLogSetup'
+                                title: 'MiLogSetup',
+                                name: 'milogsetup',
+                                summary: '#MiLogSetup',
+                                variables: [],
+                                script: '',
+                                content: [{
+                                    text: 'Setting: `{"blogTitle": "'+tokenRes.user.username+'.log", "blogIntro": "@'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.", "theme": "#86b300", "category": ["미분류"], "following": "'+antennaRes.id+'"}`',
+                                    type: 'text'
+                                }]
                             })
                         }
-                        fetch(createNoteUrl, createNoteParam)
-                        .then((noteData) => {return noteData.json()})
-                        .then((noteRes) => {
-                            location.href = domainName
+                        fetch(createPageUrl, createPageParam)
+                        .then((pageData) => {return pageData.json()})
+                        .then((pageRes) => {
+                            localStorage.setItem('blogInfoId', pageRes.id)
+                            localStorage.setItem('blogInfo', pageRes.content[0].text.split('`')[1])
+
+                            var createNoteUrl = 'https://'+signinHost+'/api/notes/create'
+                            var createNoteParam = {
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    i: tokenRes.token,
+                                    visibility: 'home',
+                                    text: '`' + pageRes.id + '` #MiLogSetup'
+                                })
+                            }
+                            fetch(createNoteUrl, createNoteParam)
+                            .then((noteData) => {return noteData.json()})
+                            .then((noteRes) => {
+                                location.href = domainName
+                            })
+                            .catch(err => {throw err});
                         })
                         .catch(err => {throw err});
                     })
@@ -1230,7 +1196,24 @@ if (!blog && !page) {
                     fetch(postCreateUrl, postCreateParam)
                     .then((postData) => {return postData.json()})
                     .then((postRes) => {
-                        location.href = domainName + '?b='+ signedusername +'@'+ signedHost +'&a='+ postRes.id
+                        var noteCreateUrl = 'https://'+signedHost+'/api/notes/create'
+                        var noteCreateParam = {
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                i: token,
+                                text: 'MiLog에 새 포스트를 [게시](https://'+domainName + '?b='+ signedusername +'@'+ signedHost +'&a='+ postRes.id +') 했습니다! #MiLogNewPost',
+                                visibility: 'home',
+                            })
+                        }
+                        fetch(noteCreateUrl, noteCreateParam)
+                        .then((noteData) => {return noteData.json()})
+                        .then((noteRes) => {
+                            location.href = domainName + '?b='+ signedusername +'@'+ signedHost +'&a='+ postRes.id
+                        })
+                        .catch(err => {throw err});
                     })
                 }
             }
