@@ -491,66 +491,243 @@ if (!blog && !page) {
 } else if (blog && !article) {
     var username = blog.split('@')[0]
     var host = blog.split('@')[1]
-    var blogPosts = []
-    var blogInfo = {}
+    var lastVisited = JSON.parse(localStorage.getItem('lastVisited'))
+    if (!lastVisited) {
+        lastVisited = {
+            blog: ''
+        }
+    }
 
-    console.log(username, host)
+    document.querySelector('#page_title').style.paddingBottom = "0px"
 
-    var findUserIdUrl = 'https://'+host+'/api/users/search-by-username-and-host'
-    var findUserIdParam = {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-        },
-        body:  JSON.stringify({
-            username: username,
-            host: host,
+    const loadPostFunc = async() => {
+        for (let result of postList) {
+            await loadPosts(result);
+        }
+    }
+
+    const loadPosts = (res) => {
+        return new Promise((resolve, reject) => {
+            var title = res.title
+            var category = res.summary.split(' #')[1]
+            var eyeCatchUrl = ''
+            if (!res.eyeCatchingImage) {
+                eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
+            } else {
+                eyeCatchUrl = res.eyeCatchingImage.url
+            }
+            document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+username+'@'+host+'&a='+res.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div><div class="post_author">@'+username+'@'+host+'</div></div>'
+            resolve()
         })
     }
-    fetch(findUserIdUrl, findUserIdParam)
-    .then((userData) => {return userData.json()})
-    .then((userRes) => {
-        var findInfoUrl = 'https://'+host+'/api/notes/search'
-        var findInfoParam = {
+    
+    function loadPostsbyCategory(cat, last = '') {
+        if (cat != '전체글'){
+            var findPostsUrl = 'https://'+host+'/api/users/pages'
+            if (last != '') {
+                var findPostParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body:  JSON.stringify({
+                        userId: userRes[0].id,
+                        untilId: last,
+                        limit: 100,
+                    })
+                }
+            } else {
+                var findPostParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body:  JSON.stringify({
+                        userId: userRes[0].id,
+                        limit: 100,
+                    })
+                }
+            }
+            fetch(findPostsUrl, findPostParam)
+            .then((postData) => {return postData.json()})
+            .then((postRes) => {
+                postList += postRes.filter((item) => {
+                    return item.summary.split(' #')[1] == cat
+                })
+                if (postList.length > 10) {
+                    postList += postList.slice(0, 10)
+                    lastPost = postList[19].pageId
+                    loadPostFunc()
+                } else if (postList.length == 10) {
+                    lastPost = ''
+                    loadPostFunc()
+                } else {
+                    loadPostsbyCategory(cat, lastPost)
+                }
+            })
+        } else if (cat == '전체글') {
+            var findPostsUrl = 'https://'+host+'/api/users/pages'
+            if (last != '') {
+                var findPostParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body:  JSON.stringify({
+                        userId: userRes[0].id,
+                        untilId: last,
+                        limit: 10,
+                    })
+                }
+            } else {
+                var findPostParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body:  JSON.stringify({
+                        userId: userRes[0].id,
+                        limit: 10,
+                    })
+                }
+            }
+            fetch(findPostsUrl, findPostParam)
+            .then((postData) => {return postData.json()})
+            .then((postRes) => {
+                if (postRes.length > 10) {
+                    postList += postRes.slice(0, 10)
+                    lastPost = postList[19].pageId
+                } else if (postRes.length <= 10) {
+                    postList = postRes
+                    lastPost = ''
+                }
+                loadPostFunc()
+            })
+        }
+    }
+
+    if (lastVisited.blog != blog) {
+
+        var findUserIdUrl = 'https://'+host+'/api/users/search-by-username-and-host'
+        var findUserIdParam = {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
             },
             body:  JSON.stringify({
-                query: 'MiLogSetup',
-                userId: userRes[0].id,
+                username: username,
+                host: host,
             })
         }
-        fetch(findInfoUrl, findInfoParam)
-        .then((infoData) => {return infoData.json()})
-        .then((infoRes) => {
-            blogInfo = {
-                url: infoRes[0].text.split(' ')[0],
-                userId: userRes[0].id,
-                username: username,
-                host: host
-            }
-            var findPostsUrl = 'https://'+host+'/api/users/pages'
-            var findPostParam = {
+        fetch(findUserIdUrl, findUserIdParam)
+        .then((userData) => {return userData.json()})
+        .then((userRes) => {
+            var findInfoUrl = 'https://'+host+'/api/notes/search'
+            var findInfoParam = {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
                 },
                 body:  JSON.stringify({
-                    userId: blogInfo.userId,
-                    limit: 100,
+                    query: 'MiLogSetup',
+                    userId: userRes[0].id,
                 })
             }
-            fetch(findPostsUrl, findPostParam)
-            .then((postData) => {return postData.json()})
-            .then((postRes) => {
-                blogPosts = blogPosts + postRes
+            fetch(findInfoUrl, findInfoParam)
+            .then((infoData) => {return infoData.json()})
+            .then((infoRes) => {
+    
+                var blogInfoUrl = 'https://'+host+'/api/pages/show'
+                var blogInfoParam = {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body:  JSON.stringify({
+                        pageId: infoRes[0].text.split('`')[1]
+                    })
+                }
+                fetch(blogInfoUrl, blogInfoParam)
+                .then((pageData) => {return pageData.json()})
+                .then((pageRes) => {
+                    var blogInfo = JSON.parse(pageRes.content[0].text.split('`')[1])
+                    document.querySelector('#page_title').innerText = blogInfo.blogTitle
+
+                    var visitRecord = JSON.stringify({
+                        blog: blog,
+                        blogInfo: blogInfo
+                    })
+                    localStorage.setItem('lastVisited', visitRecord)
+    
+                    var lastPost = ''
+                    var postList = []
+                    if (!page) {
+                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button selected" id="viewall">전체글</div></div><div id="postlist"></div></div>'
+                    } else {
+                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="viewall">전체글</div></div><div id="postlist"></div></div>'
+                    }
+                    document.querySelector('#viewall').addEventListener('click', function() {
+                        location.href = domainName + '?b=' + blog
+                    })
+                    
+                    for (let i = 0; i < blogInfo.category; i++) {
+                        if (blogInfo.category[i] == page) {
+                            document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                        } else {
+                            document.querySelector('#blognav').innerHTML += '<div class="button" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                        }
+                        
+                        document.querySelector('#view'+i.toString()).addEventListener('click', function() {
+                            location.href = domainName + '?b=' + blog + '&p=' + blogInfo.category[i]
+                        })
+                    }
+
+                    loadPostsbyCategory(document.querySelector('.selected').innerText)
+    
+                    // if (postRes.length == 20) {
+                    //     lastPost = postRes[19].pageId
+                    //     document.querySelector('#blogContainer').innerHTML += '<div class="button">더보기</div>'
+    
+                    //         //TODO
+                    // } 
+                })
+                .catch(err => {throw err});
             })
             .catch(err => {throw err});
         })
         .catch(err => {throw err});
-    })
-    .catch(err => {throw err});
+    } else {
+
+        var blogInfo = lastVisited.blogInfo
+        document.querySelector('#page_title').innerText = blogInfo.blogTitle
+
+        var lastPost = ''
+        var postList = []
+        if (!page) {
+            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button selected" id="viewall">전체글</div></div><div id="postlist"></div></div>'
+        } else {
+            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="viewall">전체글</div></div><div id="postlist"></div></div>'
+        }
+        document.querySelector('#viewall').addEventListener('click', function() {
+            location.href = domainName + '?b=' + blog
+        })
+        
+        for (let i = 0; i < blogInfo.category; i++) {
+            if (blogInfo.category[i] == page) {
+                document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+            } else {
+                document.querySelector('#blognav').innerHTML += '<div class="button" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+            }
+            
+            document.querySelector('#view'+i.toString()).addEventListener('click', function() {
+                location.href = domainName + '?b=' + blog + '&p=' + blogInfo.category[i]
+            })
+        }
+
+        loadPostsbyCategory(document.querySelector('.selected').innerText)
+
+    }
+
 } else if (blog && article) {
 
     document.querySelector("#page_title").style.display = 'none';
