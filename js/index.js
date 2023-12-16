@@ -706,9 +706,9 @@ if (!blog && !page) {
                     
                     for (let i = 0; i < blogInfo.category.length; i++) {
                         if (blogInfo.category[i] == page) {
-                            document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                            document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div>'
                         } else {
-                            document.querySelector('#blognav').innerHTML += '<div class="button" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                            document.querySelector('#blognav').innerHTML += '<div class="button" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div>'
                         }
                         
                         document.querySelector('#view'+i.toString()).addEventListener('click', function() {
@@ -756,9 +756,9 @@ if (!blog && !page) {
         
         for (let i = 0; i < blogInfo.category.length; i++) {
             if (blogInfo.category[i] == page) {
-                document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                document.querySelector('#blognav').innerHTML += '<div class="button selected" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div>'
             } else {
-                document.querySelector('#blognav').innerHTML += '<div class="button" id="view_'+i.toString()+'">'+blogInfo.category[i]+'</div>'
+                document.querySelector('#blognav').innerHTML += '<div class="button" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div>'
             }
             
             document.querySelector('#view'+i.toString()).addEventListener('click', function() {
