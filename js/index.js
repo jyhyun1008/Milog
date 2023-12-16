@@ -598,7 +598,10 @@ if (!blog && !page) {
             fetch(findPostsUrl, findPostParam)
             .then((postData) => {return postData.json()})
             .then((postRes) => {
-                postList += postRes.filter((item) => item.summary.split('#')[1] == 'MiLog ')
+                postList += postRes.filter((item) => {
+                    console.log(item)
+                    return item.summary.split('#')[1] == 'MiLog '
+                })
                 if (postList.length > 10) {
                     postList += postList.slice(0, 10)
                     lastPost = postList[10].pageId
