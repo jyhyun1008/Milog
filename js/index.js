@@ -541,7 +541,7 @@ if (!blog && !page) {
             } else {
                 eyeCatchUrl = result.eyeCatchingImage.url
             }
-            document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+username+'@'+host+'&a='+res.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div></div>'
+            document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+username+'@'+host+'&a='+result.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div></div>'
         }
     }
 
