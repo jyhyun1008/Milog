@@ -128,11 +128,11 @@ textarea {
 #postlist {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .postlist {
-    width: 48%;
-    padding: 5px;
+    width: 45%;
 }
 
 .eyecatch {
