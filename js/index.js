@@ -516,7 +516,7 @@ if (!blog && !page) {
             } else {
                 eyeCatchUrl = res.eyeCatchingImage.url
             }
-            document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+username+'@'+host+'&a='+res.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div><div class="post_author">@'+username+'@'+host+'</div></div>'
+            document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+username+'@'+host+'&a='+res.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div></div>'
             resolve()
         })
     }
@@ -552,16 +552,20 @@ if (!blog && !page) {
             .then((postData) => {return postData.json()})
             .then((postRes) => {
                 postList += postRes.filter((item) => {
-                    return item.summary.split(' #')[1] == cat
+                    return item.summary == '#MiLog #' + cat
                 })
                 if (postList.length > 10) {
                     postList += postList.slice(0, 10)
-                    lastPost = postList[19].pageId
+                    lastPost = postList[10].pageId
                     loadPostFunc()
-                } else if (postList.length == 10) {
+                } else if (postRes.length == 100 && postList.length == 10) {
+                    lastPost = postRes[100].pageId
+                    loadPostFunc()
+                } else if (postRes.length < 100 && postList.length <= 10) {
                     lastPost = ''
                     loadPostFunc()
-                } else {
+                } else if (postRes.length == 100 && postList.length < 10) {
+                    lastPost = postRes[100].pageId
                     loadPostsbyCategory(cat, lastPost)
                 }
             })
@@ -576,7 +580,7 @@ if (!blog && !page) {
                     body:  JSON.stringify({
                         userId: lastVisited.userId,
                         untilId: last,
-                        limit: 10,
+                        limit: 100,
                     })
                 }
             } else {
@@ -587,21 +591,30 @@ if (!blog && !page) {
                     },
                     body:  JSON.stringify({
                         userId: lastVisited.userId,
-                        limit: 10,
+                        limit: 100,
                     })
                 }
             }
             fetch(findPostsUrl, findPostParam)
             .then((postData) => {return postData.json()})
             .then((postRes) => {
-                if (postRes.length > 10) {
-                    postList += postRes.slice(0, 10)
-                    lastPost = postList[19].pageId
-                } else if (postRes.length <= 10) {
-                    postList = postRes
+                postList += postRes.filter((item) => {
+                    return item.summary.includes('#MiLog')
+                })
+                if (postList.length > 10) {
+                    postList += postList.slice(0, 10)
+                    lastPost = postList[10].pageId
+                    loadPostFunc()
+                } else if (postRes.length == 100 && postList.length == 10) {
+                    lastPost = postRes[100].pageId
+                    loadPostFunc()
+                } else if (postRes.length < 100 && postList.length <= 10) {
                     lastPost = ''
+                    loadPostFunc()
+                } else if (postRes.length == 100 && postList.length < 10) {
+                    lastPost = postRes[100].pageId
+                    loadPostsbyCategory(cat, lastPost)
                 }
-                loadPostFunc()
             })
         }
     }
