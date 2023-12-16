@@ -157,12 +157,19 @@ textarea {
     padding-bottom: 10px;
 }
 
-#post_title, #titlepreview {
+#post_title {
     color: white;
     position: absolute;
     z-index: 1;
-    font-size: 2rem;
     padding: 10px;
+}
+
+#titlepart {
+    font-size: 2rem;
+}
+
+#categorypart {
+    font-size: 1.2rem;
 }
 
 #postlist {
@@ -185,7 +192,7 @@ textarea {
 .eyecatchimg, #imagepreview img {
     filter:brightness(85%);
     aspect-ratio: 4 / 1;
-    border-radius: 15px 15px 0 0;
+    border-radius: 0 0 15px 15px;
     width: 100vw;
     min-height: 180px;
     max-width: 735px;

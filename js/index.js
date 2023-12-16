@@ -690,7 +690,7 @@ if (!blog && !page) {
                         await addContent(content, attFiles)
                     }
 
-                    document.querySelector("#post_content").innerHTML = '<div id="post_title">'+pageTitle+'</div>'
+                    document.querySelector("#post_content").innerHTML = '<div id="post_title"><div style="font-size:2rem;">'+pageTitle+'</div><div style="font-size:1.2rem;">'+pageCategory+'</div></div>'
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
                     console.log(result)
                     document.querySelector("#post_content").innerHTML += parseMd(result)
@@ -701,6 +701,7 @@ if (!blog && !page) {
 
                 var pageUrl = "https://"+host+"/@"+username+"/pages/"+PageRes.name
                 var pageTitle = PageRes.title
+                var pageCategory = PageRes.summary.split(' #')[1]
                 var pageImage = ''
                 if (PageRes.eyeCatchingImage) {
                     pageImage = PageRes.eyeCatchingImage.url
@@ -849,7 +850,7 @@ if (!blog && !page) {
 
         document.querySelector('#container').style.maxWidth = '1480px'
 
-        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg" class="imageUploader">배경 사진을 선택해주세요</div><select id="postCategory" placeholder="카테고리를 입력해주세요"></select><input id="postUrl" placeholder="url을 지정해주세요"></input><div id="imgupload" class="imageUploader">📷</div><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="titlepreview"></div><div id="imagepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
+        document.querySelector('#page_content').innerHTML = '<div class="editor_container"><div class="editor"><input id="postTitle" placeholder="제목을 입력해주세요"></input><div id="eyeCatchImg" class="imageUploader">배경 사진을 선택해주세요</div><select id="postCategory" placeholder="카테고리를 입력해주세요"></select><input id="postUrl" placeholder="url을 지정해주세요"></input><div id="imgupload" class="imageUploader">📷</div><textarea id="editor" placeholder="내용을 입력해주세요"></textarea></div><div class="parser"><div id="post_title"><div id="titlepart"></div><div id="categorypart"></div></div><div id="imagepreview"></div><div id="contentpreview"></div></div></div><div class="button" id="postButton">게시</div>'
         for (var i = 0; i<signedBlogInfo.category.length; i++) {
             document.querySelector('#postCategory').innerHTML += '<option value="'+signedBlogInfo.category[i]+'">'+signedBlogInfo.category[i]+'</option>'
         }
@@ -1024,8 +1025,9 @@ if (!blog && !page) {
                     }
         
                     document.querySelector("#postTitle").value = pageTitle
-                    document.querySelector("#titlepreview").innerText = pageTitle
+                    document.querySelector("#titlepart").innerText = pageTitle
                     $('#postCategory').val(pageCategory).prop("selected",true)
+                    document.querySelector("#categorypart").innerText = pageCategory
                     document.querySelector("#postUrl").value = pageUrl
                     document.querySelector("#imagepreview").innerHTML = '<img src="'+pageImage+'">'
                     document.querySelector("#editor").value = result
@@ -1053,7 +1055,12 @@ if (!blog && !page) {
 
         var title = document.getElementById('postTitle');
         title.addEventListener('keyup', function(event){
-            document.querySelector('#titlepreview').innerHTML = parseMd(title.value)
+            document.querySelector('#titlepart').innerHTML = parseMd(title.value)
+        })
+
+        var category = document.getElementById('#postCategory');
+        category.addEventListener('change', function(event){
+            document.querySelector('#categorypart').innerHTML = parseMd(category.value)
         })
 
         const insertText = (text) => {
@@ -1071,7 +1078,7 @@ if (!blog && !page) {
         imgUpload.addEventListener('click', () => imgRealUpload.click())
 
         eyeCatchRealUpload.addEventListener('change', function(e) {
-            
+
             var imgReader = new FileReader();
             imgReader.onload = (e) => {
                 console.log(e.target.result)
