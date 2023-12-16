@@ -683,15 +683,20 @@ if (!blog && !page) {
                     localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
                     document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
     
-                    if (blog == signedusername+'@'+signedHost) {
-                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
-                    } else {
-                        if (signedBlogInfo.following.includes('@'+blog)) {
-                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+                    if (token) {
+                        if (blog == signedusername+'@'+signedHost) {
+                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
                         } else {
-                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                            if (signedBlogInfo.following.includes('@'+blog)) {
+                                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+                            } else {
+                                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                            }
                         }
+                    } else {
+                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
                     }
+                    
 
                     if (!page) {
                         document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button selected" id="viewall">전체글</div></a>'
@@ -726,15 +731,20 @@ if (!blog && !page) {
         var blogInfo = lastVisited.blogInfo
         document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
 
-        if (blog == signedusername+'@'+signedHost) {
-            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
-        } else {
-            if (signedBlogInfo.following.includes('@'+blog)) {
-                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+        if (token) {
+            if (blog == signedusername+'@'+signedHost) {
+                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
             } else {
-                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                if (signedBlogInfo.following.includes('@'+blog)) {
+                    document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+                } else {
+                    document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                }
             }
+        } else {
+            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
         }
+        
 
         if (!page) {
             document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button selected" id="viewall">전체글</div></a>'
