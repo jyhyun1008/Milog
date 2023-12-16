@@ -455,7 +455,7 @@ if (!blog && !page) {
                             fetch(createNoteUrl, createNoteParam)
                             .then((noteData) => {return noteData.json()})
                             .then((noteRes) => {
-                                location.href = domainName
+                                //location.href = domainName
                             })
                             .catch(err => {throw err});
                         })
