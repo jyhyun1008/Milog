@@ -19,6 +19,10 @@ a {
     color: inherit;
 }
 
+.nodeco {
+    text-decoration: none;
+}
+
 a :hover {
     color: var(--darkaccent);
 }
@@ -163,7 +167,6 @@ textarea {
 
 .post_title {
     font-size: 1.7rem;
-    text-decoration: none;
 }
 
 .editor_container {

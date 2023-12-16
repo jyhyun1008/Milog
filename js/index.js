@@ -382,7 +382,7 @@ if (!blog && !page) {
                     } else {
                         userhost = post.user.host
                     }
-                    document.querySelector("#postlist").innerHTML += '<div class="postlist"><a href="'+domainName+'?b='+post.user.username+'@'+userhost+'&a='+post.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+post.title+'</div></a><div class="post_summary">'+post.summary+'</div><div class="post_author">@'+post.user.username+'@'+userhost+'</div></div>'
+                    document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+post.user.username+'@'+userhost+'&a='+post.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+post.title+'</div></a><div class="post_summary">'+post.summary+'</div><div class="post_author">@'+post.user.username+'@'+userhost+'</div></div>'
                     resolve()
                 })
             }
