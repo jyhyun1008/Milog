@@ -69,9 +69,9 @@ a :hover {
 }
 
 .hline {
-    height: 10px;
-    width: 200px;
-    margin: 20px;
+    height: 7px;
+    width: 100px;
+    margin: 15px;
     background-color: var(--darkaccent);
 }
 
@@ -91,7 +91,7 @@ a :hover {
     -o-transform: rotate(180deg);
 }
 
-.button:hover {
+.button:hover, .selected {
     cursor: pointer;
     color: var(--darkaccent);
     background-color: var(--lightaccent);
@@ -166,13 +166,14 @@ textarea {
 
 #blogIntro {
     padding-bottom: 20px;
-    border-bottom: var(--accent) solid 2px;
+    padding-top: 10px;
 }
 
 #blognav{
     display: flex;
     overflow: auto;
     gap: 10px;
+    padding: 10px 0;
 }
 
 #post_title {
