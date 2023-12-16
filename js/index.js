@@ -414,6 +414,9 @@ if (!blog && !page) {
                     fetch(createAntennaUrl, createAntennaParam)
                     .then((antennaData) => {return antennaData.json()})
                     .then((antennaRes) => {
+                        var followingUser = antennaRes.users
+                        localStorage.setItem('following', followingUser)
+
                         var createPageUrl = 'https://'+signinHost+'/api/pages/create'
                         var createPageParam = {
                             method: 'POST',
@@ -428,7 +431,7 @@ if (!blog && !page) {
                                 variables: [],
                                 script: '',
                                 content: [{
-                                    text: 'Setting: `{"blogTitle": "'+tokenRes.user.username+'.log", "blogIntro": "@'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.", "theme": "#86b300", "category": ["미분류"], "following": "'+antennaRes.id+'"}`',
+                                    text: 'Setting: `{"blogTitle": "'+tokenRes.user.username+'.log", "blogIntro": "@'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.", "theme": "#86b300", "category": ["미분류"], "antenna": "'+antennaRes.id+'", "following": ["@'+tokenRes.user.username+'@'+signinHost+'"]}`',
                                     type: 'text'
                                 }]
                             })
@@ -681,11 +684,22 @@ if (!blog && !page) {
                     localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
                     document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
     
-                    if (!page) {
-                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button selected" id="viewall">전체글</div></div><div id="postlist"></div></div>'
+                    if (blog == signedusername+'@'+signedHost) {
+                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="setting"><i class="bx bx-cog"></i></div></div><div id="postlist"></div></div>'
                     } else {
-                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="viewall">전체글</div></div><div id="postlist"></div></div>'
+                        if (signedBlogInfo.following.includes('@'+blog)) {
+                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="setting"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+                        } else {
+                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="setting"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                        }
                     }
+
+                    if (!page) {
+                        document.querySelector("#blognav").innerHTML += '<div class="button selected" id="viewall">전체글</div>'
+                    } else {
+                        document.querySelector("#blognav").innerHTML += '<div class="button" id="viewall">전체글</div>'
+                    }
+                    
                     document.querySelector('#viewall').addEventListener('click', function() {
                         location.href = domainName + '?b=' + blog
                     })
