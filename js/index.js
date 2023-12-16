@@ -551,23 +551,24 @@ if (!blog && !page) {
             fetch(findPostsUrl, findPostParam)
             .then((postData) => {return postData.json()})
             .then((postRes) => {
-                var filter = postRes.filter((item) => {
-                    return item.summary !== null
-                })
-                postList = postList.concat(filter.filter((item) => {
-                    return item.summary == '#MiLog #' + cat
-                }))
-                if (postList.length > 10) {
-                    postList += postList.slice(0, 10)
+                var filter = postRes.filter((item) => item.summary !== null)
+                var filter2 = filter.filter((item) => item.summary == '#MiLog #' + cat)
+                postList = postList.push(...filter2)
+                if (filter2.length > 10) {
+                    var spliter = filter2.slice(0, 10)
+                    postList.push(...spliter)
                     lastPost = postList[10].pageId
                     loadPostFunc()
-                } else if (postRes.length == 100 && postList.length == 10) {
+                } else if (postRes.length == 100 && filter2.length == 10) {
+                    postList = postList.push(...filter2)
                     lastPost = postRes[100].pageId
                     loadPostFunc()
-                } else if (postRes.length < 100 && postList.length <= 10) {
+                } else if (postRes.length < 100 && filter2.length <= 10) {
+                    postList = postList.push(...filter2)
                     lastPost = ''
                     loadPostFunc()
-                } else if (postRes.length == 100 && postList.length < 10) {
+                } else if (postRes.length == 100 && filter2.length < 10) {
+                    postList = postList.push(...filter2)
                     lastPost = postRes[100].pageId
                     loadPostsbyCategory(cat, lastPost)
                 }
@@ -601,24 +602,24 @@ if (!blog && !page) {
             fetch(findPostsUrl, findPostParam)
             .then((postData) => {return postData.json()})
             .then((postRes) => {
-                var filter = postRes.filter((item) => {
-                    return item.summary !== null
-                })
-                postList = postList.concat(filter.filter((item) => {
-                    return item.summary.split('#')[1] == 'MiLog '
-                }))
+                var filter = postRes.filter((item) => item.summary !== null)
+                var filter2 = filter.filter((item) => item.summary.split('#')[1] == 'MiLog ')
                 console.log(postList)
-                if (postList.length > 10) {
-                    postList += postList.slice(0, 10)
+                if (filter2.length > 10) {
+                    var spliter = filter2.slice(0, 10)
+                    postList.push(...spliter)
                     lastPost = postList[10].pageId
                     loadPostFunc()
-                } else if (postRes.length == 100 && postList.length == 10) {
+                } else if (postRes.length == 100 && filter2.length == 10) {
+                    postList = postList.push(...filter2)
                     lastPost = postRes[100].pageId
                     loadPostFunc()
-                } else if (postRes.length < 100 && postList.length <= 10) {
+                } else if (postRes.length < 100 && filter2.length <= 10) {
+                    postList = postList.push(...filter2)
                     lastPost = ''
                     loadPostFunc()
-                } else if (postRes.length == 100 && postList.length < 10) {
+                } else if (postRes.length == 100 && filter2.length < 10) {
+                    postList = postList.push(...filter2)
                     lastPost = postRes[100].pageId
                     loadPostsbyCategory(cat, lastPost)
                 }
