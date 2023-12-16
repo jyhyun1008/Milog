@@ -90,6 +90,14 @@ a :hover {
     background-color: var(--lightaccent);
 }
 
+#container {
+    line-height: 1.8;
+    width: calc(100% - 10px);
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 64px 5px;
+}
+
 input, select, .imageUploader {
     height: 34px;
     width: 100%;
@@ -119,13 +127,6 @@ textarea {
     resize: none;
     border: 2px solid var(--accent);
     border-radius: 15px;
-}
-
-#container {
-    width: calc(100% - 10px);
-    max-width: 740px;
-    margin: 0 auto;
-    padding: 64px 5px;
 }
 
 #page_title {
