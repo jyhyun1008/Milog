@@ -431,7 +431,7 @@ if (!blog && !page) {
                                 variables: [],
                                 script: '',
                                 content: [{
-                                    text: 'Setting: `{"blogTitle": "'+tokenRes.user.username+'.log", "blogIntro": "@'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.", "theme": "#86b300", "category": ["미분류"], "antenna": "'+antennaRes.id+'", "following": ["@'+tokenRes.user.username+'@'+signinHost+'"]}`',
+                                    text: 'Setting: `{"blogTitle": "'+tokenRes.user.username+'.log", "blogIntro": "@'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.", "theme": "#3EB489", "category": ["미분류"], "antenna": "'+antennaRes.id+'", "following": ["@'+tokenRes.user.username+'@'+signinHost+'"]}`',
                                     type: 'text'
                                 }]
                             })
@@ -699,7 +699,7 @@ if (!blog && !page) {
                     } else {
                         document.querySelector("#blognav").innerHTML += '<div class="button" id="viewall">전체글</div>'
                     }
-                    
+
                     document.querySelector('#viewall').addEventListener('click', function() {
                         location.href = domainName + '?b=' + blog
                     })
