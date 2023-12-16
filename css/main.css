@@ -89,6 +89,10 @@ input, select, .imageUploader {
     border-bottom: 2px solid var(--accent);
 }
 
+#host {
+    margin-bottom: 10px;
+}
+
 select {
     height: 36px;
     width: 100%;
