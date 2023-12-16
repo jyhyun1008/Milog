@@ -559,7 +559,6 @@ if (!blog && !page) {
             .then((postRes) => {
                 var filter = postRes.filter((item) => item.summary !== null)
                 var filter2 = filter.filter((item) => item.summary == '#MiLog #' + cat)
-                postList = postList.push(...filter2)
                 if (filter2.length > 10) {
                     postList = postList.concat(filter2.slice(0, 10))
                     lastPost = postList[10].pageId
