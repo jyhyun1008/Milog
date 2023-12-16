@@ -402,7 +402,7 @@ if (!blog && !page) {
                         body: JSON.stringify({
                             i: tokenRes.token,
                             name: "MiLogFollowingAntenna",
-                            src: "all",
+                            src: "users",
                             keywords: [[`#MiLogNewPost`]],
                             excludeKeywords: [[]],
                             users: [`@`+tokenRes.user.username+`@`+signinHost],
