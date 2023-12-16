@@ -516,6 +516,8 @@ if (!blog && !page) {
         }
     }
 
+    console.log(loadPostFunc)
+
     const loadPosts = (res) => {
         return new Promise((resolve, reject) => {
             var title = res.title
