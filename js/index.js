@@ -721,7 +721,7 @@ if (!blog && !page) {
                         await addContent(content, attFiles)
                     }
 
-                    document.querySelector("#post_content").innerText = '<div id="post_title">'+pageTitle+'</div>'
+                    document.querySelector("#post_content").innerHTML = '<div id="post_title">'+pageTitle+'</div>'
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
                     console.log(result)
                     document.querySelector("#post_content").innerHTML += '<div class="usernameView">@'+blog+'</div>'
