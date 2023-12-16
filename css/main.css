@@ -14,6 +14,11 @@ body {
     margin: 0;
 }
 
+i {
+    margin-top: 2px;
+    font-size: 1.5em;
+}
+
 a {
     text-decoration: var(--accent) wavy underline;
     color: inherit;
