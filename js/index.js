@@ -21,11 +21,11 @@ if (sessionId && signedHost) {
     if (signedBlogInfo) {
         cssRoot.style.setProperty('--accent', signedBlogInfo.theme)
     } else {
-        cssRoot.style.setProperty('--accent', '#86b300')
+        cssRoot.style.setProperty('--accent', '#3EB489')
     }
 } else {
     document.getElementsByClassName('nav-item')[0].innerHTML += '<div class="float-right"><a href="./?p=signin"><div class="button" id="loginout"><i class="bx bx-log-in" ></i></div></a></div>'
-    cssRoot.style.setProperty('--accent', '#86b300')
+    cssRoot.style.setProperty('--accent', '#3EB489')
 }
 
 function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 html로 변환시켜 줍니다.
