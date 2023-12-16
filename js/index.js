@@ -506,17 +506,6 @@ if (!blog && !page) {
 
     document.querySelector('#page_title').style.paddingBottom = "0px"
 
-    var loadPostFunc = async() => {
-        try {
-            for (let result of postList) {
-                await loadPosts(result);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    console.log(loadPostFunc)
 
     const loadPosts = (res) => {
         return new Promise((resolve, reject) => {
@@ -532,6 +521,19 @@ if (!blog && !page) {
             resolve()
         })
     }
+
+    const loadPostFunc = async() => {
+        try {
+            for (let result of postList) {
+                await loadPosts(result);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    console.log(loadPostFunc)
+
     
     function loadPostsbyCategory(cat, last = '', loadPostFunc = loadPostFunc) {
         if (cat != '전체글'){
