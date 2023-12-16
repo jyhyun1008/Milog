@@ -531,6 +531,20 @@ if (!blog && !page) {
         }
     }
 
+    function loadPostFunc2() {
+        for (let result of postList) {
+            var title = result.title
+            var category = result.summary.split(' #')[1]
+            var eyeCatchUrl = ''
+            if (!result.eyeCatchingImage) {
+                eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
+            } else {
+                eyeCatchUrl = result.eyeCatchingImage.url
+            }
+            document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+username+'@'+host+'&a='+res.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div></div>'
+        }
+    }
+
     console.log(loadPostFunc)
     
     function loadPostsbyCategory(cat, last = '') {
@@ -568,15 +582,15 @@ if (!blog && !page) {
                 if (filter2.length > 10) {
                     postList = postList.concat(filter2.slice(0, 10))
                     lastPost = postList[10].pageId
-                    loadPostFunc()
+                    loadPostFunc2()
                 } else if (postRes.length == 100 && filter2.length == 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
-                    loadPostFunc()
+                    loadPostFunc2()
                 } else if (postRes.length < 100 && filter2.length <= 10) {
                     postList = postList.concat(filter2)
                     lastPost = ''
-                    loadPostFunc()
+                    loadPostFunc2()
                 } else if (postRes.length == 100 && filter2.length < 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
@@ -617,15 +631,15 @@ if (!blog && !page) {
                 if (filter2.length > 10) {
                     postList = postList.concat(filter2.slice(0, 10))
                     lastPost = postList[10].pageId
-                    loadPostFunc()
+                    loadPostFunc2()
                 } else if (postRes.length == 100 && filter2.length == 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
-                    loadPostFunc()
+                    loadPostFunc2()
                 } else if (postRes.length < 100 && filter2.length <= 10) {
                     postList = postList.concat(filter2)
                     lastPost = ''
-                    loadPostFunc()
+                    loadPostFunc2()
                 } else if (postRes.length == 100 && filter2.length < 10) {
                     postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
