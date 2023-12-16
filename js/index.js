@@ -506,7 +506,6 @@ if (!blog && !page) {
 
     document.querySelector('#page_title').style.paddingBottom = "0px"
 
-
     const loadPosts = (res) => {
         return new Promise((resolve, reject) => {
             var title = res.title
@@ -533,9 +532,8 @@ if (!blog && !page) {
     }
 
     console.log(loadPostFunc)
-
     
-    function loadPostsbyCategory(cat, last = '', loadPostFunc = loadPostFunc) {
+    function loadPostsbyCategory(cat, last = '') {
         if (cat != '전체글'){
             var findPostsUrl = 'https://'+host+'/api/users/pages'
             if (last != '') {
