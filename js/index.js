@@ -607,6 +607,7 @@ if (!blog && !page) {
             .then((postRes) => {
                 var filter = postRes.filter((item) => item.summary !== null)
                 var filter2 = filter.filter((item) => item.summary.split('#')[1] == 'MiLog ')
+                console.log(filter2)
                 if (filter2.length > 10) {
                     var spliter = filter2.slice(0, 10)
                     postList.push(...spliter)
