@@ -498,6 +498,9 @@ if (!blog && !page) {
         }
     }
 
+    var lastPost = ''
+    var postList = []
+    
     document.querySelector('#page_title').style.paddingBottom = "0px"
 
     const loadPostFunc = async() => {
@@ -681,8 +684,6 @@ if (!blog && !page) {
                     localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
                     document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
     
-                    var lastPost = ''
-                    var postList = []
                     if (!page) {
                         document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button selected" id="viewall">전체글</div></div><div id="postlist"></div></div>'
                     } else {
