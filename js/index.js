@@ -497,6 +497,7 @@ if (!blog && !page) {
             blog: ''
         }
     }
+    var userInfo = {}
 
     document.querySelector('#page_title').style.paddingBottom = "0px"
 
@@ -531,7 +532,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        userId: userRes[0].id,
+                        userId: userInfo.id,
                         untilId: last,
                         limit: 100,
                     })
@@ -543,7 +544,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        userId: userRes[0].id,
+                        userId: userInfo.id,
                         limit: 100,
                     })
                 }
@@ -574,7 +575,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        userId: userRes[0].id,
+                        userId: userInfo.id,
                         untilId: last,
                         limit: 10,
                     })
@@ -586,7 +587,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        userId: userRes[0].id,
+                        userId: userInfo.id,
                         limit: 10,
                     })
                 }
@@ -622,6 +623,7 @@ if (!blog && !page) {
         fetch(findUserIdUrl, findUserIdParam)
         .then((userData) => {return userData.json()})
         .then((userRes) => {
+            userInfo = userRes[0]
             var findInfoUrl = 'https://'+host+'/api/notes/search'
             var findInfoParam = {
                 method: 'POST',
@@ -630,7 +632,7 @@ if (!blog && !page) {
                 },
                 body:  JSON.stringify({
                     query: 'MiLogSetup',
-                    userId: userRes[0].id,
+                    userId: userInfo.id,
                 })
             }
             fetch(findInfoUrl, findInfoParam)
