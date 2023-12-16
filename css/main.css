@@ -78,12 +78,6 @@ a :hover {
     background-color: var(--lightaccent);
 }
 
-#loginout, #editorbt {
-    border-width: 2px;
-    border-style: solid;
-    border-color: var(--darkaccent);
-}
-
 input, select, .imageUploader {
     height: 34px;
     width: 100%;
