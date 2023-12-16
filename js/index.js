@@ -506,31 +506,6 @@ if (!blog && !page) {
 
     document.querySelector('#page_title').style.paddingBottom = "0px"
 
-    const loadPosts = (res) => {
-        return new Promise((resolve, reject) => {
-            var title = res.title
-            var category = res.summary.split(' #')[1]
-            var eyeCatchUrl = ''
-            if (!res.eyeCatchingImage) {
-                eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
-            } else {
-                eyeCatchUrl = res.eyeCatchingImage.url
-            }
-            document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+username+'@'+host+'&a='+res.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div></div>'
-            resolve()
-        })
-    }
-
-    const loadPostFunc = async() => {
-        try {
-            for (let result of postList) {
-                await loadPosts(result);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     function loadPostFunc2() {
         for (let result of postList) {
             var title = result.title
@@ -544,8 +519,6 @@ if (!blog && !page) {
             document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+username+'@'+host+'&a='+result.id+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div></div>'
         }
     }
-
-    console.log(loadPostFunc)
     
     function loadPostsbyCategory(cat, last = '') {
         if (cat != '전체글'){
