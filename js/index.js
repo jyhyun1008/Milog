@@ -653,12 +653,12 @@ if (!blog && !page) {
                     var blogInfo = JSON.parse(pageRes.content[0].text.split('`')[1])
                     document.querySelector('#page_title').innerText = blogInfo.blogTitle
 
-                    lastVisited = JSON.stringify({
+                    lastVisited = {
                         blog: blog,
                         userId: userRes[0].id,
                         blogInfo: blogInfo
-                    })
-                    localStorage.setItem('lastVisited', lastVisited)
+                    }
+                    localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
     
                     var lastPost = ''
                     var postList = []
