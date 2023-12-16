@@ -10,13 +10,13 @@
     --accent: white;
     --darkaccent: color-mix(in srgb, var(--accent) 70%, #470046);
     --lightaccent: color-mix(in srgb, var(--accent) 70%, #fbffbb);
-    --bg: white;
+    --bg: rgb(245, 245, 245);
 }
 
 body {
     font-family: 'defaultGothic';
-    background-color: var(--bg);
     margin: 0;
+    color: #000;
 }
 
 i {
@@ -26,11 +26,18 @@ i {
 
 a {
     text-decoration: var(--accent) wavy underline;
-    color: inherit;
+    color: var(--accent);
 }
 
 .nodeco {
     text-decoration: none;
+    color: #000;
+}
+
+.handle {
+    padding: 5px;
+    background-color: var(--bg);
+    border-radius: 15px;
 }
 
 a :hover {

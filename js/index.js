@@ -76,6 +76,8 @@ function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 ht
     
     //links
     md = md.replace(/[\[]{1}([^\]]+)[\]]{1}[\(]{1}([^\)\"]+)(\"(.+)\")?[\)]{1}/g, '<a href="$2" title="$4">$1</a>');
+    //mentions
+    md = md.replace(/\@([^\@]+)\@([^\@]+)/gm, '<span class="handle"><a href="https://$2/@$1">@$1@$2</a></span>')
     
     //font styles
     md = md.replace(/[\*]{2}([^\*]+)[\*]{2}/g, '<strong>$1</strong>');
@@ -679,16 +681,16 @@ if (!blog && !page) {
     
                     if (token) {
                         if (blog == signedusername+'@'+signedHost) {
-                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
+                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
                         } else {
                             if (signedBlogInfo.following.includes('@'+blog)) {
-                                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+                                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
                             } else {
-                                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
                             }
                         }
                     } else {
-                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
+                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
                     }
                     
 
@@ -727,16 +729,16 @@ if (!blog && !page) {
 
         if (token) {
             if (blog == signedusername+'@'+signedHost) {
-                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
+                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
             } else {
                 if (signedBlogInfo.following.includes('@'+blog)) {
-                    document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+                    document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
                 } else {
-                    document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                    document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
                 }
             }
         } else {
-            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+blogInfo.blogIntro+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
+            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
         }
         
 
