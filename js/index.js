@@ -724,9 +724,9 @@ if (!blog && !page) {
                     document.querySelector("#post_content").innerHTML = '<div id="post_title">'+pageTitle+'</div>'
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
                     console.log(result)
+                    document.querySelector("#post_content").innerHTML += parseMd(result)
                     document.querySelector("#post_content").innerHTML += '<div class="usernameView">@'+blog+'</div>'
                     document.querySelector("#post_content").innerHTML += '<div class="createdAtView">'+PageRes.createdAt+'</div>'
-                    document.querySelector("#post_content").innerHTML += parseMd(result)
 
                 }
 
@@ -809,7 +809,7 @@ if (!blog && !page) {
                                         await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
                                     }
                                 }
-                                document.querySelector("#commentbox").innerHTML += '<div class="commentList" id="comment'+text.id+'"><div class="commentUser">@'+text.user.username+'@'+commentUserHost+'</div><div class="commentTime">'+text.createdAt+'</div><div class="commentText">'+commentText+'</div></div>'
+                                document.querySelector("#commentbox").innerHTML += '<div class="commentList" id="comment'+text.id+'"><div class="commentUser usernameView">@'+text.user.username+'@'+commentUserHost+'</div><div class="commentTime createdAtView">'+text.createdAt+'</div><div class="commentText">'+commentText+'</div></div>'
                                 if (signedHost == commentUserHost && signedusername == text.user.username) {
                                     document.querySelector("#comment"+text.id).innerHTML += '<div class="button" id="delete'+text.id+'">삭제<div>'
                                     document.querySelector("#comment"+text.id).addEventListener('click', function(e) {
