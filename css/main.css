@@ -72,6 +72,13 @@ a :hover {
     text-align: center;
 }
 
+.bx-log-out, .bx-log-in {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+}
+
 .button:hover {
     cursor: pointer;
     color: var(--darkaccent);
