@@ -506,7 +506,7 @@ if (!blog && !page) {
 
     document.querySelector('#page_title').style.paddingBottom = "0px"
 
-    const loadPostFunc = async() => {
+    var loadPostFunc = async() => {
         try {
             for (let result of postList) {
                 await loadPosts(result);
