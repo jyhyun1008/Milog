@@ -267,5 +267,8 @@ textarea {
     .parser{
         display:none;
     }
+    .editor {
+        width: 100%
+        }
 
 }
