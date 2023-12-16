@@ -554,7 +554,7 @@ if (!blog && !page) {
                 var filter = postRes.filter((item) => {
                     return item.summary !== null
                 })
-                postList.concat(filter.filter((item) => {
+                postList = postList.concat(filter.filter((item) => {
                     return item.summary == '#MiLog #' + cat
                 }))
                 if (postList.length > 10) {
@@ -604,7 +604,7 @@ if (!blog && !page) {
                 var filter = postRes.filter((item) => {
                     return item.summary !== null
                 })
-                postList.concat(filter.filter((item) => {
+                postList = postList.concat(filter.filter((item) => {
                     return item.summary.split('#')[1] == 'MiLog '
                 }))
                 console.log(postList)
