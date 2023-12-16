@@ -599,7 +599,7 @@ if (!blog && !page) {
             .then((postData) => {return postData.json()})
             .then((postRes) => {
                 postList += postRes.filter((item) => {
-                    console.log(item)
+                    console.log(item.summary.split('#')[1] == 'MiLog ')
                     return item.summary.split('#')[1] == 'MiLog '
                 })
                 if (postList.length > 10) {
