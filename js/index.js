@@ -551,7 +551,10 @@ if (!blog && !page) {
             fetch(findPostsUrl, findPostParam)
             .then((postData) => {return postData.json()})
             .then((postRes) => {
-                postList += postRes.filter((item) => {
+                var filter = postRes.filter((item) => {
+                    return item.summary !== null
+                })
+                postList += filter.filter((item) => {
                     return item.summary == '#MiLog #' + cat
                 })
                 if (postList.length > 10) {
@@ -598,9 +601,10 @@ if (!blog && !page) {
             fetch(findPostsUrl, findPostParam)
             .then((postData) => {return postData.json()})
             .then((postRes) => {
-                console.log(postRes)
-                postList += postRes.filter((item) => {
-                    console.log(item.summary.split('#')[1] == 'MiLog ')
+                var filter = postRes.filter((item) => {
+                    return item.summary !== null
+                })
+                postList += filter.filter((item) => {
                     return item.summary.split('#')[1] == 'MiLog '
                 })
                 if (postList.length > 10) {
