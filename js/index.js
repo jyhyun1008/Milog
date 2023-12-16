@@ -899,7 +899,7 @@ if (!blog && !page) {
                         await addContent(content, attFiles)
                     }
 
-                    document.querySelector("#post_content").innerHTML = '<a class="nodeco" href="./b='+blog+'"><div style="margin:5px;"><i class="bx bx-chevron-left" style="line-height: 1.5;"></i></div></a>'
+                    document.querySelector("#post_content").innerHTML = '<a class="nodeco" href="./?b='+blog+'"><div style="margin:5px;"><i class="bx bx-chevron-left" style="line-height: 1.5;"></i></div></a>'
                     document.querySelector("#post_content").innerHTML += '<div id="post_title"><div style="font-size:2rem;">'+pageTitle+'</div><div style="font-size:1.2rem;">'+pageCategory+'</div></div>'
                     document.querySelector("#post_content").innerHTML += '<div><a href="'+pageUrl+'"><img class="eyecatchimg" src="'+pageImage+'"></div>'
                     console.log(result)
