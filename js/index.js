@@ -607,6 +607,7 @@ if (!blog && !page) {
                 postList += filter.filter((item) => {
                     return item.summary.split('#')[1] == 'MiLog '
                 })
+                console.log(postList)
                 if (postList.length > 10) {
                     postList += postList.slice(0, 10)
                     lastPost = postList[10].pageId
