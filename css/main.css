@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'NEXON Lv1 Gothic OTF';
+    font-family: 'defaultGothic';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
     font-weight: normal;
     font-style: normal;
@@ -14,7 +14,7 @@
 }
 
 body {
-    font-family: 'NEXON Lv1 Gothic OTF';
+    font-family: 'defaultGothic';
     background-color: var(--bg);
     margin: 0;
 }
@@ -106,6 +106,12 @@ input, select, .imageUploader {
     background-color: #fff;
     border: 0;
     border-bottom: 2px solid var(--accent);
+}
+
+input::placeholder, textarea::placeholder {
+    font-size: 1rem;
+    font-family: 'defaultGothic';
+    padding: 5px;
 }
 
 #host {
