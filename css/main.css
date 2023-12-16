@@ -24,11 +24,11 @@ i {
 }
 
 a {
+    text-decoration: none;
     color: var(--accent);
 }
 
 .nodeco {
-    text-decoration: none;
     color: inherit;
 }
 
