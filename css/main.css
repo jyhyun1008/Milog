@@ -167,6 +167,7 @@ textarea {
 #blogAvatar {
     border-radius: 50%;
     width: 150px;
+    max-width: 20%;
     aspect-ratio: 1 / 1;
     margin: 15px;
 }
