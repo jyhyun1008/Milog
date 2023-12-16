@@ -124,6 +124,7 @@ textarea {
 }
 
 #page_title {
+    font-weight: 700;
     font-size: 2rem;
     padding: 10px 0;
 }

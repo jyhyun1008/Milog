@@ -270,8 +270,7 @@ if (!blog && !page) {
     fetch(url)
     .then(res => res.text())
     .then((out) => {
-        document.querySelector("#page_title").innerText = 'HOME'
-        document.querySelector("#page_content").innerHTML += parseMd(out)
+        document.querySelector("#page_title").innerHTML += '최신 포스트'
         const findUserNotesUrl = 'https://'+initialHost+'/api/notes/search-by-tag'
         const findUserNotesParam = {
             method: 'POST',
@@ -349,7 +348,7 @@ if (!blog && !page) {
     if (localStorage.getItem("sessionId")) {
         location.href = domainName
     } else {
-        document.querySelector("#page_title").innerText = 'SIGN IN'
+        document.querySelector("#page_title").innerText = '로그인'
         document.querySelector("#page_content").innerHTML = '<div><input id="host" placeholder="계정이 있는 인스턴스 주소"></input><div class="button" id="signinButton">로그인</div></div>'
 
         var signHost = document.getElementById('host');
@@ -1253,7 +1252,7 @@ if (!blog && !page) {
 
     if (token) {
 
-        document.querySelector('#page_title').innerText = 'SETTING'
+        document.querySelector('#page_title').innerText = '블로그 설정'
         document.querySelector('#page_content').innerHTML = '<div class="setting_container"><div>블로그 제목:</div><input id="blogTitle" value="'+signedBlogInfo.blogTitle+'"></input><div>블로그 소개:</div><textarea id="blogIntro">'+signedBlogInfo.blogIntro+'</textarea><div>테마 색상:<br>(블로그의 테마 색상을 변경하는 것이 아닌, 여러분의 브라우저에서 보이는 사이트 전체의 테마 색상을 변경하는 것입니다.)</div><input id="blogTheme" value="'+signedBlogInfo.theme+'"></input><div>카테고리:<br>(개행으로 구분합니다. 최소 1개의 카테고리는 남겨 두셔야 글을 작성하실 수 있습니다.)</div><textarea id="category">'+signedBlogInfo.category+'</textarea></div><div class="button" id="settingChange">설정 변경</div>'
 
         var settingChange = document.getElementById('settingChange');
