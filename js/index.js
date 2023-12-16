@@ -558,20 +558,20 @@ if (!blog && !page) {
                 var filter2 = filter.filter((item) => item.summary == '#MiLog #' + cat)
                 postList = postList.push(...filter2)
                 if (filter2.length > 10) {
-                    var spliter = filter2.slice(0, 10)
-                    postList.push(...spliter)
+                    postList = postList.concat(filter2.slice(0, 10))
                     lastPost = postList[10].pageId
                     loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length == 10) {
-                    postList = postList.push(...filter2)
+                    postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
                     loadPostFunc()
                 } else if (postRes.length < 100 && filter2.length <= 10) {
-                    postList = postList.push(...filter2)
+                    postList = postList.concat(filter2)
                     lastPost = ''
+                    console.log(postList)
                     loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length < 10) {
-                    postList = postList.push(...filter2)
+                    postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
                     loadPostsbyCategory(cat, lastPost)
                 }
@@ -609,21 +609,20 @@ if (!blog && !page) {
                 var filter2 = filter.filter((item) => item.summary.split('#')[1] == 'MiLog ')
                 console.log(filter2)
                 if (filter2.length > 10) {
-                    var spliter = filter2.slice(0, 10)
-                    postList.push(...spliter)
+                    postList = postList.concat(filter2.slice(0, 10))
                     lastPost = postList[10].pageId
                     loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length == 10) {
-                    postList = postList.push(...filter2)
+                    postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
                     loadPostFunc()
                 } else if (postRes.length < 100 && filter2.length <= 10) {
-                    postList = postList.push(...filter2)
+                    postList = postList.concat(filter2)
                     lastPost = ''
                     console.log(postList)
                     loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length < 10) {
-                    postList = postList.push(...filter2)
+                    postList = postList.concat(filter2)
                     lastPost = postRes[100].pageId
                     loadPostsbyCategory(cat, lastPost)
                 }
