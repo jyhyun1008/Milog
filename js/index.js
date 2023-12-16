@@ -598,6 +598,7 @@ if (!blog && !page) {
             fetch(findPostsUrl, findPostParam)
             .then((postData) => {return postData.json()})
             .then((postRes) => {
+                console.log(postRes)
                 postList += postRes.filter((item) => {
                     console.log(item.summary.split('#')[1] == 'MiLog ')
                     return item.summary.split('#')[1] == 'MiLog '
