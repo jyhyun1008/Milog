@@ -1056,7 +1056,7 @@ if (!blog && !page) {
                     document.querySelector("#titlepreview").innerText = pageTitle
                     $('#postCategory').val(pageCategory).prop("selected",true)
                     document.querySelector("#postUrl").value = pageUrl
-                    document.querySelector("#imagepreview").innerHTML = '<img class="eyecatchimg" src="'+pageImage+'">'
+                    document.querySelector("#imagepreview").innerHTML = '<img src="'+pageImage+'">'
                     document.querySelector("#editor").value = result
                     editorInitial()
 

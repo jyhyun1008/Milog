@@ -184,7 +184,7 @@ textarea {
 
 .editor textarea {
     width: 100%;
-    height: calc(100vh - 360px - 192px);
+    height: calc(100vh - 180px - 192px);
     padding: 0 2px;
     border-width: 0px !important;
     border-radius: 0 !important;
@@ -193,6 +193,10 @@ textarea {
 .parser {
     width: 50%;
     height: calc(100vh - 192px);
+}
+
+#contentpreview {
+    max-height: calc(100vh - 197px - max(180px, 735px / 4));
     overflow: scroll;
 }
 
