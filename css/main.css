@@ -70,6 +70,7 @@ a :hover {
 .button:hover {
     cursor: pointer;
     color: var(--darkaccent);
+    background-color: var(--lightaccent);
 }
 
 #loginout, #editorbt {
