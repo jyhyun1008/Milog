@@ -230,3 +230,21 @@ textarea {
     color: grey;
     text-align: right;
 }
+
+.commentTime {
+    color: grey;
+    font-size: 0.8em;
+}
+
+.commentUser{
+    margin: 5px auto;
+    font-weight: 700;
+    text-align: left;
+    color: var(--darkaccent);
+}
+
+.commentText {
+    margin: 10px 0;
+    padding: 10px;
+    border-left: 2px solid var(--accent);
+}

@@ -809,10 +809,10 @@ if (!blog && !page) {
                                         await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
                                     }
                                 }
-                                document.querySelector("#commentbox").innerHTML += '<div class="commentList" id="comment'+text.id+'"><div class="commentUser usernameView">@'+text.user.username+'@'+commentUserHost+'</div><div class="commentTime createdAtView">'+text.createdAt+'</div><div class="commentText">'+commentText+'</div></div>'
+                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser">@'+text.user.username+'@'+commentUserHost+'</div><div class="commentTime">'+text.createdAt+'</div><div class="commentText" id="comment'+text.id+'"><div>'+commentText+'</div></div></div>'
                                 if (signedHost == commentUserHost && signedusername == text.user.username) {
                                     document.querySelector("#comment"+text.id).innerHTML += '<div class="button" id="delete'+text.id+'">삭제<div>'
-                                    document.querySelector("#comment"+text.id).addEventListener('click', function(e) {
+                                    document.querySelector("#delete"+text.id).addEventListener('click', function(e) {
                                         var letsDelete = confirm("덧글을 삭제하시겠습니까?")
 
                                         if (letsDelete === true) {
