@@ -497,7 +497,6 @@ if (!blog && !page) {
             blog: ''
         }
     }
-    var userInfo = {}
 
     document.querySelector('#page_title').style.paddingBottom = "0px"
 
@@ -532,7 +531,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        userId: userInfo.id,
+                        userId: lastVisited.userId,
                         untilId: last,
                         limit: 100,
                     })
@@ -544,7 +543,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        userId: userInfo.id,
+                        userId: lastVisited.userId,
                         limit: 100,
                     })
                 }
@@ -575,7 +574,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        userId: userInfo.id,
+                        userId: lastVisited.userId,
                         untilId: last,
                         limit: 10,
                     })
@@ -587,7 +586,7 @@ if (!blog && !page) {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        userId: userInfo.id,
+                        userId: lastVisited.userId,
                         limit: 10,
                     })
                 }
@@ -623,7 +622,6 @@ if (!blog && !page) {
         fetch(findUserIdUrl, findUserIdParam)
         .then((userData) => {return userData.json()})
         .then((userRes) => {
-            userInfo = userRes[0]
             var findInfoUrl = 'https://'+host+'/api/notes/search'
             var findInfoParam = {
                 method: 'POST',
@@ -632,7 +630,7 @@ if (!blog && !page) {
                 },
                 body:  JSON.stringify({
                     query: 'MiLogSetup',
-                    userId: userInfo.id,
+                    userId: userRes[0].id,
                 })
             }
             fetch(findInfoUrl, findInfoParam)
@@ -655,11 +653,12 @@ if (!blog && !page) {
                     var blogInfo = JSON.parse(pageRes.content[0].text.split('`')[1])
                     document.querySelector('#page_title').innerText = blogInfo.blogTitle
 
-                    var visitRecord = JSON.stringify({
+                    lastVisited = JSON.stringify({
                         blog: blog,
+                        userId: userRes[0].id,
                         blogInfo: blogInfo
                     })
-                    localStorage.setItem('lastVisited', visitRecord)
+                    localStorage.setItem('lastVisited', lastVisited)
     
                     var lastPost = ''
                     var postList = []
