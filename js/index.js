@@ -500,7 +500,7 @@ if (!blog && !page) {
 
     var lastPost = ''
     var postList = []
-    
+
     document.querySelector('#page_title').style.paddingBottom = "0px"
 
     const loadPostFunc = async() => {
@@ -607,7 +607,6 @@ if (!blog && !page) {
             .then((postRes) => {
                 var filter = postRes.filter((item) => item.summary !== null)
                 var filter2 = filter.filter((item) => item.summary.split('#')[1] == 'MiLog ')
-                console.log(postList)
                 if (filter2.length > 10) {
                     var spliter = filter2.slice(0, 10)
                     postList.push(...spliter)
@@ -620,6 +619,7 @@ if (!blog && !page) {
                 } else if (postRes.length < 100 && filter2.length <= 10) {
                     postList = postList.push(...filter2)
                     lastPost = ''
+                    console.log(postList)
                     loadPostFunc()
                 } else if (postRes.length == 100 && filter2.length < 10) {
                     postList = postList.push(...filter2)
