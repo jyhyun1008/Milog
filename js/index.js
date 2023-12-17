@@ -1573,48 +1573,80 @@ if (!blog && !page) {
         })
     }
 
-} else if (page == 'blog' && category != null) {
-    document.querySelector("#page_title").innerText = category
-    const findPageUrl = 'https://'+host+'/api/users/pages'
-    const findPageParam = {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-            userId: misskeyUserId,
-            limit: 100,
-        }),
-    }
-    fetch(findPageUrl, findPageParam)
-    .then((PageData) => {return PageData.json()})
-    .then((PageRes) => {
-        var pageId = []
-        var pageUrl = []
-        var pageTitle = []
-        var pageSummary = []
-        var pageImage = []
-        for (var i=0; i<PageRes.length; i++){
-            if (PageRes[i].summary && PageRes[i].summary.includes("#"+category)) {
-                pageId.push(PageRes[i].id)
-                pageUrl.push("https://"+host+"/@"+misskeyUserName+"/pages/"+PageRes[i].name)
-                pageTitle.push(PageRes[i].title)
-                if (PageRes[i].summary != null) {
-                    pageSummary.push(PageRes[i].summary)
-                } else {
-                    pageSummary.push('')
-                }
-                pageImage.push(PageRes[i].eyeCatchingImage.url)
+} else if (!blog && page == 'subscribe') {
+    if (token) {
+
+        var AntennaNotesUrl = 'https://'+signinHost+'/api/antennas/notes'
+        var AntennaNotesParam = {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                i: token,
+                antennaId: signedBlogInfo.antenna,
+                limit: 100
+            })
+        }
+        fetch(AntennaNotesUrl, AntennaNotesParam)
+        .then((noteData) => {return noteData.json()})
+        .then((noteRes) => {
+            
+            if (noteRes.length == 0) {
+                nothingHere()
+            } else {
+                document.querySelector("#page_content").innerHTML += '<div id="postlist"></div>'
+                loadPostFunc()
             }
-        }
-        for (var i=0; i<pageTitle.length; i++) {
-            document.querySelector("#page_content").innerHTML += '<div class="section"></div>'
-            document.getElementsByClassName("section")[i].innerHTML += '<div class="blogpage_title"><a href="?p=blog&a='+pageId[i]+'">'+pageTitle[i]+'</a></div>'
-            document.getElementsByClassName("section")[i].innerHTML += '<div><a href="?p=blog&a='+pageId[i]+'"><img class="eyecatchimg" src="'+pageImage[i]+'"></div>'
-            document.getElementsByClassName("section")[i].innerHTML += '<div>'+pageSummary[i]+'</div>'
-        }
-    })
-    .catch(err => { throw err });
+
+
+            const loadPostFunc = async() => {
+                for (let result of noteRes) {
+                    await loadPosts(result);
+                }
+            }
+
+            const loadPosts = (res) => {
+                return new Promise((resolve, reject) => {
+                    var pageId = res.text.split('&a=')[1].split(')')[0]
+                    var resultusername = res.user.username
+                    var resulthost = res.user.host
+                    if (!resulthost) {
+                        resulthost = initialHost
+                    }
+                    var loadPostUrl = 'https://'+resulthost+'/api/pages/show'
+                    var loadPostParam = {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body:  JSON.stringify({
+                            pageId: pageId,
+                        })
+                    }
+                    fetch(loadPostUrl, loadPostParam)
+                    .then((postData) => {return postData.json()})
+                    .then((postRes) => {
+                        var title = postRes.title
+                        var category = postRes.summary.split(' #')[1]
+                        var postUserAvatar = postRes.user.avatarUrl
+                        var eyeCatchUrl = ''
+                        if (!postRes.eyeCatchingImage) {
+                            eyeCatchUrl = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
+                        } else {
+                            eyeCatchUrl = postRes.eyeCatchingImage.url
+                        }
+                        document.querySelector("#postlist").innerHTML += '<div class="postlist"><a class="nodeco" href="'+domainName+'?b='+resultusername+'@'+resulthost+'&a='+pageId+'"><div><img class="eyecatch" src="'+eyeCatchUrl+'"></div><div class="post_title">'+title+'</div></a><div class="post_summary">'+category+'</div><div class="post_author"><a class="nodeco" href="./?b='+resultusername+'@'+resulthost+'"><img class="emoji" src="'+postUserAvatar+'"> @'+resultusername+'@'+resulthost+'</a></div></div>'
+                        resolve()
+                    })
+                })
+            }
+
+        })
+    } else {
+        alert('잘못된 접근입니다.')
+        location.href = domainName
+    }
 } else if (page) {
     var url = "https://raw.githubusercontent.com/"+githubUserName+"/"+githubRepoName+"/main/pages/"+page+".md"
     fetch(url)
