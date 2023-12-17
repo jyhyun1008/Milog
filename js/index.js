@@ -434,7 +434,7 @@ if (!blog && !page) {
                                 variables: [],
                                 script: '',
                                 content: [{
-                                    text: 'Setting: `{"blogTitle": "'+tokenRes.user.username+'.log", "blogIntro": "@'+tokenRes.user.username+'@'+signinHost+'의 블로그입니다.", "theme": "#3EB489", "category": ["미분류"], "antenna": "'+antennaRes.id+'", "following": ["@'+tokenRes.user.username+'@'+signinHost+'"]}`',
+                                    text: 'Setting: `{"blogTitle": "'+tokenRes.user.username+'.log", "blogIntro": "@'+tokenRes.user.username+'@'+signinHost+' 의 블로그입니다.", "theme": "#3EB489", "category": ["미분류"], "antenna": "'+antennaRes.id+'", "following": ["@'+tokenRes.user.username+'@'+signinHost+'"]}`',
                                     type: 'text'
                                 }]
                             })
