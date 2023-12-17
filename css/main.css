@@ -267,7 +267,6 @@ textarea {
 
 .editor {
     width: 50%;
-    height: calc(100vh - 192px);
     padding-right: 10px;
 }
 
