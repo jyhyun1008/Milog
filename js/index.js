@@ -345,7 +345,7 @@ if (!blog && !page) {
         let uuid = self.crypto.randomUUID();
         localStorage.setItem("signinHost", signinHost);
         localStorage.setItem("sessionId", uuid);
-        var signinUrl = 'https://'+signinHost+'/miauth/'+uuid+'?name=MiLog&callback=https%3A%2F%2Fyeojibur.in%2FMilog%3Fp%3Dcallback&permission=write:notes,write:pages,write:drive,write:account'
+        var signinUrl = 'https://'+signinHost+'/miauth/'+uuid+'?name=MiLog&callback=https%3A%2F%2Fyeojibur.in%2FMilog%3Fp%3Dcallback&permission=write:account,read:account,write:drive,write:notes,write:pages'
         location.href = signinUrl;
     }
 } else if (page == 'signin' && !signinHost) {
