@@ -268,7 +268,7 @@ if (!blog && !page) {
     fetch(url)
     .then(res => res.text())
     .then((out) => {
-        document.querySelector("#page_title").innerHTML += '최신 포스트'
+        document.querySelector("#page_title").innerHTML += '연합 중인 블로그'
         const findUserNotesUrl = 'https://'+initialHost+'/api/notes/search-by-tag'
         const findUserNotesParam = {
             method: 'POST',
@@ -1591,6 +1591,8 @@ if (!blog && !page) {
         fetch(AntennaNotesUrl, AntennaNotesParam)
         .then((noteData) => {return noteData.json()})
         .then((noteRes) => {
+
+            document.querySelector("#page_title").innerHTML += '구독 중인 블로그'
             
             if (noteRes.length == 0) {
                 nothingHere()
