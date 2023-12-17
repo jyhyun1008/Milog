@@ -189,6 +189,10 @@ textarea {
     padding: 10px 0;
 }
 
+#setting, #follow, #unfollow {
+    padding: 8px 10px 0px 10px;
+}
+
 #post_title {
     color: white;
     position: absolute;
