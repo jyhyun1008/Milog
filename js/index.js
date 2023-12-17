@@ -1576,7 +1576,7 @@ if (!blog && !page) {
 } else if (!blog && page == 'subscribe') {
     if (token) {
 
-        var AntennaNotesUrl = 'https://'+signinHost+'/api/antennas/notes'
+        var AntennaNotesUrl = 'https://'+signedHost+'/api/antennas/notes'
         var AntennaNotesParam = {
             method: 'POST',
             headers: {
