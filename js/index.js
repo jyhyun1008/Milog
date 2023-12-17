@@ -651,7 +651,7 @@ if (!blog && !page) {
                                 document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
             
                                 function follunfoll() {
-                                    var updatePageUrl = 'https://'+signinHost+'/api/pages/update'
+                                    var updatePageUrl = 'https://'+signedHost+'/api/pages/update'
                                     var updatePageParam = {
                                         method: 'POST',
                                         headers: {
@@ -673,7 +673,7 @@ if (!blog && !page) {
                                     }
                                     fetch(updatePageUrl, updatePageParam)
                                     .then(() => {
-                                        var updateAntennaUrl = 'https://'+signinHost+'/api/antennas/update'
+                                        var updateAntennaUrl = 'https://'+signedHost+'/api/antennas/update'
                                         var updateAntennaParam = {
                                             method: 'POST',
                                             headers: {
