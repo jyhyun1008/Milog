@@ -42,6 +42,12 @@ a :hover {
     color: var(--darkaccent);
 }
 
+.logo {
+    -webkit-filter: brightness(0) invert(1); 
+    filter: brightness(0) invert(1);
+    height: 24px;
+}
+
 #nav {
     position: fixed;
     z-index: 99;
