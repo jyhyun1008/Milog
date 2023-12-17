@@ -238,12 +238,8 @@ const parseMFM = (md) => {
     return md;
 }
 
-function convertDataURIToBinary(dataURI) {
-	var BASE64_MARKER = ';base64,';
-	var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-	var base64 = dataURI.substring(base64Index);
-	var raw = window.atob(base64);
-	return raw;
+function nothingHere() {
+    document.querySelector("#page_content").innerHTML += '<div class="nothingHere"><div><i class="bx bx-message-alt-error"></i></div><div>여기는 아무것도 없어요!</div></div>'
 }
 
 function getQueryStringObject() {
@@ -288,7 +284,13 @@ if (!blog && !page) {
         .then((noteData) => {return noteData.json()})
         .then((noteRes) => {
 
-            document.querySelector("#page_content").innerHTML += '<div id="postlist"></div>'
+            if (noteRes.length == 0) {
+                nothingHere()
+            } else {
+                document.querySelector("#page_content").innerHTML += '<div id="postlist"></div>'
+                loadPostFunc()
+            }
+
 
             const loadPostFunc = async() => {
                 for (let result of noteRes) {
@@ -332,7 +334,6 @@ if (!blog && !page) {
                 })
             }
 
-            loadPostFunc()
         })
         .catch(err => {throw err});
     })
@@ -524,105 +525,61 @@ if (!blog && !page) {
     }
 
     function loadPostsbyCategory(cat, last = '') {
-        if (cat != '전체글'){
-            var findPostsUrl = 'https://'+host+'/api/users/pages'
-            if (last != '') {
-                var findPostParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body:  JSON.stringify({
-                        userId: lastVisited.userId,
-                        untilId: last,
-                        limit: 100,
-                    })
-                }
-            } else {
-                var findPostParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body:  JSON.stringify({
-                        userId: lastVisited.userId,
-                        limit: 100,
-                    })
-                }
+        var findPostsUrl = 'https://'+host+'/api/users/pages'
+        if (last != '') {
+            var findPostParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body:  JSON.stringify({
+                    userId: lastVisited.userId,
+                    untilId: last,
+                    limit: 100,
+                })
             }
-            fetch(findPostsUrl, findPostParam)
-            .then((postData) => {return postData.json()})
-            .then((postRes) => {
-                var filter = postRes.filter((item) => item.summary !== null)
-                var filter2 = filter.filter((item) => item.summary == '#MiLog #' + cat)
-                if (filter2.length > 10) {
-                    postList = postList.concat(filter2.slice(0, 10))
-                    lastPost = postList[10].pageId
-                    loadPostFunc2()
-                } else if (postRes.length == 100 && filter2.length == 10) {
-                    postList = postList.concat(filter2)
-                    lastPost = postRes[100].pageId
-                    loadPostFunc2()
-                } else if (postRes.length < 100 && filter2.length <= 10) {
-                    postList = postList.concat(filter2)
-                    lastPost = ''
-                    loadPostFunc2()
-                } else if (postRes.length == 100 && filter2.length < 10) {
-                    postList = postList.concat(filter2)
-                    lastPost = postRes[100].pageId
-                    loadPostsbyCategory(cat, lastPost)
-                }
-            })
-        } else if (cat == '전체글') {
-            var findPostsUrl = 'https://'+host+'/api/users/pages'
-            if (last != '') {
-                var findPostParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body:  JSON.stringify({
-                        userId: lastVisited.userId,
-                        untilId: last,
-                        limit: 100,
-                    })
-                }
-            } else {
-                var findPostParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body:  JSON.stringify({
-                        userId: lastVisited.userId,
-                        limit: 100,
-                    })
-                }
+        } else {
+            var findPostParam = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body:  JSON.stringify({
+                    userId: lastVisited.userId,
+                    limit: 100,
+                })
             }
-            fetch(findPostsUrl, findPostParam)
-            .then((postData) => {return postData.json()})
-            .then((postRes) => {
-                var filter = postRes.filter((item) => item.summary !== null)
-                var filter2 = filter.filter((item) => item.summary.split('#')[1] == 'MiLog ')
-                if (filter2.length > 10) {
-                    postList = postList.concat(filter2.slice(0, 10))
-                    lastPost = postList[10].pageId
-                    loadPostFunc2()
-                } else if (postRes.length == 100 && filter2.length == 10) {
-                    postList = postList.concat(filter2)
-                    lastPost = postRes[100].pageId
-                    loadPostFunc2()
-                } else if (postRes.length < 100 && filter2.length <= 10) {
-                    postList = postList.concat(filter2)
-                    lastPost = ''
-                    loadPostFunc2()
-                } else if (postRes.length == 100 && filter2.length < 10) {
-                    postList = postList.concat(filter2)
-                    lastPost = postRes[100].pageId
-                    loadPostsbyCategory(cat, lastPost)
-                }
-            })
         }
+        fetch(findPostsUrl, findPostParam)
+        .then((postData) => {return postData.json()})
+        .then((postRes) => {
+            var filter = postRes.filter((item) => item.summary !== null)
+            var filter2 = []
+            if (cat != '전체글'){
+                filter2 = filter.filter((item) => item.summary == '#MiLog #' + cat)
+            } else if (cat == '전체글') {
+                filter2 = filter.filter((item) => item.summary.split('#')[1] == 'MiLog ')
+            }
+            if (filter2.length > 10) {
+                postList = postList.concat(filter2.slice(0, 10))
+                lastPost = postList[10].pageId
+                loadPostFunc2()
+            } else if (postRes.length == 100 && filter2.length == 10) {
+                postList = postList.concat(filter2)
+                lastPost = postRes[100].pageId
+                loadPostFunc2()
+            } else if (postRes.length < 100 && filter2.length == 0) {
+                nothingHere()
+            } else if (postRes.length < 100 && filter2.length <= 10) {
+                postList = postList.concat(filter2)
+                lastPost = ''
+                loadPostFunc2()
+            } else if (postRes.length == 100 && filter2.length < 10) {
+                postList = postList.concat(filter2)
+                lastPost = postRes[100].pageId
+                loadPostsbyCategory(cat, lastPost)
+            }
+        })
     }
 
     if (lastVisited.blog != blog) {
@@ -641,148 +598,166 @@ if (!blog && !page) {
         fetch(findUserIdUrl, findUserIdParam)
         .then((userData) => {return userData.json()})
         .then((userRes) => {
-            var findInfoUrl = 'https://'+host+'/api/notes/search'
-            var findInfoParam = {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json',
-                },
-                body:  JSON.stringify({
-                    query: 'MiLogSetup',
-                    userId: userRes[0].id,
-                })
-            }
-            fetch(findInfoUrl, findInfoParam)
-            .then((infoData) => {return infoData.json()})
-            .then((infoRes) => {
-    
-                var blogInfoUrl = 'https://'+host+'/api/pages/show'
-                var blogInfoParam = {
+
+            if (userRes.length == 0) {
+                nothingHere()
+            } else {
+
+                var findInfoUrl = 'https://'+host+'/api/notes/search'
+                var findInfoParam = {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json',
                     },
                     body:  JSON.stringify({
-                        pageId: infoRes[0].text.split('`')[1]
+                        query: 'MiLogSetup',
+                        userId: userRes[0].id,
                     })
                 }
-                fetch(blogInfoUrl, blogInfoParam)
-                .then((pageData) => {return pageData.json()})
-                .then((pageRes) => {
-                    var blogInfo = JSON.parse(pageRes.content[0].text.split('`')[1])
-                    lastVisited = {
-                        blog: blog,
-                        userId: userRes[0].id,
-                        userAvatar: userRes[0].avatarUrl,
-                        blogInfo: blogInfo
-                    }
-                    localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
-                    document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
+                fetch(findInfoUrl, findInfoParam)
+                .then((infoData) => {return infoData.json()})
+                .then((infoRes) => {
 
-                    function follunfoll() {
-                        var updatePageUrl = 'https://'+signinHost+'/api/pages/update'
-                        var updatePageParam = {
+                    if (infoRes.length == 0) {
+                        nothingHere()
+                    } else {
+
+                        var blogInfoUrl = 'https://'+host+'/api/pages/show'
+                        var blogInfoParam = {
                             method: 'POST',
                             headers: {
                                 'content-type': 'application/json',
                             },
-                            body: JSON.stringify({
-                                i: token,
-                                pageId: signedBlogInfoId,
-                                title: 'MiLogSetup',
-                                name: 'milogsetup',
-                                summary: '#MiLogSetup',
-                                variables: [],
-                                script: '',
-                                content: [{
-                                    text: 'Setting: `'+JSON.stringify(signedBlogInfo)+'`',
-                                    type: 'text'
-                                }]
+                            body:  JSON.stringify({
+                                pageId: infoRes[0].text.split('`')[1]
                             })
                         }
-                        fetch(updatePageUrl, updatePageParam)
-                        .then(() => {
-                            var updateAntennaUrl = 'https://'+signinHost+'/api/antennas/update'
-                            var updateAntennaParam = {
-                                method: 'POST',
-                                headers: {
-                                    'content-type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    i: tokenRes.token,
-                                    antennaId: signedBlogInfo.antenna,
-                                    name: "MiLogFollowingAntenna",
-                                    src: "users",
-                                    keywords: [[`#MiLogNewPost`]],
-                                    excludeKeywords: [[]],
-                                    users: signedBlogInfo.following,
-                                    caseSensitive: false,
-                                    withReplies: false,
-                                    withFile: false,
-                                    notify: false
-                                })
+                        fetch(blogInfoUrl, blogInfoParam)
+                        .then((pageData) => {return pageData.json()})
+                        .then((pageRes) => {
+
+                            if (!pageRes.content) {
+                                nothingHere()
+                            } else {
+
+                                var blogInfo = JSON.parse(pageRes.content[0].text.split('`')[1])
+                                lastVisited = {
+                                    blog: blog,
+                                    userId: userRes[0].id,
+                                    userAvatar: userRes[0].avatarUrl,
+                                    blogInfo: blogInfo
+                                }
+                                localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
+                                document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
+            
+                                function follunfoll() {
+                                    var updatePageUrl = 'https://'+signinHost+'/api/pages/update'
+                                    var updatePageParam = {
+                                        method: 'POST',
+                                        headers: {
+                                            'content-type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                            i: token,
+                                            pageId: signedBlogInfoId,
+                                            title: 'MiLogSetup',
+                                            name: 'milogsetup',
+                                            summary: '#MiLogSetup',
+                                            variables: [],
+                                            script: '',
+                                            content: [{
+                                                text: 'Setting: `'+JSON.stringify(signedBlogInfo)+'`',
+                                                type: 'text'
+                                            }]
+                                        })
+                                    }
+                                    fetch(updatePageUrl, updatePageParam)
+                                    .then(() => {
+                                        var updateAntennaUrl = 'https://'+signinHost+'/api/antennas/update'
+                                        var updateAntennaParam = {
+                                            method: 'POST',
+                                            headers: {
+                                                'content-type': 'application/json',
+                                            },
+                                            body: JSON.stringify({
+                                                i: tokenRes.token,
+                                                antennaId: signedBlogInfo.antenna,
+                                                name: "MiLogFollowingAntenna",
+                                                src: "users",
+                                                keywords: [[`#MiLogNewPost`]],
+                                                excludeKeywords: [[]],
+                                                users: signedBlogInfo.following,
+                                                caseSensitive: false,
+                                                withReplies: false,
+                                                withFile: false,
+                                                notify: false
+                                            })
+                                        }
+                                        fetch(updateAntennaUrl, updateAntennaParam)
+                                        .then((antennaData) => {return antennaData.json()})
+                                        .then((antennaRes) => {
+                                            window.location.reload()
+                                        })
+                                    })
+                                    .catch(err => {throw err});
+            
+                                }
+                
+                                if (token) {
+                                    if (blog == signedusername+'@'+signedHost) {
+                                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
+                                    } else {
+                                        if (signedBlogInfo.following.includes('@'+blog)) {
+                                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+            
+                                            document.querySelector("#unfollow").addEventListener('click', function(e) {
+                                                signedBlogInfo.following = signedBlogInfo.following.filter((el) => {el !== '@'+blog})
+                                                follunfoll()
+                                            })
+                                        } else {
+                                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                                            document.querySelector("#follow").addEventListener('click', function(e) {
+                                                signedBlogInfo.following = signedBlogInfo.following.push('@'+blog)
+                                                follunfoll()
+                                            })
+                                        }
+                                    }
+                                } else {
+                                    document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
+                                }
+                                
+                                if (!page) {
+                                    document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button selected" id="viewall">전체글</div></a>'
+                                } else {
+                                    document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button" id="viewall">전체글</div></a>'
+                                }
+                                
+                                for (let i = 0; i < blogInfo.category.length; i++) {
+                                    if (blogInfo.category[i] == page) {
+                                        document.querySelector('#blognav').innerHTML += '<a href="./?b=' + blog + '&p=' + blogInfo.category[i]+'"><div class="button selected" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div></a>'
+                                    } else {
+                                        document.querySelector('#blognav').innerHTML += '<a href="./?b=' + blog + '&p=' + blogInfo.category[i]+'"><div class="button" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div></a>'
+                                    }
+                                }
+            
+                                loadPostsbyCategory(document.querySelector('.selected').innerText)
+                
+                                // if (postRes.length == 20) {
+                                //     lastPost = postRes[19].pageId
+                                //     document.querySelector('#blogContainer').innerHTML += '<div class="button">더보기</div>'
+                
+                                //         //TODO
+                                // } 
                             }
-                            fetch(updateAntennaUrl, updateAntennaParam)
-                            .then((antennaData) => {return antennaData.json()})
-                            .then((antennaRes) => {
-                                window.location.reload()
-                            })
                         })
                         .catch(err => {throw err});
-
                     }
-    
-                    if (token) {
-                        if (blog == signedusername+'@'+signedHost) {
-                            document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><a href="./?p=setting"><div class="button" id="setting"><i class="bx bx-cog"></i></div></a></div><div id="postlist"></div></div>'
-                        } else {
-                            if (signedBlogInfo.following.includes('@'+blog)) {
-                                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
-
-                                document.querySelector("#unfollow").addEventListener('click', function(e) {
-                                    signedBlogInfo.following = signedBlogInfo.following.filter((el) => {el !== '@'+blog})
-                                    follunfoll()
-                                })
-                            } else {
-                                document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
-                                document.querySelector("#follow").addEventListener('click', function(e) {
-                                    signedBlogInfo.following = signedBlogInfo.following.push('@'+blog)
-                                    follunfoll()
-                                })
-                            }
-                        }
-                    } else {
-                        document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
-                    }
-                    
-                    if (!page) {
-                        document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button selected" id="viewall">전체글</div></a>'
-                    } else {
-                        document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button" id="viewall">전체글</div></a>'
-                    }
-                    
-                    for (let i = 0; i < blogInfo.category.length; i++) {
-                        if (blogInfo.category[i] == page) {
-                            document.querySelector('#blognav').innerHTML += '<a href="./?b=' + blog + '&p=' + blogInfo.category[i]+'"><div class="button selected" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div></a>'
-                        } else {
-                            document.querySelector('#blognav').innerHTML += '<a href="./?b=' + blog + '&p=' + blogInfo.category[i]+'"><div class="button" id="view'+i.toString()+'">'+blogInfo.category[i]+'</div></a>'
-                        }
-                    }
-
-                    loadPostsbyCategory(document.querySelector('.selected').innerText)
-    
-                    // if (postRes.length == 20) {
-                    //     lastPost = postRes[19].pageId
-                    //     document.querySelector('#blogContainer').innerHTML += '<div class="button">더보기</div>'
-    
-                    //         //TODO
-                    // } 
                 })
                 .catch(err => {throw err});
-            })
-            .catch(err => {throw err});
+            }
         })
         .catch(err => {throw err});
+
     } else {
 
         var blogInfo = lastVisited.blogInfo
@@ -978,135 +953,140 @@ if (!blog && !page) {
 
                 }
 
-                var pageUrl = "https://"+host+"/@"+username+"/pages/"+PageRes.name
-                var pageTitle = PageRes.title
-                var pageCategory = PageRes.summary.split(' #')[1]
-                var pageImage = ''
-                var userAvatar = PageRes.user.avatarUrl
-                if (PageRes.eyeCatchingImage) {
-                    pageImage = PageRes.eyeCatchingImage.url
+                if (!PageRes.content) {
+                    nothingHere()
                 } else {
-                    pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
-                }
-                document.querySelector("#page_content").innerHTML += '<div id="post_content"></div>'
-                makePageText(PageRes.content, PageRes.attachedFiles)
-                if (signedusername == username && signedHost == host) {
-                    document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=editor&a='+article+'"><div class="button" id="update">수정</div></a> <a href="./?p=delete&a='+article+'"><div class="button" id="delete">삭제</div></a></div>'
-                } 
-                document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
-                if (token) {
-                    document.getElementById("commentbox").innerHTML = '<textarea id="comment" placeholder="덧글을 작성해보세요. 작성된 덧글은 수정하기 어렵습니다."></textarea><div class="button" id="leavecomment">덧글 작성</div>'
-                }
-                const findCommentUrl = 'https://'+host+'/api/notes/search'
-                const findCommentParam = {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        query: article,
-                    }),
-                }
-                fetch(findCommentUrl, findCommentParam)
-                .then((commentData) => {return commentData.json()})
-                .then((commentRes) => {
 
-                    const addComment = (text) => {
-                        return new Promise((resolve, reject) => {
-                            var commentUserHost = ''
-                            if (text.user.host) {
-                                commentUserHost = text.user.host
-                            } else {
-                                commentUserHost = host
-                            }
-                            var commentText = text.text.substr(text.text.indexOf('\n'))
-                            commentText = parseMFM(commentText)
-
-                            var emojinames = []
-                            var emojiurl = {}
-                            if (commentText.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)) {
-                                emojinames = commentText.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
-                            }
-                
-                            const commentEmojiUrl = (name) => {
-                                return new Promise((resolve, reject) => {
-                                    var searchEmojiUrl = 'https://'+commentUserHost+'/api/emoji'
-                                    var searchEmojiParam = {
-                                        method: 'POST',
-                                        headers: {
-                                            'content-type': 'application/json',
-                                        },
-                                        body:  JSON.stringify({
-                                            name: name
+                    var pageUrl = "https://"+host+"/@"+username+"/pages/"+PageRes.name
+                    var pageTitle = PageRes.title
+                    var pageCategory = PageRes.summary.split(' #')[1]
+                    var pageImage = ''
+                    var userAvatar = PageRes.user.avatarUrl
+                    if (PageRes.eyeCatchingImage) {
+                        pageImage = PageRes.eyeCatchingImage.url
+                    } else {
+                        pageImage = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
+                    }
+                    document.querySelector("#page_content").innerHTML += '<div id="post_content"></div>'
+                    makePageText(PageRes.content, PageRes.attachedFiles)
+                    if (signedusername == username && signedHost == host) {
+                        document.querySelector("#page_content").innerHTML += '<div id="tools"><a href="./?p=editor&a='+article+'"><div class="button" id="update">수정</div></a> <a href="./?p=delete&a='+article+'"><div class="button" id="delete">삭제</div></a></div>'
+                    } 
+                    document.querySelector("#page_content").innerHTML += '<div id="commentbox"><div>'
+                    if (token) {
+                        document.getElementById("commentbox").innerHTML = '<textarea id="comment" placeholder="덧글을 작성해보세요. 작성된 덧글은 수정하기 어렵습니다."></textarea><div class="button" id="leavecomment">덧글 작성</div>'
+                    }
+                    const findCommentUrl = 'https://'+host+'/api/notes/search'
+                    const findCommentParam = {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            query: article,
+                        }),
+                    }
+                    fetch(findCommentUrl, findCommentParam)
+                    .then((commentData) => {return commentData.json()})
+                    .then((commentRes) => {
+    
+                        const addComment = (text) => {
+                            return new Promise((resolve, reject) => {
+                                var commentUserHost = ''
+                                if (text.user.host) {
+                                    commentUserHost = text.user.host
+                                } else {
+                                    commentUserHost = host
+                                }
+                                var commentText = text.text.substr(text.text.indexOf('\n'))
+                                commentText = parseMFM(commentText)
+    
+                                var emojinames = []
+                                var emojiurl = {}
+                                if (commentText.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)) {
+                                    emojinames = commentText.match(/\:([^\:\/\`\n\s\(\)\,\-]+)\:/g)
+                                }
+                    
+                                const commentEmojiUrl = (name) => {
+                                    return new Promise((resolve, reject) => {
+                                        var searchEmojiUrl = 'https://'+commentUserHost+'/api/emoji'
+                                        var searchEmojiParam = {
+                                            method: 'POST',
+                                            headers: {
+                                                'content-type': 'application/json',
+                                            },
+                                            body:  JSON.stringify({
+                                                name: name
+                                            })
+                                        }
+                                        fetch(searchEmojiUrl, searchEmojiParam)
+                                        .then((emojiData) => {return emojiData.json()})
+                                        .then((emojiRes) => {
+                                            emojiurl[name] = emojiRes.url
+                                            if (emojiurl[name] && emojiurl[name] !== 'undefined') {
+                                                commentText = commentText.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
+                                            }
+                                            resolve()
+                                        })
+                                        .catch(err => {throw err});
+                                    })
+                                }
+    
+                                const commentEmoji = async(emojinames) => {
+                                    if (emojinames) {
+                                        for (let emojiname of emojinames) {
+                                            await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
+                                        }
+                                    }
+                                    document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser"><a class="nodeco" href="./?b='+text.user.username+'@'+commentUserHost+'"><img class="emoji" src="'+text.user.avatarUrl+'"> @'+text.user.username+'@'+commentUserHost+'</a></div><div class="commentTime">'+text.createdAt+'</div><div class="commentText" id="comment'+text.id+'"><div>'+commentText+'</div></div></div>'
+                                    if (signedHost == commentUserHost && signedusername == text.user.username) {
+                                        document.querySelector("#comment"+text.id).innerHTML += '<div class="button" id="delete'+text.id+'">삭제<div>'
+                                        document.querySelector("#delete"+text.id).addEventListener('click', function(e) {
+                                            var letsDelete = confirm("덧글을 삭제하시겠습니까?")
+    
+                                            if (letsDelete === true) {
+                                                var deleteCommentUrl = 'https://'+signedHost+'/api/notes/delete'
+                                                var deleteCommentParam = {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'content-type': 'application/json',
+                                                    },
+                                                    body:  JSON.stringify({
+                                                        i: token,
+                                                        noteId: text.id
+                                                    })
+                                                }
+                                                fetch(deleteCommentUrl, deleteCommentParam)
+                                                .then((result) => {
+                                                    location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
+                                                })
+                                                .catch(err => {throw err});
+                                            } else {
+                                                alert("취소되었습니다.")
+                                            }
                                         })
                                     }
-                                    fetch(searchEmojiUrl, searchEmojiParam)
-                                    .then((emojiData) => {return emojiData.json()})
-                                    .then((emojiRes) => {
-                                        emojiurl[name] = emojiRes.url
-                                        if (emojiurl[name] && emojiurl[name] !== 'undefined') {
-                                            commentText = commentText.replace(':'+name+':', '<img src="'+emojiRes.url+'" class="emoji">')
-                                        }
-                                        resolve()
-                                    })
-                                    .catch(err => {throw err});
-                                })
-                            }
-
-                            const commentEmoji = async(emojinames) => {
-                                if (emojinames) {
-                                    for (let emojiname of emojinames) {
-                                        await commentEmojiUrl(emojiname.substring(1, emojiname.length - 1))
-                                    }
+                                    resolve()
                                 }
-                                document.querySelector("#commentbox").innerHTML += '<div class="commentList"><div class="commentUser"><a class="nodeco" href="./?b='+text.user.username+'@'+commentUserHost+'"><img class="emoji" src="'+text.user.avatarUrl+'"> @'+text.user.username+'@'+commentUserHost+'</a></div><div class="commentTime">'+text.createdAt+'</div><div class="commentText" id="comment'+text.id+'"><div>'+commentText+'</div></div></div>'
-                                if (signedHost == commentUserHost && signedusername == text.user.username) {
-                                    document.querySelector("#comment"+text.id).innerHTML += '<div class="button" id="delete'+text.id+'">삭제<div>'
-                                    document.querySelector("#delete"+text.id).addEventListener('click', function(e) {
-                                        var letsDelete = confirm("덧글을 삭제하시겠습니까?")
-
-                                        if (letsDelete === true) {
-                                            var deleteCommentUrl = 'https://'+signedHost+'/api/notes/delete'
-                                            var deleteCommentParam = {
-                                                method: 'POST',
-                                                headers: {
-                                                    'content-type': 'application/json',
-                                                },
-                                                body:  JSON.stringify({
-                                                    i: token,
-                                                    noteId: text.id
-                                                })
-                                            }
-                                            fetch(deleteCommentUrl, deleteCommentParam)
-                                            .then((result) => {
-                                                location.href = domainName + '?b='+ username +'@'+ host +'&a='+ article
-                                            })
-                                            .catch(err => {throw err});
-                                        } else {
-                                            alert("취소되었습니다.")
-                                        }
-                                    })
-                                }
-                                resolve()
-                            }
-                            
-                            commentEmoji(emojinames)
-                        })
-                    }
-
-                    if (commentRes.length > 0) {
-                        const makeCommentText = async(commentRes) => {
-                            for (let comment of commentRes) {
-                                await addComment(comment)
-                            }
+                                
+                                commentEmoji(emojinames)
+                            })
                         }
-                        makeCommentText(commentRes)
-                    } else {
-                        document.querySelector("#commentbox").innerHTML += '<div class="commentList">작성된 덧글이 없습니다.</div>'
-                    }
-                    resolve()
-                })
-                .catch(err => {throw err});
+    
+                        if (commentRes.length > 0) {
+                            const makeCommentText = async(commentRes) => {
+                                for (let comment of commentRes) {
+                                    await addComment(comment)
+                                }
+                            }
+                            makeCommentText(commentRes)
+                        } else {
+                            document.querySelector("#commentbox").innerHTML += '<div class="commentList">작성된 덧글이 없습니다.</div>'
+                        }
+                        resolve()
+                    })
+                    .catch(err => {throw err});
+                }
                 
             })
             .catch(err => { throw err });
@@ -1268,9 +1248,9 @@ if (!blog && !page) {
             fetch(findPageUrl, findPageParam)
             .then((PageData) => {return PageData.json()})
             .then((PageRes) => {
-        
+
                 var result = ''
-        
+                
                 const addContent = (content, attFiles) => {
                     return new Promise((resolve, reject) => {
                         if (content.type == 'section') {
@@ -1314,17 +1294,23 @@ if (!blog && !page) {
                     editorInitial()
 
                 }
-        
-                var pageTitle = PageRes.title
-                if (PageRes.eyeCatchingImage) {
-                    eyeCatchImgId = PageRes.eyeCatchingImage.id
-                    pageImage = PageRes.eyeCatchingImage.url
-                    document.querySelector("#eyeCatchImg").innerText = eyeCatchImgId
+
+                if (!PageRes.content) {
+                    alert('잘못된 접근입니다.')
+                    location.href = domainName + '?b='+ signedusername +'@'+ signedHost
+                } else {
+                    var pageTitle = PageRes.title
+                    if (PageRes.eyeCatchingImage) {
+                        eyeCatchImgId = PageRes.eyeCatchingImage.id
+                        pageImage = PageRes.eyeCatchingImage.url
+                        document.querySelector("#eyeCatchImg").innerText = eyeCatchImgId
+                    }
+                    var pageUrl = PageRes.name
+                    var pageCategory = PageRes.summary.substring(PageRes.summary.indexOf(' #')+2)
+                    document.querySelector("#contentpreview").innerHTML += '<div id="post_content"></div>'
+                    makePageText(PageRes.content, PageRes.attachedFiles)
                 }
-                var pageUrl = PageRes.name
-                var pageCategory = PageRes.summary.substring(PageRes.summary.indexOf(' #')+2)
-                document.querySelector("#contentpreview").innerHTML += '<div id="post_content"></div>'
-                makePageText(PageRes.content, PageRes.attachedFiles)
+
             })
             .catch(err => {throw err});
                         
@@ -1376,11 +1362,7 @@ if (!blog && !page) {
                     contentType: 'image/png',
                 });
                 formData.append("i", token)
-              
-                //binaryBlob = convertDataURIToBinary(reader.result);
-                //console.log('Encoded Binary File String:', binaryBlob);
-                console.log(formData)
-                
+
                 var eyeCatchUrl = 'https://'+signedHost+'/api/drive/files/create'
                 var eyeCatchParam = {
                     method: 'POST',
@@ -1412,10 +1394,6 @@ if (!blog && !page) {
                     contentType: 'image/png',
                 });
                 formData.append("i", token)
-              
-                //binaryBlob = convertDataURIToBinary(reader.result);
-                //console.log('Encoded Binary File String:', binaryBlob);
-                console.log(formData)
                 
                 var imgUploadURL = 'https://'+signedHost+'/api/drive/files/create'
                 var imgUploadParam = {

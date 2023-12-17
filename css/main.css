@@ -361,3 +361,21 @@ textarea {
         width: 100%;
     }
 }
+
+.nothingHere {
+    display: flex;
+    height: 256px;
+    background-color: var(--bg);
+    color: var(--darkaccent);
+    border-radius: 30px;
+    border: var(--accent) dashed 2px;
+    flex-direction: column;
+    align-items: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.nothingHere i {
+    font-size: 10rem;
+    color: var(--accent);
+}
