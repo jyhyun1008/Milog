@@ -460,14 +460,14 @@ if (!blog && !page) {
                             fetch(createNoteUrl, createNoteParam)
                             .then((noteData) => {return noteData.json()})
                             .then((noteRes) => {
-                                //location.href = domainName
+                                location.href = domainName
                             })
                             .catch(err => {throw err});
                         })
                         .catch(err => {throw err});
                     })
                     .catch(err => {throw err});
-                } else if (infoRes.length == 1) {
+                } else if (infoRes.length > 0) {
                     var blogInfoId = infoRes[0].text.split('`')[1]
                     var ShowPageUrl = 'https://'+signinHost+'/api/pages/show'
                     var ShowPageParam = {
