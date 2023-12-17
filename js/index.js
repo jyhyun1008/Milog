@@ -678,6 +678,59 @@ if (!blog && !page) {
                     }
                     localStorage.setItem('lastVisited', JSON.stringify(lastVisited))
                     document.querySelector('#page_title').innerHTML = '<div><img id="blogAvatar" src="'+lastVisited.userAvatar+'"></div>'+blogInfo.blogTitle
+
+                    function follunfoll() {
+                        var updatePageUrl = 'https://'+signinHost+'/api/pages/update'
+                        var updatePageParam = {
+                            method: 'POST',
+                            headers: {
+                                'content-type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                i: token,
+                                pageId: signedBlogInfoId,
+                                title: 'MiLogSetup',
+                                name: 'milogsetup',
+                                summary: '#MiLogSetup',
+                                variables: [],
+                                script: '',
+                                content: [{
+                                    text: 'Setting: `'+JSON.stringify(signedBlogInfo)+'`',
+                                    type: 'text'
+                                }]
+                            })
+                        }
+                        fetch(updatePageUrl, updatePageParam)
+                        .then(() => {
+                            var updateAntennaUrl = 'https://'+signinHost+'/api/antennas/update'
+                            var updateAntennaParam = {
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    i: tokenRes.token,
+                                    antennaId: signedBlogInfo.antenna,
+                                    name: "MiLogFollowingAntenna",
+                                    src: "users",
+                                    keywords: [[`#MiLogNewPost`]],
+                                    excludeKeywords: [[]],
+                                    users: signedBlogInfo.following,
+                                    caseSensitive: false,
+                                    withReplies: false,
+                                    withFile: false,
+                                    notify: false
+                                })
+                            }
+                            fetch(updateAntennaUrl, updateAntennaParam)
+                            .then((antennaData) => {return antennaData.json()})
+                            .then((antennaRes) => {
+                                window.location.reload()
+                            })
+                        })
+                        .catch(err => {throw err});
+
+                    }
     
                     if (token) {
                         if (blog == signedusername+'@'+signedHost) {
@@ -685,15 +738,23 @@ if (!blog && !page) {
                         } else {
                             if (signedBlogInfo.following.includes('@'+blog)) {
                                 document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+
+                                document.querySelector("#unfollow").addEventListener('click', function(e) {
+                                    signedBlogInfo.following = signedBlogInfo.following.filter((el) => {el !== '@'+blog})
+                                    follunfoll()
+                                })
                             } else {
                                 document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                                document.querySelector("#follow").addEventListener('click', function(e) {
+                                    signedBlogInfo.following = signedBlogInfo.following.push('@'+blog)
+                                    follunfoll()
+                                })
                             }
                         }
                     } else {
                         document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
                     }
                     
-
                     if (!page) {
                         document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button selected" id="viewall">전체글</div></a>'
                     } else {
@@ -733,14 +794,22 @@ if (!blog && !page) {
             } else {
                 if (signedBlogInfo.following.includes('@'+blog)) {
                     document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="unfollow"><i class="bx bxs-user-minus"></i></div></div><div id="postlist"></div></div>'
+
+                    document.querySelector("#unfollow").addEventListener('click', function(e) {
+                        signedBlogInfo.following = signedBlogInfo.following.filter((el) => {el !== '@'+blog})
+                        follunfoll()
+                    })
                 } else {
                     document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"><div class="button" id="follow"><i class="bx bxs-user-plus"></i></div></div><div id="postlist"></div></div>'
+                    document.querySelector("#follow").addEventListener('click', function(e) {
+                        signedBlogInfo.following = signedBlogInfo.following.push('@'+blog)
+                        follunfoll()
+                    })
                 }
             }
         } else {
             document.querySelector("#page_content").innerHTML += '<div class="hline"></div><div id="blogIntro">'+parseMd(blogInfo.blogIntro)+'</div><div id="blogContainer"><div id="blognav"></div><div id="postlist"></div></div>'
         }
-        
 
         if (!page) {
             document.querySelector("#blognav").innerHTML += '<a href="./?b=' + blog +'"><div class="button selected" id="viewall">전체글</div></a>'
