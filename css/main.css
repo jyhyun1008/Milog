@@ -133,6 +133,7 @@ input, .imageUploader {
     height: 20px !important;
     width: 20px !important;
     margin: 0 3px 0 0;
+    transform: translate(0, 3px);
 }
 
 input::placeholder, textarea::placeholder {
