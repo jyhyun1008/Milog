@@ -400,4 +400,5 @@ blockquote {
     border-left: 2px solid var(--accent);
     padding-left: 1em;
     margin-inline-start: 1em;
+    opacity: 0.7;
 }
