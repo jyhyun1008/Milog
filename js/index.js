@@ -36,6 +36,9 @@ function parseMd(md){ // 깃허브 등에 사용하는 마크다운 파일을 ht
 
     //루비
     md = md.replace(/\$\[ruby\s([^\]]+)\s([^\]]+)\]/gm, '<ruby>$1<rp>(</rp><rt>$2</rt><rp>)</rp></ruby>');
+
+    //체크박스
+    md = md.replace(/^\[\]\s/gm, '<input type="checkbox" /> ')
   
     //ul
     md = md.replace(/^\s*\n\*\s/gm, '<ul">\n* ');
