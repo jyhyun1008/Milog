@@ -28,6 +28,11 @@ a {
     color: var(--accent);
 }
 
+p {
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+}
+
 .nodeco {
     color: inherit;
 }
@@ -385,4 +390,14 @@ textarea {
 .nothingHere i {
     font-size: 10rem;
     color: var(--accent);
+}
+
+small {
+    opacity: 0.7;
+}
+
+blockquote {
+    border-left: 2px solid var(--accent);
+    padding-left: 1em;
+    margin-inline-start: 1em;
 }
