@@ -47,6 +47,18 @@ a :hover {
     color: var(--darkaccent);
 }
 
+code {
+    background-color: var(--bg);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+pre {
+    background-color: var(--bg);
+    padding: 10px;
+    border-radius: 5px;
+}
+
 .logo {
     -webkit-filter: brightness(0) invert(1); 
     filter: brightness(0) invert(1);
